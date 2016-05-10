@@ -2,3 +2,4 @@ django==1.8.5
 django-compat
 django-transmeta
 pyparsing
+gunicorn
