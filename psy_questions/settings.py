@@ -69,7 +69,7 @@ STATIC_URL = '/static/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     os.path.abspath('./static'),
-    os.path.abspath('../questionnaire/static/')
+    # os.path.abspath('../questionnaire/static/')
 )
 
 # List of finder classes that know how to find static files in
