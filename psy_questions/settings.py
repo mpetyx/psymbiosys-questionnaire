@@ -60,7 +60,7 @@ SECRET_KEY = 'j69g6-&t0l43f06iq=+u!ni)9n)g!ygy4dk-dgdbrbdx7%9l*6'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # psy_questions: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.abspath('./static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 
 # URL prefix for static files.
 # psy_questions: "http://media.lawrence.com/static/"
@@ -70,6 +70,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.abspath('./static'),
     os.path.abspath('static'),
+    os.path.join(BASE_DIR, 'static'),
     # os.path.abspath('../questionnaire/static/')
 )
 
