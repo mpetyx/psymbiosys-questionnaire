@@ -69,6 +69,7 @@ STATIC_URL = '/static/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     os.path.abspath('./static'),
+os.path.abspath('static'),
     # os.path.abspath('../questionnaire/static/')
 )
 
