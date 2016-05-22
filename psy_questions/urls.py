@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^(?P<page_to_render>.*)\.html$', 'questionnaire.page.views.page'),
     url(r'^setlang/$', 'questionnaire.views.set_language'),
 
+url(r'^complete/$', 'psy_questions.views.complete', {'page_to_render' : 'complete'}),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )+ static(settings.STATIC_ROOT, document_root=settings.STATIC_ROOT)
