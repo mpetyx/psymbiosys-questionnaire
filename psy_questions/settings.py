@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'transmeta',
     'questionnaire',
     'questionnaire.page',
+    'email_campaigns',
 )
 
 LANGUAGES = (
@@ -163,3 +164,7 @@ QUESTIONNAIRE_USE_SESSION = False
 
 try: from local_settings import *
 except: pass
+
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+MAILGUN_ACCESS_KEY = os.environ.get("MAILGUN_ACCESS_KEY","")
+MAILGUN_SERVER_NAME = 'apis.technology'
