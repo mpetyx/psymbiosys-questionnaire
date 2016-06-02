@@ -13,6 +13,7 @@ from django.template.loader import render_to_string, get_template
 from django.core.mail import EmailMessage
 from datetime import date
 import os
+from .models import Campaign
 
 
 @shared_task(ignore_result=True)
@@ -71,10 +72,14 @@ def start_campaign(emails):
 
 
 @celery.decorators.periodic_task(run_every=crontab(day_of_month=[1,15]),ignore_result=True,name="task_check_who_filled_the_questionaire",)
-def check_who_filled_the_questionaire(emails, questionnaire):
-    for email in emails:
-        if not RunInfoHistory.objects.filter(subject__email=email,questionnaire=questionnaire):
-            send_email_alert.delay(email)
+def check_who_filled_the_questionaire():
+    for campaign in Campaign.objects.all():
+        questionnaires = campaign.questionnaires.all()
+        for questionnaire in questionnaires:
+            emails = campaign.emails
+            for email in emails:
+                if not RunInfoHistory.objects.filter(subject__email=email,questionnaire=questionnaire):
+                    send_email_alert.delay(email,questionnaire)
 
 # from email_campaigns.tasks import send_email
 # send_email("mpetyx@me.com")

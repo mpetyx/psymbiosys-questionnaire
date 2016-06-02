@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'questionnaire',
     'questionnaire.page',
     'email_campaigns',
+    'multi_email_field',
 )
 
 LANGUAGES = (
