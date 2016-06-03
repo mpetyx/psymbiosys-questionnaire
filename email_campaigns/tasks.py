@@ -88,7 +88,7 @@ def send_email_alert(email, questionnaire):
 
     message = get_template('mails/questionaire.html').render(Context(ctx))
     msg = EmailMessage(subject, message, to=to, from_email=from_email)
-    msg.content_subtype = 'text/html'
+    msg.content_type = 'text/html'
     msg.send()
 
     return True
