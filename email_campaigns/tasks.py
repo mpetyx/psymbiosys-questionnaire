@@ -17,6 +17,8 @@ from datetime import timedelta
 from .models import Campaign
 from questionnaire.views import *
 from django.contrib.sites.models import Site
+from django.template import loader
+from django.core.mail import send_mail
 
 
 current_site = Site.objects.all()[0].name
@@ -88,8 +90,18 @@ def send_email_alert(email, questionnaire):
 
     message = get_template('mails/questionaire.html').render(Context(ctx))
     msg = EmailMessage(subject, message, to=to, from_email=from_email)
-    msg.content_subtype = "html"
-    msg.send()
+    # msg.content_subtype = "html"
+    # msg.send()
+
+
+    html_message = loader.render_to_string(
+        'mails/questionaire.html',
+        {
+            'questionnaire':str(questionnaire)
+    }
+    )
+
+    send_mail(subject, message, from_email, to, fail_silently=True, html_message=html_message)
 
     return True
 
