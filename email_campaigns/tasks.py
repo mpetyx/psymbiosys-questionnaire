@@ -138,7 +138,7 @@ def start_campaign(emails):
 
 
 # @celery.decorators.periodic_task(run_every=crontab(day_of_month=[1,15]),ignore_result=True,name="task_check_who_filled_the_questionaire",)
-@celery.decorators.periodic_task(run_every=timedelta(seconds=30),ignore_result=True,name="task_check_who_filled_the_questionaire",)
+@celery.decorators.periodic_task(run_every=timedelta(minutes=30),ignore_result=True,name="task_check_who_filled_the_questionaire",)
 def check_who_filled_the_questionaire():
     for campaign in Campaign.objects.all():
         questionnaires = campaign.questionnaires.all()
