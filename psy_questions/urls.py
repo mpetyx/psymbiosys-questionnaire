@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
-
+from views import clone_questionnaire
 
 admin.autodiscover()
 
@@ -16,7 +16,9 @@ urlpatterns = patterns('',
     url(r'^(?P<page_to_render>.*)\.html$', 'questionnaire.page.views.page'),
     url(r'^setlang/$', 'questionnaire.views.set_language'),
 
-url(r'^complete/$', 'psy_questions.views.complete', {'page_to_render' : 'complete'}),
+    url(r'^complete/$', 'psy_questions.views.complete', {'page_to_render' : 'complete'}),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^clone/(?P<questionnaire_id>[0-9]+)/$', 'psy_questions.views.clone_questionnaire'),
 )+ static(settings.STATIC_ROOT, document_root=settings.STATIC_ROOT)
