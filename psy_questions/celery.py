@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
 import os
@@ -38,7 +39,7 @@ if not os.environ.get('LOGNAME')=='mpetyx':
     app.conf.update(CELERY_EVENT_QUEUE_TTL= 60)
 else:
     app.conf.update(BROKER_URL=os.getenv('REDISTOGO_URL', 'redis://localhost:6379'),
-                CELERY_RESULT_BACKEND=os.getenv('REDISTOGO_URL', 'redis://localhost:6379'))
+                CELERY_RESULT_BACKEND=None)
 
 
 

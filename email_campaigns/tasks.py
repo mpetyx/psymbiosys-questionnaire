@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+
+
 __author__ = 'mpetyx'
 
 import celery
@@ -9,12 +13,13 @@ from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from datetime import timedelta
-from .models import Campaign
+from email_campaigns.models import Campaign
 from questionnaire.views import *
 from django.contrib.sites.models import Site
 from django.template import loader
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
+
 
 current_site = Site.objects.all()[0].name
 
@@ -143,8 +148,7 @@ def check_who_filled_the_questionaire():
                     send_email_alert.delay(email, retrieve_campaign_run(questionnaire.id, email))
 
 
-def a_campaign_created(sender, instance, created, **kwargs):
-    a_campaign_created_celery.delay(instance)
+
 
 @shared_task(ignore_result=True)
 def a_campaign_created_celery(instance):
@@ -158,7 +162,5 @@ def a_campaign_created_celery(instance):
                 if not RunInfo.objects.filter(subject__email=email, questionset=questionnaire.questionsets()[0]):
                     send_email_campagin.delay(email, retrieve_campaign_run(questionnaire.id, email))
 
-
-post_save.connect(a_campaign_created, sender=Campaign)
 
 
