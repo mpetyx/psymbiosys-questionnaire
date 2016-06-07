@@ -65,6 +65,12 @@ def CloneQuestionnaire_update(request, id):
             question.questionset = qs
             question.save()
 
+            for choice in question.choices():
+                choice.pk = None
+                choice.save()
+                choice.question = question
+                choice.save()
+
     return redirect('/admin/email_campaigns/clonequestionnaire/')
 
 
