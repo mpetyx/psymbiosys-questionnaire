@@ -60,12 +60,13 @@ def CloneQuestionnaire_update(request, id):
         qs_original = QuestionSet.objects.get(id=qs_original_id)
 
         for question in qs_original.questions():
+            original_question_id = question.id
             question.pk = None
             question.save()
             question.questionset = qs
             question.save()
 
-            for choice in question.choices():
+            for choice in Question.objects.get(id=original_question_id).choices():
                 choice.pk = None
                 choice.save()
                 choice.question = question
