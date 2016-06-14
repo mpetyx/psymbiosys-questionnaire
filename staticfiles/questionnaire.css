@@ -14,7 +14,43 @@
 }
 
 div.input {
-    margin-left: 35px;
+    margin-left: 0px;
+}
+
+div.table-input thead > tr {
+    border-top: 2px solid #0988af;
+    border-bottom: 2px solid #0988af;
+}
+
+div.table-input tbody > tr > td:first-child,
+div.table-input tbody > tr > td:last-child {
+    max-width: 175px;
+}
+
+div.table-input thead > tr > th,
+div.table-input tbody > tr > td {
+    color: #1b63c1;
+    font-size: 16px;
+    text-align: center;
+}
+
+div.table-input tbody > tr:nth-child(2n+1) {
+    background: rgba(27, 99, 193, 0.15);
+}
+
+div.table-input tbody > tr > td {
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+div.table-input tbody > tr > td > input[type="radio"] {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    box-shadow: none;
+    width: 100%;
 }
 
 .answer {
