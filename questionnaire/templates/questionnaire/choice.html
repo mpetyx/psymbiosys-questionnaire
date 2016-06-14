@@ -1,20 +1,34 @@
 {% load i18n %}
-<div class="clearfix">
-    <div class="input">
-        <ul class="inputs-list">
-        {% for sel, choice in qdict.choices %}
-            <li>
-                <label>
-                    <input type="radio" id="{{ question.number }}_{{ forloop.counter }}" name="question_{{ question.number }}" onClick="valchanged('{{ question.number }}', this.value)" value="{{ choice.value }}"{% if sel %} checked {% endif %}>
-                    <span>{{ choice.text }}</span>
-                </label>
-            </li>
-        {% endfor %}
-        {% if question.extra %}
-            <li>
-                <span class="help-block">{{ question.extra }}</span>
-            </li>
-        {% endif %}
-        </ul>
-    </div>
+{% load app_filters %}
+
+<div class="input table-input">
+    <table>
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                {% for sel, choice in qdict.choices %}
+                    <th>{{ choice.text }}</th>
+                {% endfor %}
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ question.text|qtext_parse:0 }}</td>
+                {% for sel, choice in qdict.choices %}
+                    <td>
+                        <input type="radio" id="{{ question.number }}_{{ forloop.counter }}" name="question_{{ question.number }}" onClick="valchanged('{{ question.number }}', this.value)" value="{{ choice.value }}"{% if sel %} checked {% endif %}>
+                    </td>
+                {% endfor %}
+                <td>{{ question.text|qtext_parse:-1 }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if question.extra %}
+        <div class="row col-xs-12">
+            <div class="col-xs-12 help-block">{{ question.extra }}</div>
+        </div>
+    {% endif %}
+
 </div>
