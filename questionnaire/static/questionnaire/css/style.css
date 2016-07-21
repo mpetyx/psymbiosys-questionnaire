@@ -181,3 +181,66 @@ p{font-size:1em;line-height: 1.7em; margin-bottom: 1.7em;}
 .red {
 	color: #dd0000;
 }
+
+body.choice-page h2 {
+	font-size: 55px;
+	font-weight: 300;
+}
+
+body.choice-page .header {
+	color: #bbb;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-bottom: 5vh;
+    font-weight: 300;
+    border-bottom: 1px solid #eee;
+}
+
+
+body.choice-page .analytics-choice,
+body.choice-page .analytics-choice:focus {
+	height: 50vh;
+	padding: 20vh 0 15vh 50px;
+	text-align: center;
+	color: #888;
+	display: block;
+	text-decoration: none;
+	outline: none;
+}
+
+body.choice-page .analytics-choice:hover {
+	color: black;
+	cursor: pointer;
+	text-decoration: none;
+	outline: none;
+}
+
+body.choice-page .analytics-choice:first-child {
+	border-right: 1px solid #eee;
+}
+
+nav ul li {
+	list-style: none;
+	float: right;
+	margin: 10px;
+}
+
+nav ul li a,
+nav ul li a:focus {
+	background: white;
+	color: #aaa;
+	border: 1px solid #ccc;
+	padding: 10px 15px;
+	border-radius: 3px;
+	margin: 10px;
+	text-decoration: none;
+	display: block;
+}
+
+nav ul li a:hover,
+nav ul li a:focus {
+	background: white;
+	color: black;
+	border-color: black;
+	text-decoration: none;
+}

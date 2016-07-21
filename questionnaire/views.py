@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.contrib.auth.decorators import permission_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, render
 from django.db import transaction
 from django.conf import settings
 from datetime import datetime
@@ -976,3 +976,11 @@ def generate_run(request, questionnaire_id, subject_id=None):
 
     questionnaire_start.send(sender=None, runinfo=run, questionnaire=qu)
     return HttpResponseRedirect(reverse('questionnaire', kwargs=kwargs))
+
+
+"""
+The views that follow down below have to do with the analytics part of the questionnaire
+"""
+
+def index(request):
+    return render(request, 'questionnaire/analytics/index.html', {})
