@@ -40,7 +40,12 @@ class Subject(models.Model):
             ("paperform", _("Subject is sent paper form"),))
     )
     language = models.CharField(max_length=2, default=settings.LANGUAGE_CODE,
-        verbose_name = _('Language'), choices = settings.LANGUAGES)
+        verbose_name = _('Language'), choices=settings.LANGUAGES)
+    type = models.CharField(max_length=30, default='VISITOR', choices=(
+        ('VISITOR', 'Visitor'),
+        ('WORKER', 'Worker'),
+        ('MANAGER', 'Manager')
+    ))
 
     def __unicode__(self):
         return u'%s, %s (%s)' % (self.surname, self.givenname, self.email)

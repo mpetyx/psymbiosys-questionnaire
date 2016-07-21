@@ -53,7 +53,7 @@ def answer_proc(*names):
     """
     Decorator to create an answer processor for one or more
     question types.
-    
+
     Usage:
     @question_proc('typename1', 'typename2')
     def qproc_blah(request, question):
@@ -74,7 +74,7 @@ def add_type(id, name):
     Register a new question type in the admin interface.
     At least an answer processor must also be defined for this
     type.
-    
+
     Usage:
         add_type('mysupertype', 'My Super Type [radio]')
     """

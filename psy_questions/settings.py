@@ -11,22 +11,22 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if os.environ.get('LOGNAME')=='mpetyx':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'psy_questions.sqlite',                      # Or path to database file if using sqlite3.
-            'USER': '',                      # Not used with sqlite3.
-            'PASSWORD': '',                  # Not used with sqlite3.
-            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-        }
+# if os.environ.get('LOGNAME') in ['mpetyx', '3nvi']:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'psy_questions.sqlite',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
-else:
-    import dj_database_url
-
-    DATABASES = dict()
-    DATABASES['default'] = dj_database_url.config()
+}
+# else:
+#     import dj_database_url
+#
+#     DATABASES = dict()
+#     DATABASES['default'] = dj_database_url.config()
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -73,20 +73,20 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 STATIC_URL = '/app/staticfiles/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (
-    os.path.abspath('./static'),
-    os.path.abspath('static'),
-    os.path.join(BASE_DIR, 'static'),
-    # os.path.abspath('../questionnaire/static/')
-)
+# STATICFILES_DIRS = (
+#     os.path.abspath('./static'),
+#     os.path.abspath('static'),
+#     os.path.join(BASE_DIR, 'static'),
+#     # os.path.abspath('../questionnaire/static/')
+# )
 
 # List of finder classes that know how to find static files in
 # various locations.
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-)
+# STATICFILES_FINDERS = (
+#     'django.contrib.staticfiles.finders.FileSystemFinder',
+#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+# #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+# )
 
 
 # List of callables that know how to import templates from various sources.

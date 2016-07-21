@@ -14,7 +14,27 @@
 }
 
 div.input {
-    margin-left: 35px;
+    margin-left: 0px;
+}
+
+div.table-input thead > tr {
+    border-top: 2px solid #0988af;
+    border-bottom: 2px solid #0988af;
+}
+
+div.table-input thead > tr > th {
+    color: #1b63c1;
+    font-size: 15px;
+    text-align: center;
+}
+
+div.table-input tbody > tr > td > input[type="radio"] {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    box-shadow: none;
+    width: 100%;
 }
 
 .answer {
