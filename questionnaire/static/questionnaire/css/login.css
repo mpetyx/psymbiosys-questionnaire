@@ -1,0 +1,41 @@
+/* variable definition */
+
+
+form.qs-form ul.errorlist li,
+form.qs-form .django-form-error {
+  color: #D90000;
+  list-style: none; }
+
+.logo {
+  padding: 50px 0;
+}
+
+.btn-submit {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.btn-default {
+    color: #fff;
+    border: 1px solid #fff;
+    background: rgb(78, 100, 107);
+}
+
+.login-form {
+  width: 50%;
+  margin: 5vh 25%;
+  padding: 50px 25px;
+  border-radius: 5px;
+  border: 1px solid #e7e7e7;
+}
+
+.login-form .error input.form-control {
+    border-color: #e26666;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(232, 175, 156, 0.6);
+}
+
+.login-form .row {
+  line-height: 1.2em; }
+
+.login-form .fields-container {
+  padding: 0 15%; }

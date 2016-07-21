@@ -70,7 +70,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 
 # URL prefix for static files.
 # psy_questions: "http://media.lawrence.com/static/"
-STATIC_URL = '/app/staticfiles/'
+STATIC_URL = '/static/'
 
 # Additional locations of static files
 # STATICFILES_DIRS = (
@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'questionnaire.page',
     'email_campaigns',
     'multi_email_field',
+    'widget_tweaks'
 )
 
 LANGUAGES = (
@@ -162,9 +163,6 @@ QUESTIONNAIRE_PROGRESS = 'async'
 # If True the ids are set in the session and the URL remains unchanged as the
 # user goes through the steps of the question set.
 QUESTIONNAIRE_USE_SESSION = False
-
-try: from local_settings import *
-except: pass
 
 EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
 MAILGUN_ACCESS_KEY = os.environ.get("MAILGUN_ACCESS_KEY","")

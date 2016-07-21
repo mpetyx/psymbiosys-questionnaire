@@ -1,0 +1,83 @@
+{% load staticfiles %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{% block title %}Anlzer{% endblock %}</title>
+
+    <!-- Google fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- font awesome -->
+    <link href="{% static 'questionnaire/css/font-awesome.min.css' %}" rel="stylesheet">
+
+    <!-- perfect scrollbar -->
+    <link href="{% static 'questionnaire/css/perfect-scrollbar.min.css' %}" rel="stylesheet">
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="{% static 'questionnaire/css/bootstrap.min.css' %}" />
+
+    <!-- custom CSS styling from inherited template-->
+    <link rel="stylesheet" href="{% static 'questionnaire/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/login.css' %}">
+
+    <!-- any extra CSS that must be included in the current page -->
+    {% block css %}{% endblock %}
+    <!-- end of CSS block -->
+
+    <!-- favicon -->
+{#    <link rel="shortcut icon" href="{% static 'anlzer/favicon.ico' %}" type="image/x-icon">#}
+{#    <link rel="icon" href="{% static 'anlzer/favicon.ico' %}" type="image/x-icon">#}
+</head>
+<body class="body {% block body_class %}{% endblock %}">
+
+    <!-- Header Starts -->
+    <div class="navbar-wrapper">
+      <div class="container">
+      {% block navbar %}
+
+      {% endblock %}
+      </div>
+    </div>
+    <!-- #Header Starts -->
+
+    <div id="{% block container_id %}home{% endblock %}">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block components %}{% endblock %}
+
+    <!-- jquery -->
+    <script src="{% static 'questionnaire/js/jquery.js' %}"></script>
+
+    <!-- REACT needed JS components -->
+    <script src="{% static 'questionnaire/js/react.js' %}"></script>
+    <script src="{% static 'questionnaire/js/react-dom.js' %}"></script>
+    <script src="{% static 'questionnaire/js/browser.min.js' %}"></script>
+
+    <!-- signals & prioritized managers -->
+    <script src="{% static 'questionnaire/js/signals.js' %}"></script>
+
+    <!-- boostrap -->
+    <script src="{% static 'questionnaire/js/bootstrap.js' %}" type="text/javascript" ></script>
+
+    <!-- jquery mobile -->
+    <script src="{% static 'questionnaire/js/respond.js' %}"></script>
+
+    <!-- scripts for the input & forms relative content -->
+    <script src="{% static 'questionnaire/js/perfect-scrollbar.js' %}"></script>
+    <script src="{% static 'questionnaire/js/perfect-scrollbar.jquery.js' %}"></script>
+    <script src="{% static 'questionnaire/js/wow.js' %}"></script>
+
+    <!-- Page necessary JS -->
+    {% block js %}{% endblock %}
+
+    <!-- custom script -->
+    <script src="{% static 'questionnaire/js/scripts.js' %}"></script>
+
+</body>
+</html>

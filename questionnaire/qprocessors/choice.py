@@ -43,8 +43,8 @@ def process_choice(question, answer):
         return dumps([[opt]])
     else:
         valid = [c.value for c in question.choices()]
-        if opt not in valid:
-            raise AnswerException(_(u'Invalid option!'))
+        # if opt not in valid:
+        #     raise AnswerException(_(u'Invalid option!'))
     return dumps([opt])
 add_type('choice', 'Choice [radio]')
 add_type('choice-freeform', 'Choice with a freeform option [radio]')
