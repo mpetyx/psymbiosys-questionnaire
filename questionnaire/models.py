@@ -45,7 +45,7 @@ class Subject(models.Model):
         ('VISITOR', 'Visitor'),
         ('WORKER', 'Worker'),
         ('MANAGER', 'Manager')
-    ))
+    ), null=True)
 
     def __unicode__(self):
         return u'%s, %s (%s)' % (self.surname, self.givenname, self.email)
