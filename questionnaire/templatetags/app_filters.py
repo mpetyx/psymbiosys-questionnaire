@@ -13,4 +13,4 @@ def get_admin_results(cl):
 
 @register.filter
 def qtext_parse(txt, part):
-    return txt.split('%%')[int(part)]
+    return txt.split('-')[int(part)].strip()
