@@ -17,6 +17,10 @@ div.input {
     margin-left: 0px;
 }
 
+div.table-input table {
+    width: 100%;
+}
+
 div.table-input thead > tr {
     border-top: 2px solid #0988af;
     border-bottom: 2px solid #0988af;
