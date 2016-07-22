@@ -25,4 +25,4 @@ urlpatterns = patterns('',
     url(r'^admin_clone/(?P<id>.*)/$', clone_CloneQuestionnaire),
     url(r'^csv/(?P<qid>\d+)/$',
         'questionnaire.views.export_csv', name='export_csv'),
-)+ static(settings.STATIC_ROOT, document_root=settings.STATIC_ROOT)
+)#+ static(settings.STATIC_ROOT, document_root=settings.STATIC_ROOT)
