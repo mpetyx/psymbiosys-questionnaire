@@ -13,9 +13,11 @@ urlpatterns = patterns(
             'redirect_field_name': '/analytics/'
         },
         name='login'
-        ),
+    ),
     url(r'^logout/$', login_required(auth_views.logout_then_login), {
         'login_url': '/analytics/login/'
     },
-        name='logout'),
+        name='logout'
+    ),
+    url(r'^brand-value/$', login_required(brand_value), name='brand-value'),
 )

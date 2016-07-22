@@ -984,3 +984,6 @@ The views that follow down below have to do with the analytics part of the quest
 
 def index(request):
     return render(request, 'questionnaire/analytics/index.html', {})
+
+def brand_value(request):
+    return render(request, 'questionnaire/analytics/brand-value.html', {})

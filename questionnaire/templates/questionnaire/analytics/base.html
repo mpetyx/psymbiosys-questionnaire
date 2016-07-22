@@ -36,16 +36,27 @@
 
     <!-- Header Starts -->
     <div class="navbar-wrapper">
-      <div class="container">
-      {% block navbar %}
-
-      {% endblock %}
-      </div>
+        <div class="container">
+        {% block navbar %}
+            {% if request.user.is_authenticated %}
+                <nav>
+                    <ul>
+                        <li>
+                            <a href="/analytics/logout/">Logout</a>
+                        </li>
+                    </ul>
+                </nav>
+            {% endif %}
+        {% endblock %}
+        </div>
     </div>
     <!-- #Header Starts -->
 
     <div id="{% block container_id %}home{% endblock %}">
-        {% block content %}{% endblock %}
+        <div class="container">
+        {% block content %}
+        {% endblock %}
+        </div>
     </div>
 
     {% block components %}{% endblock %}

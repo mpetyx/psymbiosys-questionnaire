@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,8 +7,8 @@
     
     <title>{% block title %}Questionnaire{% endblock title %}</title>
     
-    <link rel="stylesheet" href="/app/staticfiles/bootstrap/bootstrap.min.css" type="text/css"/>
-    <link rel="stylesheet" href="/app/staticfiles/questionnaire.css"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css'%}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'questionnaire.css'%}"/>
     
     <style type="text/css">
     {% block styleextra %}
@@ -38,7 +39,7 @@
 
             <div class="page-header">
                 <a href="http://www.psymbiosys.eu/">
-                  <img src="/app/staticfiles/logo.jpg" alt="logo" style="width: 150px"/>
+                  <img src="{% static 'logo.jpg' %}" alt="logo" style="width: 150px"/>
                 </a>
                 <h1 style="padding:0 8px; color:#00bf55; font-weight: 300">{{ questionset.questionnaire.name }} </h1>
             </div>

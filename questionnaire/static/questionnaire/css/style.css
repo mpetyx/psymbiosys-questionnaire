@@ -244,3 +244,13 @@ nav ul li a:focus {
 	border-color: black;
 	text-decoration: none;
 }
+
+.analytics-page h4 {
+	color: #aaa;
+	text-transform: uppercase;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+	font-size: 20px;
+	letter-spacing: 4px;
+	border-bottom: 1px solid #ddd;
+}
