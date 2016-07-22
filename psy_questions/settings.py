@@ -1,4 +1,6 @@
-# Django settings for psy_questions project.
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+
 import os.path
 
 DEBUG = True
@@ -165,5 +167,5 @@ QUESTIONNAIRE_PROGRESS = 'async'
 QUESTIONNAIRE_USE_SESSION = False
 
 EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-MAILGUN_ACCESS_KEY = os.environ.get("MAILGUN_ACCESS_KEY","")
+MAILGUN_ACCESS_KEY = os.environ.get("MAILGUN_ACCESS_KEY","key-726951")
 MAILGUN_SERVER_NAME = 'apis.technology'

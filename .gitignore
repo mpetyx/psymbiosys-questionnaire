@@ -61,4 +61,4 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 .idea/*
-psy_questions/settings.py
+#psy_questions/settings.py
