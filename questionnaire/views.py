@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # vim: set fileencoding=utf-8
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
@@ -26,6 +26,7 @@ from compat import commit_on_success, commit, rollback
 import logging
 import random
 from hashlib import md5
+from email_campaigns.models import *
 import re
 
 
@@ -985,5 +986,144 @@ The views that follow down below have to do with the analytics part of the quest
 def index(request):
     return render(request, 'questionnaire/analytics/index.html', {})
 
-def brand_value(request):
-    return render(request, 'questionnaire/analytics/brand-value.html', {})
+
+def workers_sentiment(request):
+    workers_sentiment_qs = Answer.objects.filter(
+        question__questionset__questionnaire__name="Questionnaire for Workers Sentiment"
+    )
+    unique_people_ids = workers_sentiment_qs.values_list('runid', flat=True).distinct()
+
+    grouped_answers_part_1 = []
+    grouped_answers_part_2 = []
+    grouped_answers_part_3 = []
+
+    for uid in unique_people_ids:
+        answer_group = workers_sentiment_qs\
+            .filter(runid=uid, question__questionset__sortid=1)\
+            .order_by('question__sort_id')
+        grouped_answers_part_1.append(list(answer_group))
+
+        answer_group = workers_sentiment_qs \
+            .filter(runid=uid, question__questionset__sortid=2) \
+            .order_by('question__sort_id')
+        grouped_answers_part_2.append(list(answer_group))
+
+        answer_group = workers_sentiment_qs \
+            .filter(runid=uid, question__questionset__sortid=3) \
+            .order_by('question__sort_id')
+        grouped_answers_part_3.append(list(answer_group))
+
+
+    return render(request, 'questionnaire/analytics/workers-sentiment.html', {
+        'grouped_answers_part_1': grouped_answers_part_1,
+        'grouped_answers_part_2': grouped_answers_part_2,
+        'grouped_answers_part_3': grouped_answers_part_3,
+        'campaigns': Campaign.objects.all()
+    })
+
+
+def workers_sentiment_charts(request, part=1):
+
+    subject_type = request.GET.get('type', '')
+    campaign = request.GET.get('campaign', None)
+    unique_answers = request.GET.get('unique', False)
+
+    # The original query set for this questionnaire's specific part
+    workers_sentiment_qs = Answer.objects.filter(
+        question__questionset__questionnaire__name="Questionnaire for Workers Sentiment",
+        question__questionset__sortid=part
+    )
+
+    if campaign:
+        workers_sentiment_qs = workers_sentiment_qs.filter(question__questionset__questionnaire__campaign_set__pk=campaign)
+    if subject_type:
+        workers_sentiment_qs = workers_sentiment_qs.filter(subject__type=subject_type.upper())
+
+    # possible questions & answers for this questionnaire's specific part
+    question_texts = workers_sentiment_qs.values_list('question__text_en', flat=True).distinct()
+
+    # for each question
+    chart_data = []
+    for question_text in question_texts:
+        # get all the possible answers, possibly discard duplicates
+        answers_for_this_question_text = workers_sentiment_qs.filter(question__text_en=question_text)
+        if unique_answers:
+            run_ids = answers_for_this_question_text.values_list('runid', flat=True)
+            unique_answer_runids = RunInfoHistory.objects\
+                .filter(runid__in=run_ids)\
+                .reverse()\
+                .distinct('subject_id')\
+                .values_list('runid', flat=True)
+            answers_for_this_question_text = answers_for_this_question_text.filter(runid__in=unique_answer_runids)
+
+        different_answers_for_this_question = {}
+
+        for a in answers_for_this_question_text:
+            answer_text = a.get_answer_text()
+            if answer_text in different_answers_for_this_question:
+                different_answers_for_this_question[answer_text] += 1
+            else:
+                different_answers_for_this_question[answer_text] = 1
+
+        for key, val in different_answers_for_this_question.iteritems():
+            chart_data.append({
+                'Question': question_text,
+                'Answer': key,
+                'Responses': val
+            })
+    return JsonResponse(chart_data, safe=False)
+
+
+def workers_sentiment_stats(request, part=1):
+    subject_type = request.GET.get('type', '')
+    campaign = request.GET.get('campaign', None)
+    unique_answers = request.GET.get('unique', False)
+
+    # The original query set for this questionnaire's specific part
+    workers_sentiment_qs = Answer.objects.filter(
+        question__questionset__questionnaire__name="Questionnaire for Workers Sentiment",
+        question__questionset__sortid=part
+    )
+
+    questionnaire_history = RunInfoHistory.objects.filter(questionnaire__name="Questionnaire for Workers Sentiment")
+    if campaign:
+        questionnaire_history = questionnaire_history.filter(questionnaire__campaign_set__pk=campaign)
+
+    questionnaire_unique_history = questionnaire_history.distinct('subject_id')
+
+    number_of_responses = questionnaire_history.count()
+    number_of_unique_responses = questionnaire_unique_history.count()
+
+    number_of_unique_worker_responses = "%.2f" % (
+        questionnaire_unique_history.filter(subject__type='WORKER').count() * 100 / float(number_of_unique_responses)
+    )
+    number_of_unique_visitor_responses = "%.2f" % (
+        questionnaire_unique_history.filter(subject__type='VISITOR').count() * 100 / float(number_of_unique_responses)
+    )
+    number_of_unique_manager_responses = "%.2f" % (
+        questionnaire_unique_history.filter(subject__type='MANAGER').count() * 100 / float(number_of_unique_responses)
+    )
+
+    different_answers_for_this_questionnaire_part, payload = {}, []
+    for a in workers_sentiment_qs:
+        answer_text = a.get_answer_text()
+        if answer_text in different_answers_for_this_questionnaire_part:
+            different_answers_for_this_questionnaire_part[answer_text] += 1
+        else:
+            different_answers_for_this_questionnaire_part[answer_text] = 1
+
+    for key, val in different_answers_for_this_questionnaire_part.iteritems():
+        payload.append({
+            'Answer': key,
+            'Responses': val,
+            'Percentage': "%.2f" % (100 * val / len(workers_sentiment_qs))
+        })
+    return JsonResponse({
+        '#_of_responses': number_of_responses,
+        '#_of_unique_responses': number_of_unique_responses,
+        '#_of_workers': number_of_unique_worker_responses,
+        '#_of_visitors': number_of_unique_visitor_responses,
+        '#_of_managers': number_of_unique_manager_responses,
+        'percentages':payload
+    }
+        , safe=False)

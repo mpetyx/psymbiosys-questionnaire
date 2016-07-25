@@ -14,3 +14,7 @@ def get_admin_results(cl):
 @register.filter
 def qtext_parse(txt, part):
     return txt.split('-')[int(part)].strip()
+
+@register.filter
+def contains(txt, part):
+    return part.lower() in txt.lower()

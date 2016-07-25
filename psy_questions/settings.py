@@ -13,13 +13,25 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if os.environ.get('LOGNAME') in ['mpetyx', '3nvi']:
+if os.environ.get('LOGNAME') in ['mpetyx']:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
             'NAME': 'psy_questions.sqlite',                      # Or path to database file if using sqlite3.
             'USER': '',                      # Not used with sqlite3.
             'PASSWORD': '',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        }
+    }
+
+elif os.environ.get('LOGNAME') in ['3nvi']:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'questionnaire',                      # Or path to database file if using sqlite3.
+            'USER': 'postgres',                      # Not used with sqlite3.
+            'PASSWORD': '1234',                  # Not used with sqlite3.
             'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
             'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         }
@@ -169,3 +181,5 @@ QUESTIONNAIRE_USE_SESSION = False
 EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
 MAILGUN_ACCESS_KEY = os.environ.get("MAILGUN_ACCESS_KEY","key-726951")
 MAILGUN_SERVER_NAME = 'apis.technology'
+
+LOGIN_URL = '/analytics/login/'

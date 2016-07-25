@@ -19,5 +19,7 @@ urlpatterns = patterns(
     },
         name='logout'
     ),
-    url(r'^brand-value/$', login_required(brand_value), name='brand-value'),
+    url(r'^workers-sentiment/$', login_required(workers_sentiment), name='workers-sentiment'),
+    url(r'^workers-sentiment-charts/(?P<part>[0-9]+)/', login_required(workers_sentiment_charts), name='workers-sentiment-charts'),
+    url(r'^workers-sentiment-stats/(?P<part>[0-9]+)/', login_required(workers_sentiment_stats), name='workers-sentiment-stats')
 )

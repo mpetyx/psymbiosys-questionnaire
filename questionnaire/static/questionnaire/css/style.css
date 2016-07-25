@@ -249,8 +249,192 @@ nav ul li a:focus {
 	color: #aaa;
 	text-transform: uppercase;
 	padding-bottom: 10px;
-	margin-bottom: 20px;
+	margin-bottom: 100px;
 	font-size: 20px;
 	letter-spacing: 4px;
 	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+
+.analytics-page h4 i:hover {
+	color: black;
+}
+
+table.analytics-table,
+table.analytics-table thead,
+table.analytics-table tbody,
+table.analytics-table tr {
+	width: 100%;
+	display: block;
+	overflow-x: visible;
+}
+
+table.analytics-table {
+	padding-bottom: 6em;
+}
+
+table.analytics-table thead {
+	color: #666;
+	border-bottom: 1px solid;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	font-weight: 600;
+	font-size: 12px;
+	margin-bottom: 15px;
+}
+
+table.analytics-table tbody tr {
+	padding: 15px 0;
+}
+table.analytics-table tbody tr td {
+	padding: 0 15px;
+	font-size: 12px;
+	font-weight: 400;
+	color: #999;
+}
+
+table.analytics-table tbody tr td i.fa-check-circle {
+	margin-right: 3px;
+	color: #529fff;
+}
+
+table.analytics-table tbody tr td i.fa-times-circle {
+	margin-right: 3px;
+	color: #ff6c3b;
+}
+
+table.analytics-table th:nth-child(1),
+table.analytics-table td:nth-child(1) {
+	width: 50px;
+}
+
+table.analytics-table th:nth-child(2),
+table.analytics-table td:nth-child(2) {
+	width: 80px;
+}
+
+table.analytics-table th:nth-child(3),
+table.analytics-table td:nth-child(3) {
+	width: 95px;
+}
+
+table.analytics-table th:nth-child(4),
+table.analytics-table td:nth-child(4) {
+	width: 165px;
+}
+
+table.analytics-table#detailed-results-part-1 th:nth-child(n+5),
+table.analytics-table#detailed-results-part-1 td:nth-child(n+5) {
+	width: 145px;
+}
+
+table.analytics-table#detailed-results-part-2 th:nth-child(n+5),
+table.analytics-table#detailed-results-part-2 td:nth-child(n+5) {
+	width: 160px;
+}
+
+table.analytics-table#detailed-results-part-3 th:nth-child(n+5),
+table.analytics-table#detailed-results-part-3 td:nth-child(n+5) {
+	width: 400px;
+}
+
+table td.positive {
+	color: rgb(22, 200, 91) !important;
+}
+
+table td.neutral {
+	color: rgba(124, 171, 228, 0.73) !important;
+}
+
+table td.negative {
+	color: rgba(245, 82, 43, 0.92) !important;
+}
+
+
+table.analytics-table thead th {
+	padding: 10px 15px;
+}
+
+table.analytics-table  {
+
+}
+
+.chosen-container {
+	width: 300px !important;
+	letter-spacing: 1px;
+	font-weight: 600;
+	margin-top: -13px;
+	background: white;
+	margin-bottom: 15px;
+	margin-right: 15px;
+}
+
+.chosen-container .chosen-single {
+	background: white;
+	padding: 5px 15px;
+	background-image: none;
+	height: 35px;
+}
+
+.hidden-type,
+tr.hidden-type,
+tr.hidden-campaign {
+	display: none !important;
+}
+
+.analytics-page {
+	padding-bottom: 6em;
+}
+
+body.analytics-page h4.collapsed > *:not(span),
+body.analytics-page h4.collapsed ~ *,
+body.analytics-page h4.collapsed + * {
+	display: none;
+}
+
+label {
+	cursor: pointer;
+}
+
+input[type="checkbox"] {
+	margin-top: 0px;
+	margin-left: 15px;
+}
+
+.opac {
+	opacity: 0.45 !important;
+}
+
+.main-stat {
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.main-stat > div:first-child {
+	font-size: 20px;
+	color: #bbb;
+	padding: 15px;
+}
+
+.main-stat > div:first-child > div {
+	font-weight: 600;
+	color: #999;
+	font-size: 18px;
+}
+
+.main-stat > div:nth-child(2) {
+	font-size: 25px;
+	padding: 15px;
+	color: #666;
+	text-align: center;
+}
+
+.main-stat.delimit {
+	margin-bottom: 50px;
+}
+
+.main-stat.delimit  > div:first-child {
+	padding-left: 0;
+	padding-right: 0;
 }

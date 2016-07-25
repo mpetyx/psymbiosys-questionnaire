@@ -404,9 +404,22 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, help_text = u"The question that this is an answer to")
     runid = models.CharField(u'RunID', help_text = u"The RunID (ie. year)", max_length=32)
     answer = models.TextField()
+    answered_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return "Answer(%s: %s, %s)" % (self.question.number, self.subject.surname, self.subject.givenname)
+
+    def get_campaign(self):
+        return self.question.questionset.questionnaire.campaign_set.name
+
+    def get_answer_text(self):
+        try:
+            number = int(eval(self.answer)[0])
+            return self.question.choices()[number - 1].text
+        except:
+            return ''
+
+
 
     def split_answer(self):
         """
