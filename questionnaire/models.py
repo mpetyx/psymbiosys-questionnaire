@@ -419,6 +419,13 @@ class Answer(models.Model):
         except:
             return ''
 
+    def get_answer_value(self):
+        try:
+            number = int(eval(self.answer)[0])
+            return self.question.choices()[number - 1].value
+        except:
+            return ''
+
 
 
     def split_answer(self):

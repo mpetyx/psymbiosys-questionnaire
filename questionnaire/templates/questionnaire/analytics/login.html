@@ -8,7 +8,7 @@
 {% block navbar %} {% endblock %}
 
 {% block content %}
-    <form method="post" autocomplete="off" action="/analytics/login/" class="login-form qs-form">
+    <form method="post" autocomplete="off" action="/analytics/login/?next=/analytics/" class="login-form qs-form">
         {% csrf_token %}
 
         <div class="logo row"><img class="center-block" src="http://www.aidima.eu/wp-content/uploads/2011/12/xlogo2.jpg.pagespeed.ic.oa9yiAsapz.jpg"/></div>

@@ -1,0 +1,56 @@
+{% extends 'questionnaire/analytics/base.html' %}
+{% load app_filters %}
+
+
+{% block title %}Brand value analytics{% endblock %}
+{% block body_class %}brand-value analytics-page{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>
+                <span class="toggle-section">
+                    1. Aggregated Statistical Analysis
+                </span>
+            </h4>
+
+            <div class="col-xs-12">
+                <select id="brand-table-type-filter" class="col-xs-4">
+                    <option></option>
+                    <option data-val="Worker" data-varname="type">Worker</option>
+                    <option data-val="Manager" data-varname="type">Manager</option>
+                    <option data-val="Visitor" data-varname="type">Visitor</option>
+                </select>
+
+                <select id="brand-table-campaign-filter" class="col-xs-4">
+                    <option></option>
+                    {% for campaign in campaigns %}
+                        <option data-val="{{ campaign.name }}" data-varname="campaign">{{ campaign.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-xs-12" id="brand-value-table-container">
+
+            </div>
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="main-stat col-xs-12">
+                        <div class="col-xs-9">Number of Responses: </div>
+                        <div class="col-xs-3" id="number-of-responses"></div>
+                    </div>
+                    <div class="main-stat col-xs-12">
+                        <div class="col-xs-9">Number of Unique Responders: </div>
+                        <div class="col-xs-3" id="number-of-unique-responses"></div>
+                    </div>
+                    <div class="main-stat col-xs-12 delimit">
+                        <div class="col-xs-12">
+                            <div class="col-xs-4"><span id="number-of-workers"></span>% Workers </div>
+                            <div class="col-xs-4"><span id="number-of-managers"></span>% Managers</div>
+                            <div class="col-xs-4"><span id="number-of-visitors"></span>% Visitors</div>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+{% endblock %}

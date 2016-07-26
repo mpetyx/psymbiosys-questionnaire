@@ -38,17 +38,20 @@
     <!-- Header Starts -->
     <div class="navbar-wrapper">
         <div class="container">
-        {% block navbar %}
-            {% if request.user.is_authenticated %}
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="/analytics/logout/">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
-            {% endif %}
-        {% endblock %}
+            <nav>
+                <ul>
+                    {% if logged_in %}
+                    <li>
+                        <a href="/analytics/logout/">Logout</a>
+                    </li>
+                        {% if not index %}
+                            <li>
+                                <a href="/analytics/">Back</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
     </div>
     <!-- #Header Starts -->

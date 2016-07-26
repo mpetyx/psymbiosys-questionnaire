@@ -308,6 +308,41 @@ table.analytics-table td:nth-child(1) {
 	width: 50px;
 }
 
+table#brand-value-table th {
+	text-align: center;
+}
+
+table#brand-value-table tbody tr {
+	margin-bottom: 15px;
+	padding-bottom: 25px;
+	border-bottom: 1px solid #eee;
+}
+
+table#brand-value-table th,
+table#brand-value-table td {
+	width: 155px;
+	display: inline-block;
+}
+
+table#brand-value-table tbody tr td:nth-child(7),
+table#brand-value-table tbody tr td:first-child {
+	font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+	color: #847c75;
+}
+
+table#brand-value-table td .bullet{
+	background: green;
+	height: 10px;
+	width: 10px;
+	text-align: center;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 50%;
+}
+
 table.analytics-table th:nth-child(2),
 table.analytics-table td:nth-child(2) {
 	width: 80px;
@@ -437,4 +472,8 @@ input[type="checkbox"] {
 .main-stat.delimit  > div:first-child {
 	padding-left: 0;
 	padding-right: 0;
+}
+
+.margin-top-lg {
+	margin-top: 3em;
 }

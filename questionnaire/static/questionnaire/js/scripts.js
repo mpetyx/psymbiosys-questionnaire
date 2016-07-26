@@ -67,6 +67,39 @@ function drawStats(container, url) {
      })
 }
 
+function updateBrandValueTable (container, url) {
+    $.ajax({
+         type: "get",
+         cache: false,
+         url: url,
+         error: function (xhr, status, error) {
+             console.log('Something went bad');
+         },
+         success: function (data) {
+             $(container).html(data)
+         }
+    });
+
+    $.ajax({
+        type: "get",
+        cache: false,
+        url: url.replace('charts', 'stats'),
+        dataType: "json",
+        error: function (xhr, status, error) {
+            console.log('Something went bad');
+        },
+        success: function (data) {
+
+            $('#number-of-responses').html(data['#_of_responses']);
+            $('#number-of-unique-responses').html(data['#_of_unique_responses']);
+
+            $('#number-of-workers').html(data['#_of_workers']);
+            $('#number-of-managers').html(data['#_of_managers']);
+            $('#number-of-visitors').html(data['#_of_visitors']);
+        }
+    })
+}
+
 $(document).ready(function() {
     // select & checkbox initialization
     $('select').chosen();
@@ -132,6 +165,36 @@ $(document).ready(function() {
             drawChart('#chartContainer', '/analytics/workers-sentiment-charts/' + endpointURL, chartChoice);
             drawStats('#statsContainer', '/analytics/workers-sentiment-stats/' + endpointURL)
     });
+
+    $('select#brand-table-campaign-filter, select#brand-table-type-filter, input#brand-table-unique-answers-filter').on('change',
+        function() {
+            var urlParamString = '?';
+
+            $.each($('select#brand-table-campaign-filter, select#brand-table-type-filter, input#brand-table-unique-answers-filter'), function(i, sel) {
+                if ($(sel).is('select')) {
+
+                    var $option = $(sel).find('option:selected'),
+                        varname = $option.data('varname'),
+                        val = $option.val();
+                }
+                else {
+                    var varname = $(sel).data('varname'),
+                        val = $(sel).prop('checked');
+                }
+
+                if ((val) && (varname != undefined)) {
+                    if (urlParamString.length != 1) {
+                        urlParamString += '&';
+                    }
+
+                    urlParamString += varname + '=' + val;
+                }
+            });
+            console.log(urlParamString)
+            var endpointURL = '/analytics/brand-value-charts/'+ urlParamString;
+            updateBrandValueTable('#brand-value-table-container', endpointURL);
+            drawStats()
+    });
     
     $('select#table-campaign-filter').on('change', function() {
         var val = $(this).find('option:selected').data('val').toUpperCase(),
@@ -156,8 +219,13 @@ $(document).ready(function() {
             .toggleClass('fa-chevron-up fa-chevron-down')
     });
 
-    // Chart Initialization
-    drawChart('#chartContainer', '/analytics/workers-sentiment-charts/1/');
-    drawStats('#statsContainer', '/analytics/workers-sentiment-stats/1/')
+    if ($('body').hasClass('brand-value')) {
+        updateBrandValueTable('#brand-value-table-container', '/analytics/brand-value-charts/');
+    }
+    else {
+        // Chart Initialization
+        drawChart('#chartContainer', '/analytics/workers-sentiment-charts/1/');
+        drawStats('#statsContainer', '/analytics/workers-sentiment-stats/1/');
+    }
 });
 

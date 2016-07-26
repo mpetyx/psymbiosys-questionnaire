@@ -25,6 +25,7 @@ from questionnaire import profiler
 from compat import commit_on_success, commit, rollback
 import logging
 import random
+import operator
 from hashlib import md5
 from email_campaigns.models import *
 import re
@@ -984,7 +985,10 @@ The views that follow down below have to do with the analytics part of the quest
 """
 
 def index(request):
-    return render(request, 'questionnaire/analytics/index.html', {})
+    return render(request, 'questionnaire/analytics/index.html', {
+        'logged_in': request.user.is_authenticated(),
+        'index': True
+    })
 
 
 def workers_sentiment(request):
@@ -1018,8 +1022,97 @@ def workers_sentiment(request):
         'grouped_answers_part_1': grouped_answers_part_1,
         'grouped_answers_part_2': grouped_answers_part_2,
         'grouped_answers_part_3': grouped_answers_part_3,
-        'campaigns': Campaign.objects.all()
+        'campaigns': Campaign.objects.all(),
+        'logged_in': request.user.is_authenticated()
     })
+
+
+def brand_value(request):
+    return render(request, 'questionnaire/analytics/brand-value.html', {
+        'campaigns': Campaign.objects.all(),
+        'logged_in': request.user.is_authenticated()
+    })
+
+
+def brand_value_charts(request):
+
+    subject_type = request.GET.get('type', '')
+    campaign = request.GET.get('campaign', None)
+    unique_answers = request.GET.get('unique', False)
+
+    brand_value_qs = Answer.objects.filter(
+        question__questionset__questionnaire__name="Questionnaire for Brand Value Analysis"
+    )
+
+    if campaign:
+        brand_value_qs = brand_value_qs.filter(question__questionset__questionnaire__campaign_set__pk=campaign)
+    if subject_type:
+        brand_value_qs = brand_value_qs.filter(subject__type=subject_type.upper())
+    if unique_answers:
+        brand_value_qs = brand_value_qs.reverse().distinct('question_id', 'subject_id')
+
+    formatted_answers = {}
+    for answer in brand_value_qs:
+        question_text = answer.question.text
+        answer_id = str(eval(answer.answer)[0])
+        if question_text in formatted_answers:
+            if answer_id in formatted_answers[question_text]:
+                formatted_answers[question_text][answer_id] += 1
+            else:
+                formatted_answers[question_text][answer_id] = 1
+        else:
+            formatted_answers[question_text] = {}
+            formatted_answers[question_text][answer_id] = 1
+
+    dominant_answers = {}
+    for question_text, answers_dict in formatted_answers.iteritems():
+        dominant_answer = max(answers_dict.iteritems(), key=operator.itemgetter(1))[0]
+        try:
+            dominant_answers[question_text] = int(dominant_answer)
+        except ValueError:
+            pass
+
+    return render(request, 'questionnaire/analytics/brand-value-table.html', {
+        'dominant_answers': dominant_answers,
+        'logged_in': request.user.is_authenticated()
+    })
+
+
+def brand_value_stats(request):
+    campaign = request.GET.get('campaign', None)
+
+    # The original query set for this questionnaire's specific part
+    workers_sentiment_qs = Answer.objects.filter(
+        question__questionset__questionnaire__name="Questionnaire for Brand Value Analysis"
+    )
+
+    questionnaire_history = RunInfoHistory.objects.filter(questionnaire__name="Questionnaire for Brand Value Analysis")
+    if campaign:
+        questionnaire_history = questionnaire_history.filter(questionnaire__campaign_set__pk=campaign)
+
+    questionnaire_unique_history = questionnaire_history.distinct('subject_id')
+
+    number_of_responses = questionnaire_history.count()
+    number_of_unique_responses = questionnaire_unique_history.count()
+
+    number_of_unique_worker_responses = "%.2f" % (
+        questionnaire_unique_history.filter(subject__type='WORKER').count() * 100 / float(number_of_unique_responses)
+    )
+    number_of_unique_visitor_responses = "%.2f" % (
+        questionnaire_unique_history.filter(subject__type='VISITOR').count() * 100 / float(number_of_unique_responses)
+    )
+    number_of_unique_manager_responses = "%.2f" % (
+        questionnaire_unique_history.filter(subject__type='MANAGER').count() * 100 / float(number_of_unique_responses)
+    )
+
+    return JsonResponse({
+            '#_of_responses': number_of_responses,
+            '#_of_unique_responses': number_of_unique_responses,
+            '#_of_workers': number_of_unique_worker_responses,
+            '#_of_visitors': number_of_unique_visitor_responses,
+            '#_of_managers': number_of_unique_manager_responses,
+        }, safe=False
+    )
 
 
 def workers_sentiment_charts(request, part=1):
@@ -1074,10 +1167,9 @@ def workers_sentiment_charts(request, part=1):
     return JsonResponse(chart_data, safe=False)
 
 
+
 def workers_sentiment_stats(request, part=1):
-    subject_type = request.GET.get('type', '')
     campaign = request.GET.get('campaign', None)
-    unique_answers = request.GET.get('unique', False)
 
     # The original query set for this questionnaire's specific part
     workers_sentiment_qs = Answer.objects.filter(
@@ -1119,11 +1211,13 @@ def workers_sentiment_stats(request, part=1):
             'Percentage': "%.2f" % (100 * val / len(workers_sentiment_qs))
         })
     return JsonResponse({
-        '#_of_responses': number_of_responses,
-        '#_of_unique_responses': number_of_unique_responses,
-        '#_of_workers': number_of_unique_worker_responses,
-        '#_of_visitors': number_of_unique_visitor_responses,
-        '#_of_managers': number_of_unique_manager_responses,
-        'percentages':payload
-    }
-        , safe=False)
+            '#_of_responses': number_of_responses,
+            '#_of_unique_responses': number_of_unique_responses,
+            '#_of_workers': number_of_unique_worker_responses,
+            '#_of_visitors': number_of_unique_visitor_responses,
+            '#_of_managers': number_of_unique_manager_responses,
+            'percentages':payload
+        }, safe=False
+    )
+
+

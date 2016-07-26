@@ -1,0 +1,35 @@
+{% load app_filters %}
+
+{% if dominant_answers %}
+    <table id="brand-value-table" class="analytics-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Very</th>
+                <th>Somewhat</th>
+                <th>Neither / Nor</th>
+                <th>Somewhat</th>
+                <th>Very</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question, avg_answer in dominant_answers.iteritems %}
+                <tr>
+                    <td>{{ question|split_brand_value:"0" }}</td>
+                    {% for x in '12345' %}
+                            <td>
+                                {% if avg_answer == forloop.counter %}
+                                    <div class="bullet"></div>
+                                {% endif %}
+                            </td>
+                    {% endfor %}
+                    <td>{{ question|split_brand_value:"1" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+    <h3 class="margin-top-lg">No answers found</h3>
+{% endif %}
