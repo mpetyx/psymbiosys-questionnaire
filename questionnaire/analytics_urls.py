@@ -6,7 +6,11 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 anonymous_required = user_passes_test(lambda u: u.is_anonymous(), '/analytics/')
 urlpatterns = patterns(
     '',
-    url(r'^$', login_required(index), name='index'),
+    url(r'^$', login_required(index), {
+        'login_url': '/analytics/login/'
+    },
+        name='index'
+    ),
     url(r'^login/$', anonymous_required(auth_views.login),
         {
             'template_name': 'questionnaire/analytics/login.html'
@@ -19,19 +23,29 @@ urlpatterns = patterns(
         name='logout'
     ),
 
-    url(r'^workers-sentiment/$', login_required(workers_sentiment), name='workers-sentiment'),
+    url(r'^workers-sentiment/$', login_required(workers_sentiment), {
+        'login_url': '/analytics/login/'
+    }, name='workers-sentiment'),
     url(r'^brand-value/$', login_required(brand_value), name='brand-value'),
 
-    url(r'^brand-value-charts/$', login_required(brand_value_charts),
+    url(r'^brand-value-charts/$', login_required(brand_value_charts), {
+        'login_url': '/analytics/login/'
+    },
         name='brand-value-charts'
     ),
-    url(r'^brand-value-stats/$', login_required(brand_value_stats),
+    url(r'^brand-value-stats/$', login_required(brand_value_stats), {
+        'login_url': '/analytics/login/'
+    },
         name='brand-value-stats'
     ),
-    url(r'^workers-sentiment-charts/(?P<part>[0-9]+)/', login_required(workers_sentiment_charts),
+    url(r'^workers-sentiment-charts/(?P<part>[0-9]+)/', login_required(workers_sentiment_charts), {
+        'login_url': '/analytics/login/'
+    },
         name='workers-sentiment-charts'
     ),
-    url(r'^workers-sentiment-stats/(?P<part>[0-9]+)/', login_required(workers_sentiment_stats),
+    url(r'^workers-sentiment-stats/(?P<part>[0-9]+)/', login_required(workers_sentiment_stats), {
+        'login_url': '/analytics/login/'
+    },
         name='workers-sentiment-stats'
     )
 )
