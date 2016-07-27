@@ -401,7 +401,7 @@ table.analytics-table  {
 	margin-top: -13px;
 	background: white;
 	margin-bottom: 15px;
-	margin-right: 15px;
+	margin-right: 45px;
 }
 
 .chosen-container .chosen-single {
@@ -476,4 +476,15 @@ input[type="checkbox"] {
 
 .margin-top-lg {
 	margin-top: 3em;
+}
+
+.select-header {
+	position: relative;
+	top: -10px;
+	margin-right: 5px;
+	font-weight: bold;
+	font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0px;
+    color: #333;
 }
