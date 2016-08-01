@@ -169,7 +169,7 @@ LANGUAGES = (
 #   'none'
 #   Completely omits the progressbar. Good if you don't want one or if the
 #   questionnaire is so huge that even the ajax request takes too long.
-QUESTIONNAIRE_PROGRESS = 'async'
+QUESTIONNAIRE_PROGRESS = 'default'
 
 # Defines how the questionnaire and questionset id are passed around.
 # If False, the default value, the ids are part of the URLs and visible to the
