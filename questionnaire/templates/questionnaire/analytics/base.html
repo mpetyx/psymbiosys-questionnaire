@@ -38,8 +38,11 @@
     <!-- Header Starts -->
     <div class="navbar-wrapper">
         <div class="container">
-            <nav>
+            <nav class="col-xs-12">
                 <ul>
+                    <li class="pull-left">
+                        <img src="{% static 'questionnaire/img/logo.png' %}" style="width: 175px;"/>
+                    </li>
                     {% if logged_in %}
                     <li>
                         <a href="/analytics/logout/">Logout</a>
