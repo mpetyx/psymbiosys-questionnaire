@@ -604,6 +604,8 @@ def show_questionnaire(request, runinfo, errors={}):
     try:
         has_progress = settings.QUESTIONNAIRE_PROGRESS in ('async', 'default')
         async_progress = settings.QUESTIONNAIRE_PROGRESS == 'async'
+        has_progress = True
+        async_progress = True
     except AttributeError:
         has_progress = True
         async_progress = False
@@ -740,7 +742,7 @@ def _table_headers(questions):
 
 
 @permission_required("questionnaire.export")
-def export_csv(request, qid):  # questionnaire_id
+def export_csv_old(request, qid):  # questionnaire_id
     """
     For a given questionnaire id, generaete a CSV containing all the
     answers for all subjects.
@@ -797,6 +799,31 @@ def export_csv(request, qid):  # questionnaire_id
     fd.seek(0)
     return response
 
+@permission_required("questionnaire.export")
+def export_csv(request, qid): # questionnaire_id
+    """
+    For a given questionnaire id, generaete a CSV containing all the
+    answers for all subjects.
+    """
+    import csv
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    
+    writer = csv.writer(response, dialect=csv.excel)
+
+    questionnaire = get_object_or_404(Questionnaire, pk=int(qid))
+    headings, answers = answer_export(questionnaire)
+
+    writer.writerow([u'subject', u'runid'] + headings)
+    for subject, runid, answer_row in answers:
+        row = ["%s/%s" % (subject.id, subject.state), runid] + [
+            a if a else '--' for a in answer_row]
+        writer.writerow(row)
+
+    response['Content-Disposition'] = 'attachment; filename="export-%s.csv"' % qid
+
+    return response
 
 def answer_export(questionnaire, answers=None):
     """
