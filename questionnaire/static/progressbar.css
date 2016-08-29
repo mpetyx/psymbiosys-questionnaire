@@ -35,7 +35,7 @@ THE SOFTWARE.
   padding-right: 2px;
   
   /* For browser that don't support gradients, we'll set a blanket background colour */
-  background-color: #effd14;
+  background-color: #abb2bc;
   
   /* Rounds the ends, we specify an excessive amount to make sure they are completely rounded */
   /* Adjust to your liking, and don't forget to adjust to the same amount in .ui-progress */
@@ -44,9 +44,9 @@ THE SOFTWARE.
   -webkit-border-radius: 4px;*/
   
   /* Webkit background gradient */
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #effd14), color-stop(1, #effd14));
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #b6bcc6), color-stop(1, #9da5b0));
   /* Mozilla background gradient */
-  background: -moz-linear-gradient(#effd14 0%, #effd14 100%);
+  background: -moz-linear-gradient(#9da5b0 0%, #b6bcc6 100%);
   
   /* Give it the inset look by adding some shadows and highlights */
   -webkit-box-shadow: inset 0px 1px 2px 0px rgba(0, 0, 0, 0.5), 0px 1px 0px 0px #FFF;
@@ -74,18 +74,18 @@ THE SOFTWARE.
   -webkit-background-size: 44px 44px; /* Webkit */
   
   /* For browser that don't support gradients, we'll set a blanket background colour */
-  background-color: #effd14;
+  background-color: #74d04c;
   
   /* Webkit background stripes and gradient */
   background: -webkit-gradient(linear, 0 0, 44 44,
-    color-stop(0.00, rgba(242,255,255,1.17)),
+    color-stop(0.00, rgba(242,255,44,1.17)), 
     color-stop(0.25, rgba(242,255,44,1.17)),
-    color-stop(0.26, rgba(242,255,44,1)),
+     color-stop(0.26, rgba(242,255,44,1)), 
     color-stop(0.50, rgba(242,255,44,1)),
-    color-stop(0.51, rgba(242,255,44,1.17)),
+     color-stop(0.51, rgba(242,255,44,1.17)), 
     color-stop(0.75, rgba(242,255,44,1.17)),
-    color-stop(0.76, rgba(242,255,44,1)),
-    color-stop(1.00, rgba(242,255,44,1))
+     color-stop(0.76, rgba(242,255,44,1)),
+     color-stop(1.00, rgba(242,255,44,1))
   ), -webkit-gradient(linear, left bottom, left top, color-stop(0, #74d04c), color-stop(1, #9bdd62));
   
   /* Mozilla (Firefox etc) background stripes */
@@ -95,17 +95,17 @@ THE SOFTWARE.
     rgba(242,255,44,1.17) 15px,
     rgba(242,255,44,1) 15px,
     rgba(242,255,44,1) 30px
-  ), -moz-linear-gradient(#effd14 0%, #effd14 100%);
+  ), -moz-linear-gradient(#9bdd62 0%, #74d04c 100%);
   
   /* Webkit embossing */
-  -webkit-box-shadow: inset 0px 1px 0px 0px #effd14, inset 0px -1px 1px #effd14;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #dbf383, inset 0px -1px 1px #58c43a;
   /* Mozilla embossing */
-  -moz-box-shadow: inset 0px 1px 0px 0px #effd14, inset 0px -1px 1px #effd14;
+  -moz-box-shadow: inset 0px 1px 0px 0px #dbf383, inset 0px -1px 1px #58c43a;
   /* IE9 and Opera embossing */
-  box-shadow: inset 0px 1px 0px 0px #effd14, inset 0px -1px 1px #effd14;
+  box-shadow: inset 0px 1px 0px 0px #dbf383, inset 0px -1px 1px #58c43a;
   
   /* Give it a higher contrast outline */
-  border: 1px solid #effd14;
+  border: 1px solid #4c8932;
 }
 
 /* Progress indicator text */
