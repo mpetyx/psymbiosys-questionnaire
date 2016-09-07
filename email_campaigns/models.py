@@ -10,4 +10,6 @@ class Campaign(models.Model):
     name = models.CharField(max_length=200, default='Aidima Campaign')
     manager = models.ForeignKey(User, blank=True)
     emails = MultiEmailField()
-    questionnaires = models.ManyToManyField(Questionnaire, blank=True)
+    questionnaires = models.ManyToManyField(Questionnaire, blank=True, related_name='campaigns')
+
+    get_latest_by = "campaign_id"

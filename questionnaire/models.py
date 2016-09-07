@@ -410,11 +410,14 @@ class Answer(models.Model):
         return "Answer(%s: %s, %s)" % (self.question.number, self.subject.surname, self.subject.givenname)
 
     def get_campaign(self):
-        return self.question.questionset.questionnaire.campaign_set.name
+        return self.question.questionset.questionnaire.campaigns.latest('id').name
+
+    def get_likert_answer(self):
+        return int(eval(self.answer)[0])
 
     def get_answer_text(self):
         try:
-            number = int(eval(self.answer)[0])
+            number = self.get_likert_answer()
             return self.question.choices()[number - 1].text
         except:
             return ''

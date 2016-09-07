@@ -28,6 +28,7 @@ import random
 import operator
 from hashlib import md5
 from email_campaigns.models import *
+from statistics import *
 import re
 
 
@@ -1045,7 +1046,7 @@ def brand_value_charts(request):
     )
 
     if campaign:
-        brand_value_qs = brand_value_qs.filter(question__questionset__questionnaire__campaign_set__pk=campaign)
+        brand_value_qs = brand_value_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
     if subject_type:
         brand_value_qs = brand_value_qs.filter(subject__type=subject_type.upper())
     if unique_answers:
@@ -1088,7 +1089,7 @@ def brand_value_stats(request):
 
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__name="Questionnaire for Brand Value Analysis")
     if campaign:
-        questionnaire_history = questionnaire_history.filter(questionnaire__campaign_set__pk=campaign)
+        questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
 
     questionnaire_unique_history = questionnaire_history.distinct('subject_id')
 
@@ -1128,7 +1129,7 @@ def workers_sentiment_charts(request, part=1):
     )
 
     if campaign:
-        workers_sentiment_qs = workers_sentiment_qs.filter(question__questionset__questionnaire__campaign_set__pk=campaign)
+        workers_sentiment_qs = workers_sentiment_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
     if subject_type:
         workers_sentiment_qs = workers_sentiment_qs.filter(subject__type=subject_type.upper())
 
@@ -1167,9 +1168,9 @@ def workers_sentiment_charts(request, part=1):
     return JsonResponse(chart_data, safe=False)
 
 
-
 def workers_sentiment_stats(request, part=1):
     campaign = request.GET.get('campaign', None)
+    subject_type = request.GET.get('type', None)
 
     # The original query set for this questionnaire's specific part
     workers_sentiment_qs = Answer.objects.filter(
@@ -1179,7 +1180,7 @@ def workers_sentiment_stats(request, part=1):
 
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__name="Questionnaire for Workers Sentiment")
     if campaign:
-        questionnaire_history = questionnaire_history.filter(questionnaire__campaign_set__pk=campaign)
+        questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
 
     questionnaire_unique_history = questionnaire_history.distinct('subject_id')
 
@@ -1197,12 +1198,19 @@ def workers_sentiment_stats(request, part=1):
     )
 
     different_answers_for_this_questionnaire_part, payload = {}, []
+
     for a in workers_sentiment_qs:
         answer_text = a.get_answer_text()
+        answer_number = a.get_likert_answer()
+
         if answer_text in different_answers_for_this_questionnaire_part:
             different_answers_for_this_questionnaire_part[answer_text] += 1
         else:
             different_answers_for_this_questionnaire_part[answer_text] = 1
+
+    likert_dict = {}
+    for available_answer in workers_sentiment_qs[0].question.choice_set.all():
+        likert_dict[available_answer.sortid] = available_answer.text
 
     for key, val in different_answers_for_this_questionnaire_part.iteritems():
         payload.append({
@@ -1210,13 +1218,30 @@ def workers_sentiment_stats(request, part=1):
             'Responses': val,
             'Percentage': "%.2f" % (100 * val / len(workers_sentiment_qs))
         })
+
+    likert_list = []
+    subject_type_qs = workers_sentiment_qs
+    if subject_type:
+        subject_type_qs = subject_type_qs.filter(subject__type=subject_type.upper())
+    for a in subject_type_qs:
+        likert_list.append(a.get_likert_answer())
+
+    likert_values = {
+        'min': min(likert_list) if likert_list else None,
+        'max': max(likert_list) if likert_list else None,
+        'avg': mean(likert_list) if likert_list else None,
+        'sd': pstdev(likert_list) if likert_list else None
+    }
+
     return JsonResponse({
             '#_of_responses': number_of_responses,
             '#_of_unique_responses': number_of_unique_responses,
             '#_of_workers': number_of_unique_worker_responses,
             '#_of_visitors': number_of_unique_visitor_responses,
             '#_of_managers': number_of_unique_manager_responses,
-            'percentages':payload
+            'percentages':payload,
+            'likert_values': likert_values,
+            'likert_dict': likert_dict
         }, safe=False
     )
 

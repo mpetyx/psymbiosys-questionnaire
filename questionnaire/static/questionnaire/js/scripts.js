@@ -17,7 +17,7 @@ function drawChart(container, url, qsPart) {
                 $(container).removeClass('opac').empty();
                 var svg = dimple.newSvg(container, "90%", "100%");
                 var myChart = new dimple.chart(svg, data);
-                myChart.setBounds(10, 30, "100%", 400);
+                myChart.setBounds(20, 30, "100%", 400);
 
                 if ((qsPart == undefined) || (qsPart != 3)) {
                     myChart.addCategoryAxis("x", ["Question", "Answer"]);
@@ -57,6 +57,8 @@ function drawStats(container, url) {
              $('#number-of-visitors').html(data['#_of_visitors']);
              
              $statsContainer.removeClass('opac').empty();
+
+
              $.each(data['percentages'], function(i, stat) {
                  var $container = $('<div class="col-xs-12 main-stat"></div>');
                  $container.append('<div class="col-xs-9">' + ((stat['Answer'] != '') ? stat['Answer'] : '(No Answer)') + '</div>');
