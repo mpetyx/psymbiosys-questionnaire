@@ -1036,7 +1036,7 @@ def index(request):
 
 def workers_sentiment(request):
     workers_sentiment_qs = Answer.objects.filter(
-        question__questionset__questionnaire__name="Questionnaire for Workers Sentiment"
+        question__questionset__questionnaire__type="WORKERS_SENTIMENT"
     )
     unique_people_ids = workers_sentiment_qs.values_list('runid', flat=True).distinct()
 
@@ -1084,7 +1084,7 @@ def brand_value_charts(request):
     unique_answers = request.GET.get('unique', False)
 
     brand_value_qs = Answer.objects.filter(
-        question__questionset__questionnaire__name="Questionnaire for Brand Value Analysis"
+        question__questionset__questionnaire__type="BRAND_VALUE"
     )
 
     if campaign:
@@ -1126,10 +1126,10 @@ def brand_value_stats(request):
 
     # The original query set for this questionnaire's specific part
     workers_sentiment_qs = Answer.objects.filter(
-        question__questionset__questionnaire__name="Questionnaire for Brand Value Analysis"
+        question__questionset__questionnaire__type="BRAND_VALUE"
     )
 
-    questionnaire_history = RunInfoHistory.objects.filter(questionnaire__name="Questionnaire for Brand Value Analysis")
+    questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="BRAND_VALUE")
     if campaign:
         questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
 
@@ -1170,7 +1170,7 @@ def workers_sentiment_charts(request, part=1):
 
     # The original query set for this questionnaire's specific part
     workers_sentiment_qs = Answer.objects.filter(
-        question__questionset__questionnaire__name="Questionnaire for Workers Sentiment",
+        question__questionset__questionnaire__type="WORKERS_SENTIMENT",
         question__questionset__sortid=part
     )
 
@@ -1220,11 +1220,11 @@ def workers_sentiment_stats(request, part=1):
 
     # The original query set for this questionnaire's specific part
     workers_sentiment_qs = Answer.objects.filter(
-        question__questionset__questionnaire__name="Questionnaire for Workers Sentiment",
+        question__questionset__questionnaire__type="WORKERS_SENTIMENT",
         question__questionset__sortid=part
     )
 
-    questionnaire_history = RunInfoHistory.objects.filter(questionnaire__name="Questionnaire for Workers Sentiment")
+    questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="WORKERS_SENTIMENT")
     if campaign:
         questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
 

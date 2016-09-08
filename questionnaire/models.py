@@ -70,8 +70,14 @@ class Subject(models.Model):
 
 
 class Questionnaire(models.Model):
+    QUESTIONNAIRE_CHOICES = (
+        ('WORKERS_SENTIMENT', 'Workers Sentiment Questionnaire'),
+        ('BRAND_VALUE', 'Brand Value Questionnaire'),
+    )
+
     name = models.CharField(max_length=128)
     redirect_url = models.CharField(max_length=128, help_text="URL to redirect to when Questionnaire is complete. Macros: $SUBJECTID, $RUNID, $LANG", default="/static/complete.html")
+    type = models.CharField(max_length=256, choices=QUESTIONNAIRE_CHOICES, default="WORKERS_SENTIMENT")
 
     def __unicode__(self):
         return self.name
