@@ -1215,13 +1215,12 @@ def workers_sentiment_stats(request, part=1):
     different_answers_for_this_questionnaire_part, payload = {}, []
 
     for a in workers_sentiment_qs:
-        answer_text = a.get_answer_text()
         answer_number = a.get_likert_answer()
 
-        if answer_text in different_answers_for_this_questionnaire_part:
-            different_answers_for_this_questionnaire_part[answer_text] += 1
+        if answer_number in different_answers_for_this_questionnaire_part:
+            different_answers_for_this_questionnaire_part[answer_number] += 1
         else:
-            different_answers_for_this_questionnaire_part[answer_text] = 1
+            different_answers_for_this_questionnaire_part[answer_number] = 1
 
     likert_dict = {}
     for available_answer in workers_sentiment_qs[0].question.choice_set.all():
@@ -1239,13 +1238,14 @@ def workers_sentiment_stats(request, part=1):
     if subject_type:
         subject_type_qs = subject_type_qs.filter(subject__type=subject_type.upper())
     for a in subject_type_qs:
+
         likert_list.append(a.get_likert_answer())
 
     likert_values = {
-        'min': min(likert_list) if likert_list else None,
-        'max': max(likert_list) if likert_list else None,
-        'avg': mean(likert_list) if likert_list else None,
-        'sd': pstdev(likert_list) if likert_list else None
+        'Minimum': min(likert_list) if likert_list else None,
+        'Maximum': max(likert_list) if likert_list else None,
+        'Average': ("%.2f" % mean(likert_list)) if likert_list else None,
+        'Standard Deviation':  ("%.2f" % pstdev(likert_list)) if likert_list else None
     }
 
     return JsonResponse({

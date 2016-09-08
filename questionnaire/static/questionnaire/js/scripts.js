@@ -17,7 +17,7 @@ function drawChart(container, url, qsPart) {
                 $(container).removeClass('opac').empty();
                 var svg = dimple.newSvg(container, "90%", "100%");
                 var myChart = new dimple.chart(svg, data);
-                myChart.setBounds(20, 30, "100%", 400);
+                myChart.setBounds(20, 30, "95%", 400);
 
                 if ((qsPart == undefined) || (qsPart != 3)) {
                     myChart.addCategoryAxis("x", ["Question", "Answer"]);
@@ -37,7 +37,9 @@ function drawChart(container, url, qsPart) {
 
 function drawStats(container, url) {
     var $statsContainer = $(container);
+    var $dictContainer = $('#dictContainer');
     $statsContainer.addClass('opac');
+    $dictContainer.addClass('opac');
 
     $.ajax({
          type: "get",
@@ -48,23 +50,48 @@ function drawStats(container, url) {
              console.log('Something went bad');
          },
          success: function (data) {
-            
+
+             $statsContainer.removeClass('opac').empty();
+             $dictContainer.removeClass('opac').empty();
+
              $('#number-of-responses').html(data['#_of_responses']);
              $('#number-of-unique-responses').html(data['#_of_unique_responses']);
              
              $('#number-of-workers').html(data['#_of_workers']);
              $('#number-of-managers').html(data['#_of_managers']);
              $('#number-of-visitors').html(data['#_of_visitors']);
-             
-             $statsContainer.removeClass('opac').empty();
 
 
+
+             // update Likert dictionary
+             var $container;
+
+             $container = $('<div class="row likert-dict"></div>');
+             for (var i in data['likert_dict']) {
+                 $container.append('<div class="col-xs-6">' + i + '  -  ' + data['likert_dict'][i] + '</div>')
+             }
+             $dictContainer.append($container);
+
+
+             $container = $('<div class="row likert-stats"></div>');
+             $container.append('<div class="col-xs-12 title">Likert Statistical Values</div>');
+             for (var i in data['likert_values']) {
+                 $container.append('<div class="col-xs-12">'
+                     + '<span class="col-xs-6">' + i + ':</span>'
+                     + '<span class="col-xs-6">' + data['likert_values'][i] + '</span></div>')
+             }
+             $statsContainer.append($container);
+
+             $container = $('<div class="row likert-stats"></div>');
+             $container.append('<div class="col-xs-12 title">Likert Aggregated Answers</div>');
              $.each(data['percentages'], function(i, stat) {
-                 var $container = $('<div class="col-xs-12 main-stat"></div>');
-                 $container.append('<div class="col-xs-9">' + ((stat['Answer'] != '') ? stat['Answer'] : '(No Answer)') + '</div>');
-                 $container.append('<div class="col-xs-3">' + stat['Percentage'] + '% </div>');
-                 $statsContainer.append($container)
-             })
+
+                 $container.append('<div class="col-xs-12">'
+                     + '<span class="col-xs-6">' + ((stat['Answer'] != '') ? 'Answer #' + stat['Answer'] : '(No Answer)') + ':</span>'
+                     + '<span class="col-xs-6">' + stat['Percentage'] + '%</span></div>')
+
+             });
+             $statsContainer.append($container)
          }
      })
 }
