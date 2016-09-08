@@ -502,6 +502,21 @@ def finish_questionnaire(request, runinfo, questionnaire):
     hist.skipped = runinfo.skipped
     hist.save()
 
+    """
+    ==== Update the type of the user ====
+    * If the user has an email and is not an admin in our application he is automatically a WORKER
+    * If the user has an email but is also a Django user then he has access to the admin so he is a MANAGER
+    """
+
+    if runinfo.subject.email:
+        hist.subject.type = 'WORKER'
+
+        for u in User.objects.all():
+            if u.email == runinfo.subject.email:
+                hist.subject.type = 'MANAGER'
+
+        hist.subject.save()
+
     questionnaire_done.send(sender=None, runinfo=runinfo,
                             questionnaire=questionnaire)
 
