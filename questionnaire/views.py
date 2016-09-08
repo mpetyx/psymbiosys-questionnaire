@@ -55,9 +55,9 @@ def get_runinfo(random):
     return res and res[0] or None
 
 
-def get_question(number, questionnaire):
+def get_question(number, questionset, questionnaire):
     "Return the specified Question (by number) from the specified Questionnaire"
-    res = Question.objects.filter(number=number, questionset__questionnaire=questionnaire)
+    res = Question.objects.filter(number=number, questionset=questionset, questionset__questionnaire=questionnaire)
     return res and res[0] or None
 
 
@@ -426,7 +426,7 @@ def questionnaire(request, runcode=None, qs=None):
         key, value = item[0], item[1]
         if key.startswith('question_'):
             answer = key.split("_", 2)
-            question = get_question(answer[1], questionnaire)
+            question = get_question(answer[1], questionset, questionnaire)
             if not question:
                 logging.warn("Unknown question when processing: %s" % answer[1])
                 continue
