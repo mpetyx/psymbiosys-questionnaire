@@ -29,6 +29,7 @@ import operator
 from hashlib import md5
 from email_campaigns.models import *
 from statistics import *
+from django.db.models import Q
 import re
 
 
@@ -1038,6 +1039,8 @@ def workers_sentiment(request):
     workers_sentiment_qs = Answer.objects.filter(
         question__questionset__questionnaire__type="WORKERS_SENTIMENT"
     )
+
+
     unique_people_ids = workers_sentiment_qs.values_list('runid', flat=True).distinct()
 
     grouped_answers_part_1 = []
@@ -1092,7 +1095,10 @@ def brand_value_charts(request):
     if subject_type:
         brand_value_qs = brand_value_qs.filter(subject__type=subject_type.upper())
     if unique_answers:
-        brand_value_qs = brand_value_qs.reverse().distinct('question_id', 'subject_id')
+        anonymous_brand_value_qs_ids = brand_value_qs.filter(subject_id=1).values_list('id', flat=True)
+        brand_value_qs_ids = brand_value_qs.exclude(subject_id=1).reverse().distinct('question_id', 'subject_id').values_list('id', flat=True)
+        combined = list(anonymous_brand_value_qs_ids) + list(brand_value_qs_ids)
+        brand_value_qs = brand_value_qs.filter(id__in=combined)
 
     formatted_answers = {}
     for answer in brand_value_qs:
@@ -1133,7 +1139,10 @@ def brand_value_stats(request):
     if campaign:
         questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
 
-    questionnaire_unique_history = questionnaire_history.distinct('subject_id')
+    questionnaire_unique_history_non_anonymous_ids = questionnaire_history.exclude(subject_id=1).distinct('subject_id').values_list('id', flat=True)
+    questionnaire_unique_history_anonymous_ids = questionnaire_history.filter(subject_id=1).values_list('id', flat=True)
+    combined = list(questionnaire_unique_history_non_anonymous_ids) + list(questionnaire_unique_history_anonymous_ids)
+    questionnaire_unique_history = questionnaire_history.filter(id__in=combined)
 
     number_of_responses = questionnaire_history.count()
     number_of_unique_responses = questionnaire_unique_history.count()
@@ -1189,11 +1198,23 @@ def workers_sentiment_charts(request, part=1):
         answers_for_this_question_text = workers_sentiment_qs.filter(question__text_en=question_text)
         if unique_answers:
             run_ids = answers_for_this_question_text.values_list('runid', flat=True)
-            unique_answer_runids = RunInfoHistory.objects\
+
+
+            non_anonymous_distict = RunInfoHistory.objects\
                 .filter(runid__in=run_ids)\
+                .exclude(subject_id=1) \
                 .reverse()\
                 .distinct('subject_id')\
                 .values_list('runid', flat=True)
+
+            anonymous = RunInfoHistory.objects\
+                .filter(runid__in=run_ids, subject_id=1)\
+                .reverse() \
+                .distinct('id') \
+                .values_list('runid', flat=True)
+
+            unique_answer_runids = non_anonymous_distict + anonymous
+
             answers_for_this_question_text = answers_for_this_question_text.filter(runid__in=unique_answer_runids)
 
         different_answers_for_this_question = {}
@@ -1228,7 +1249,10 @@ def workers_sentiment_stats(request, part=1):
     if campaign:
         questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
 
-    questionnaire_unique_history = questionnaire_history.distinct('subject_id')
+    questionnaire_unique_history_non_anonymous_ids = questionnaire_history.exclude(subject_id=1).distinct('subject_id').values_list('id', flat=True)
+    questionnaire_unique_history_anonymous_ids = questionnaire_history.filter(subject_id=1).values_list('id', flat=True)
+    combined = list(questionnaire_unique_history_non_anonymous_ids) + list(questionnaire_unique_history_anonymous_ids)
+    questionnaire_unique_history = questionnaire_history.filter(id__in=combined)
 
     number_of_responses = questionnaire_history.count()
     number_of_unique_responses = questionnaire_unique_history.count()
