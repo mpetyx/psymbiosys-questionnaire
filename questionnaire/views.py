@@ -1138,15 +1138,19 @@ def brand_value_stats(request):
     number_of_responses = questionnaire_history.count()
     number_of_unique_responses = questionnaire_unique_history.count()
 
-    number_of_unique_worker_responses = "%.2f" % (
-        questionnaire_unique_history.filter(subject__type='WORKER').count() * 100 / float(number_of_unique_responses)
-    )
-    number_of_unique_visitor_responses = "%.2f" % (
-        questionnaire_unique_history.filter(subject__type='VISITOR').count() * 100 / float(number_of_unique_responses)
-    )
-    number_of_unique_manager_responses = "%.2f" % (
-        questionnaire_unique_history.filter(subject__type='MANAGER').count() * 100 / float(number_of_unique_responses)
-    )
+
+    if not number_of_unique_responses:
+        number_of_unique_worker_responses = number_of_unique_visitor_responses = number_of_unique_manager_responses = 0
+    else:
+        number_of_unique_worker_responses = "%.2f" % (
+            questionnaire_unique_history.filter(subject__type='WORKER').count() * 100 / float(number_of_unique_responses)
+        )
+        number_of_unique_visitor_responses = "%.2f" % (
+            questionnaire_unique_history.filter(subject__type='VISITOR').count() * 100 / float(number_of_unique_responses)
+        )
+        number_of_unique_manager_responses = "%.2f" % (
+            questionnaire_unique_history.filter(subject__type='MANAGER').count() * 100 / float(number_of_unique_responses)
+        )
 
     return JsonResponse({
             '#_of_responses': number_of_responses,
