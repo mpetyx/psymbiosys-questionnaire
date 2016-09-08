@@ -17,7 +17,7 @@ function drawChart(container, url, qsPart) {
                 $(container).removeClass('opac').empty();
                 var svg = dimple.newSvg(container, "90%", "100%");
                 var myChart = new dimple.chart(svg, data);
-                myChart.setBounds(20, 30, "95%", 400);
+                myChart.setBounds(50, 30, "90%", 400);
 
                 if ((qsPart == undefined) || (qsPart != 3)) {
                     myChart.addCategoryAxis("x", ["Question", "Answer"]);
