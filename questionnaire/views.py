@@ -604,8 +604,8 @@ def show_questionnaire(request, runinfo, errors={}):
     try:
         has_progress = settings.QUESTIONNAIRE_PROGRESS in ('async', 'default')
         async_progress = settings.QUESTIONNAIRE_PROGRESS == 'async'
-        has_progress = True
-        async_progress = True
+        has_progress = None
+        async_progress = None
     except AttributeError:
         has_progress = True
         async_progress = False
