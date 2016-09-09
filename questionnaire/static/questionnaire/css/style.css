@@ -308,6 +308,7 @@ table.analytics-table td:nth-child(1) {
 	width: 50px;
 }
 
+
 table#brand-value-table th {
 	text-align: center;
 }
@@ -332,7 +333,10 @@ table#brand-value-table tbody tr td:first-child {
 	color: #847c75;
 }
 
-table#brand-value-table td .bullet{
+td .bullet {
+	display: block;
+}
+.bullet {
 	background: green;
 	height: 10px;
 	width: 10px;
@@ -341,6 +345,28 @@ table#brand-value-table td .bullet{
 	margin-left: auto;
 	margin-right: auto;
 	border-radius: 50%;
+	display: inline-block;
+}
+
+ .bullet.manager-bullet {
+	background: #e12b2f;
+}
+
+.bullet.simultaneous-bullet {
+	background: rgba(43, 146, 225, 1)
+}
+
+.bullet.simultaneous-bullet::after {
+	content: '';
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    background: rgba(43, 146, 225, 0.44);
+    border-radius: 50%;
+    z-index: -1;
+    left: -5px;
+    top: -5px;
+
 }
 
 table.analytics-table th:nth-child(2),

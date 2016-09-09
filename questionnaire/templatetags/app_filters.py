@@ -22,3 +22,10 @@ def contains(txt, part):
 @register.filter
 def split_brand_value(txt, part):
     return txt.split(' - ')[int(part)]
+
+@register.filter
+def getitem(lista, value):
+    try:
+        return lista[value]
+    except:
+        return 0

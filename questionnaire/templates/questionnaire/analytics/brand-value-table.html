@@ -1,6 +1,17 @@
 {% load app_filters %}
 
 {% if dominant_answers %}
+    <div class="col-xs-12 text-center" style="padding: 15px; border: 1px solid #ccc; margin: 50px 0;">
+        <div class="col-xs-4">
+            <span class="bullet" style="margin-right: 15px;"></span> User's Average Answer
+        </div>
+        <div class="col-xs-4">
+            <span class="bullet manager-bullet" style="margin-right: 15px;"></span> Manager's Answer
+        </div>
+        <div class="col-xs-4">
+            <span class="bullet simultaneous-bullet" style="margin-right: 15px;"></span> Answer is the same
+        </div>
+    </div>
     <table id="brand-value-table" class="analytics-table">
         <thead>
             <tr>
@@ -17,13 +28,19 @@
             {% for question, avg_answer in dominant_answers.iteritems %}
                 <tr>
                     <td>{{ question|split_brand_value:"0" }}</td>
-                    {% for x in '12345' %}
-                            <td>
-                                {% if avg_answer == forloop.counter %}
-                                    <div class="bullet"></div>
-                                {% endif %}
-                            </td>
-                    {% endfor %}
+                    {% with manager_answer=last_manager_answers|getitem:forloop.counter0 %}
+                        {% for x in '12345' %}
+                                <td>
+                                    {% if avg_answer == forloop.counter and manager_answer != forloop.counter %}
+                                        <div class="bullet"></div>
+                                    {% elif avg_answer != forloop.counter and manager_answer == forloop.counter %}
+                                        <div class="bullet manager-bullet"></div>
+                                    {% elif avg_answer == forloop.counter and manager_answer == forloop.counter %}
+                                        <div class="bullet simultaneous-bullet"></div>
+                                    {% endif %}
+                                </td>
+                        {% endfor %}
+                    {% endwith %}
                     <td>{{ question|split_brand_value:"1" }}</td>
                 </tr>
             {% endfor %}

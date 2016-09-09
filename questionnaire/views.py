@@ -1121,8 +1121,33 @@ def brand_value_charts(request):
         except ValueError:
             pass
 
+    # get the answers of the last brand value questionnaire in this campaign asked by a manager
+    manager_brand_value_qs = Answer.objects.filter(
+        question__questionset__questionnaire__type="BRAND_VALUE",
+        subject__type="MANAGER"
+    )
+
+    if campaign:
+        manager_brand_value_qs = manager_brand_value_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
+
+    # save the latest & remove duplicates
+        manager_brand_value_qs.reverse().distinct('question_id')
+
+    last_manager_answers = []
+    for manager_answer in manager_brand_value_qs:
+        last_manager_answers.append({
+            'qid': manager_answer.question_id,
+            'answer': int(eval(manager_answer.answer)[0])
+        })
+
+    sortedlist = sorted(last_manager_answers, key=lambda k: k['qid'])
+    last_manager_answers = []
+    for i in sortedlist:
+        last_manager_answers.append(i['answer'])
+
     return render(request, 'questionnaire/analytics/brand-value-table.html', {
         'dominant_answers': dominant_answers,
+        'last_manager_answers': last_manager_answers,
         'logged_in': request.user.is_authenticated()
     })
 
