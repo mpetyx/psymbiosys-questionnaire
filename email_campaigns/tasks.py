@@ -67,7 +67,7 @@ def retrieve_campaign_run(questionnaire_id, subject):
 
 @shared_task(ignore_result=True)
 def send_email_alert(email, questionnaire):
-    subject = "You should Complete your Questionaire!"
+    subject = "REMINDER: Give us your perspective for the AIDIMME workplace !"
     to = [email]
     from_email = 'forgot_questionaires@apis.technology'
 
@@ -100,7 +100,7 @@ def send_email_alert(email, questionnaire):
 
 @shared_task(ignore_result=True)
 def send_email_campagin(email, qu):
-    subject = "You should Complete your Questionaire!"
+    subject = "Give us your perspective for the AIDIMME workplace !"
     to = [email]
     from_email = 'welcome_questionaires@apis.technology'
 
