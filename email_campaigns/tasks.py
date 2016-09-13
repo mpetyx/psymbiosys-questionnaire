@@ -69,7 +69,7 @@ def retrieve_campaign_run(questionnaire_id, subject):
 def send_email_alert(email, questionnaire):
     subject = "REMINDER: Give us your perspective for the AIDIMME workplace !"
     to = [email]
-    from_email = 'forgot_questionaires@apis.technology'
+    from_email = 'aidimme-questionnaires@psymbiosys.info'
 
     ctx = {
         # 'user': str(user.first_name+ " "+user.last_name),
@@ -102,7 +102,7 @@ def send_email_alert(email, questionnaire):
 def send_email_campagin(email, qu):
     subject = "Give us your perspective for the AIDIMME workplace !"
     to = [email]
-    from_email = 'welcome_questionaires@apis.technology'
+    from_email = 'aidimme-questionnaires@psymbiosys.info'
 
     ctx = {
         # 'user': str(user.first_name+ " "+user.last_name),

@@ -180,6 +180,6 @@ QUESTIONNAIRE_USE_SESSION = False
 
 EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
 MAILGUN_ACCESS_KEY = os.environ.get("MAILGUN_ACCESS_KEY","key-726951")
-MAILGUN_SERVER_NAME = 'apis.technology'
+MAILGUN_SERVER_NAME = 'psymbiosys.info'
 
 LOGIN_URL = '/analytics/login/'
