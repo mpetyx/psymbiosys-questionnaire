@@ -25,6 +25,7 @@
     <!-- custom CSS styling from inherited template-->
     <link rel="stylesheet" href="{% static 'questionnaire/css/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/radar-chart.min.css' %}">
 
     <!-- any extra CSS that must be included in the current page -->
     {% block css %}{% endblock %}
@@ -41,7 +42,7 @@
             <nav class="col-xs-12">
                 <ul>
                     <li class="pull-left">
-                        <img src="{% static 'questionnaire/img/aidimme_logo.jpg' %}" width="175"/>
+                        <img src="{% static 'questionnaire/img/logo.png' %}" width="175"/>
                     </li>
                     {% if logged_in %}
                     <li>
@@ -92,6 +93,7 @@
     <script src="{% static 'questionnaire/js/chosen.jquery.min.js' %}"></script>
     <script src="{% static 'questionnaire/js/d3.min.js' %}"></script>
     <script src="{% static 'questionnaire/js/dimple.min.js' %}"></script>
+    <script src="{% static 'questionnaire/js/radar-chart.min.js' %}"></script>
     <script src="{% static 'questionnaire/js/icheck.js' %}"></script>
 
     <!-- Page necessary JS -->

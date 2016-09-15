@@ -1225,18 +1225,18 @@ def workers_sentiment_charts(request, part=1):
             run_ids = answers_for_this_question_text.values_list('runid', flat=True)
 
 
-            non_anonymous_distict = RunInfoHistory.objects\
+            non_anonymous_distict = list(RunInfoHistory.objects\
                 .filter(runid__in=run_ids)\
                 .exclude(subject_id=1) \
                 .reverse()\
                 .distinct('subject_id')\
-                .values_list('runid', flat=True)
+                .values_list('runid', flat=True))
 
-            anonymous = RunInfoHistory.objects\
+            anonymous = list(RunInfoHistory.objects\
                 .filter(runid__in=run_ids, subject_id=1)\
                 .reverse() \
                 .distinct('id') \
-                .values_list('runid', flat=True)
+                .values_list('runid', flat=True))
 
             unique_answer_runids = non_anonymous_distict + anonymous
 
