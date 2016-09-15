@@ -17,7 +17,7 @@ function drawChart(container, url, qsPart) {
                 $(container).removeClass('opac').empty();
                 var svg = dimple.newSvg(container, "90%", "100%");
                 var myChart = new dimple.chart(svg, data);
-                myChart.setBounds(50, 30, "90%", 400);
+                myChart.setBounds(50, 75, "90%", 550);
 
                 if ((qsPart == undefined) || (qsPart != 3)) {
                     myChart.addCategoryAxis("x", ["Question", "Answer"]);
@@ -228,16 +228,34 @@ $(document).ready(function() {
     $('select#table-campaign-filter').on('change', function() {
         var val = $(this).find('option:selected').data('val').toUpperCase(),
             $table = $('table:not(.hidden)');
-        
+        console.log(val)
         $table
             .find('tr')
             .removeClass('hidden-campaign')
             .find('td.campaign-name')
             .filter(function(){
-                return $(this).text() != val
+                return $(this).text().toUpperCase() != val
             })
             .closest('tr')
             .addClass('hidden-campaign');
+
+        if (!$table
+            .find('tbody tr:not(.hidden-campaign)')
+            .length
+        ) {
+
+            if (!$table.find('.table-placeholder').length) {
+                $table
+                    .find('tbody')
+                    .append('<tr class="table-placeholder"></tr>')
+                    .find('.table-placeholder')
+                    .append('<h5 class="text-center">No results were found</h5>')
+            }
+        } else {
+            $table
+                .find('.table-placeholder')
+                .remove()
+        }
     });
 
     $('body.analytics-page h4 .toggle-section').on('click', function() {
@@ -251,10 +269,10 @@ $(document).ready(function() {
     if ($('body').hasClass('brand-value')) {
         updateBrandValueTable('#brand-value-table-container', '/analytics/brand-value-charts/');
     }
-    else {
-        // Chart Initialization
+
+    $('[aria-controls="statistical-data"]').one('click', function() {
         drawChart('#chartContainer', '/analytics/workers-sentiment-charts/1/');
         drawStats('#statsContainer', '/analytics/workers-sentiment-stats/1/');
-    }
+    })
 });
 

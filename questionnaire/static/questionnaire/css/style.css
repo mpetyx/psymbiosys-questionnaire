@@ -305,7 +305,7 @@ table.analytics-table tbody tr td i.fa-times-circle {
 
 table.analytics-table th:nth-child(1),
 table.analytics-table td:nth-child(1) {
-	width: 50px;
+	width: 45px;
 }
 
 
@@ -371,7 +371,7 @@ td .bullet {
 
 table.analytics-table th:nth-child(2),
 table.analytics-table td:nth-child(2) {
-	width: 80px;
+	width: 90px;
 }
 
 table.analytics-table th:nth-child(3),
@@ -544,4 +544,19 @@ input[type="checkbox"] {
 	color: #666;
 	text-transform: uppercase;
 	font-size: 11px;
+}
+
+.base-title {
+	position: absolute;
+    top: -10px;
+    left: 40%;
+    text-transform: uppercase;
+    color: #666;
+    letter-spacing: 5px;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.tab-content {
+	margin-top: 100px;
 }

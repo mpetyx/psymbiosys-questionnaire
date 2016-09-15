@@ -1131,7 +1131,7 @@ def brand_value_charts(request):
         manager_brand_value_qs = manager_brand_value_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
 
     # save the latest & remove duplicates
-        manager_brand_value_qs.reverse().distinct('question_id')
+    manager_brand_value_qs = manager_brand_value_qs.reverse().distinct('question_id')
 
     last_manager_answers = []
     for manager_answer in manager_brand_value_qs:
@@ -1172,7 +1172,6 @@ def brand_value_stats(request):
     number_of_responses = questionnaire_history.count()
     number_of_unique_responses = questionnaire_unique_history.count()
 
-
     if not number_of_unique_responses:
         number_of_unique_worker_responses = number_of_unique_visitor_responses = number_of_unique_manager_responses = 0
     else:
@@ -1197,6 +1196,14 @@ def brand_value_stats(request):
 
 
 def workers_sentiment_charts(request, part=1):
+
+    big_question_dict = {
+        'In what extent are you pleased with this workplace?': 'PLEASURE',
+        'In what extent this workplace encourages you for doing a better work?': 'ACTIVATION',
+        'In what extent this workplace helps you to take control of your work?': 'CONTROL',
+        'In what extent would you like to modify this workplace?': 'MODIFICATION',
+        'In what extent would you like to go out of this workplace?': 'AVOIDANCE',
+    }
 
     subject_type = request.GET.get('type', '')
     campaign = request.GET.get('campaign', None)
@@ -1252,11 +1259,13 @@ def workers_sentiment_charts(request, part=1):
                 different_answers_for_this_question[answer_text] = 1
 
         for key, val in different_answers_for_this_question.iteritems():
+            clean_question_text = question_text.strip().replace('\r\n', '')
             chart_data.append({
-                'Question': question_text,
+                'Question': question_text if clean_question_text not in big_question_dict else big_question_dict[clean_question_text],
                 'Answer': key,
                 'Responses': val
             })
+
     return JsonResponse(chart_data, safe=False)
 
 

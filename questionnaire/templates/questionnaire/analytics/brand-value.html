@@ -9,10 +9,28 @@
     <div class="row">
         <div class="col-xs-12">
             <h4>
-                <span class="toggle-section">
-                    1. Aggregated Statistical Analysis
+                <span>
+                    Aggregated Statistical Analysis
                 </span>
             </h4>
+
+            <div class="col-xs-12" style="margin-bottom: 100px">
+                <span class="select-header">Select a User type:</span>
+                <select id="brand-table-type-filter" class="col-xs-4">
+                    <option></option>
+                    <option data-val="Worker" data-varname="type">Worker</option>
+                    <option data-val="Manager" data-varname="type">Manager</option>
+                    <option data-val="Visitor" data-varname="type">Visitor</option>
+                </select>
+
+                <span class="select-header">Select a Campaign:</span>
+                <select id="brand-table-campaign-filter" class="col-xs-4">
+                    <option></option>
+                    {% for campaign in campaigns %}
+                        <option value="{{ campaign.pk }}" data-varname="campaign">{{ campaign.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
             <div class="col-xs-12">
                 <div class="row">
@@ -34,23 +52,6 @@
                 </div>
             </div>
 
-            <div class="col-xs-12" style="margin-top: 100px;margin-bottom: 25px;">
-                <span class="select-header">Select a User type:</span>
-                <select id="brand-table-type-filter" class="col-xs-4">
-                    <option></option>
-                    <option data-val="Worker" data-varname="type">Worker</option>
-                    <option data-val="Manager" data-varname="type">Manager</option>
-                    <option data-val="Visitor" data-varname="type">Visitor</option>
-                </select>
-
-                <span class="select-header">Select a Campaign:</span>
-                <select id="brand-table-campaign-filter" class="col-xs-4">
-                    <option></option>
-                    {% for campaign in campaigns %}
-                        <option data-val="{{ campaign.name }}" data-varname="campaign">{{ campaign.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
             <div class="col-xs-12" id="brand-value-table-container">
 
             </div>
