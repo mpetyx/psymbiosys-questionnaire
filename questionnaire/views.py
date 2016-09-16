@@ -1258,6 +1258,8 @@ def workers_sentiment_charts(request, part=1):
             else:
                 different_answers_for_this_question[answer_text] = 1
 
+
+
         for key, val in different_answers_for_this_question.iteritems():
             clean_question_text = question_text.strip().replace('\r\n', '')
             chart_data.append({
@@ -1265,6 +1267,7 @@ def workers_sentiment_charts(request, part=1):
                 'Answer': key,
                 'Responses': val
             })
+
 
     return JsonResponse(chart_data, safe=False)
 
@@ -1315,8 +1318,23 @@ def workers_sentiment_stats(request, part=1):
             different_answers_for_this_questionnaire_part[answer_number] = 1
 
     likert_dict = {}
-    for available_answer in workers_sentiment_qs[0].question.choice_set.all():
-        likert_dict[available_answer.sortid] = available_answer.text
+    for answer in workers_sentiment_qs:
+        for available_answer in answer.question.choice_set.all():
+            # print available_answer.value
+            answer_id = available_answer.sortid
+            answer_text = available_answer.text
+
+            if answer_id in likert_dict:
+                if answer_text not in likert_dict[answer_id]:
+                    likert_dict[answer_id].append(answer_text)
+            else:
+                likert_dict[answer_id] = []
+                likert_dict[answer_id].append(answer_text)
+
+    str_likert_dict = {}
+    for id, lista in likert_dict.iteritems():
+        str_likert_dict[id] = '   ---   '.join(lista)
+
 
     for key, val in different_answers_for_this_questionnaire_part.iteritems():
         payload.append({
@@ -1348,7 +1366,7 @@ def workers_sentiment_stats(request, part=1):
             '#_of_managers': number_of_unique_manager_responses,
             'percentages':payload,
             'likert_values': likert_values,
-            'likert_dict': likert_dict
+            'likert_dict': str_likert_dict
         }, safe=False
     )
 

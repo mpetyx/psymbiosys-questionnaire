@@ -147,16 +147,21 @@ $(document).ready(function() {
     $('select#table-type-filter').on('change', function() {
         var val = $(this).find('option:selected').data('val').toUpperCase(),
             $table = $('table:not(.hidden)');
-        
-        $table
-            .find('tr')
-            .removeClass('hidden-type')
-            .find('td.subject-type')
-            .filter(function(){
-                return $(this).text() != val
-            })
-            .closest('tr')
-            .addClass('hidden-type');
+        if ( val ) {
+            $table
+                .find('tr')
+                .removeClass('hidden-type')
+                .find('td.subject-type')
+                .filter(function () {
+                    return $(this).text() != val
+                })
+                .closest('tr')
+                .addClass('hidden-type');
+        } else {
+            $table
+                .find('tr')
+                .removeClass('hidden-type')
+        }
     });
     
     $('select#chart-choice, select#chart-subject-type-filter, select#chart-campaign-filter, input#chart-unique-answers-filter').on('change',
