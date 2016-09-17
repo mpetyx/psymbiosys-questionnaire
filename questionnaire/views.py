@@ -1263,9 +1263,11 @@ def workers_sentiment_charts(request, part=1):
         for key, val in different_answers_for_this_question.iteritems():
             clean_question_text = question_text.strip().replace('\r\n', '')
             chart_data.append({
+
                 'Question': question_text if clean_question_text not in big_question_dict else big_question_dict[clean_question_text],
                 'Answer': key,
                 'Responses': val
+                
             })
 
 
