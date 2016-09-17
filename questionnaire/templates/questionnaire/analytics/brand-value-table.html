@@ -26,23 +26,23 @@
             </tr>
         </thead>
         <tbody>
-            {% for question, avg_answer in dominant_answers.iteritems %}
+            {% for dom_answer in dominant_answers %}
                 <tr>
-                    <td>{{ question|split_brand_value:"0" }}</td>
+                    <td>{{ dom_answer.question|split_brand_value:"0" }}</td>
                     {% with manager_answer=last_manager_answers|getitem:forloop.counter0 %}
                         {% for x in '12345' %}
                                 <td>
-                                    {% if avg_answer == forloop.counter and manager_answer != forloop.counter %}
+                                    {% if dom_answer.answer == forloop.counter and manager_answer != forloop.counter %}
                                         <div class="bullet"></div>
-                                    {% elif avg_answer != forloop.counter and manager_answer == forloop.counter %}
+                                    {% elif dom_answer.answer != forloop.counter and manager_answer == forloop.counter %}
                                         <div class="bullet manager-bullet"></div>
-                                    {% elif avg_answer == forloop.counter and manager_answer == forloop.counter %}
+                                    {% elif dom_answer.answer == forloop.counter and manager_answer == forloop.counter %}
                                         <div class="bullet simultaneous-bullet"></div>
                                     {% endif %}
                                 </td>
                         {% endfor %}
                     {% endwith %}
-                    <td>{{ question|split_brand_value:"1" }}</td>
+                    <td>{{ dom_answer.question|split_brand_value:"1" }}</td>
                 </tr>
             {% endfor %}
         </tbody>

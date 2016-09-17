@@ -1104,22 +1104,32 @@ def brand_value_charts(request):
     for answer in brand_value_qs:
         question_text = answer.question.text
         answer_id = str(eval(answer.answer)[0])
+
         if question_text in formatted_answers:
             if answer_id in formatted_answers[question_text]:
-                formatted_answers[question_text][answer_id] += 1
+                formatted_answers[question_text]['answers'][answer_id] += 1
             else:
-                formatted_answers[question_text][answer_id] = 1
+                formatted_answers[question_text]['answers'][answer_id] = 1
         else:
             formatted_answers[question_text] = {}
-            formatted_answers[question_text][answer_id] = 1
+            formatted_answers[question_text]['answers'] = {}
+            formatted_answers[question_text]['id'] = answer.question.pk
+            formatted_answers[question_text]['answers'][answer_id] = 1
 
-    dominant_answers = {}
-    for question_text, answers_dict in formatted_answers.iteritems():
-        dominant_answer = max(answers_dict.iteritems(), key=operator.itemgetter(1))[0]
+    dominant_answers = []
+    for question_text, id_and_answers_dict in formatted_answers.iteritems():
+        dominant_answer = max(id_and_answers_dict['answers'].iteritems(), key=operator.itemgetter(1))[0]
         try:
-            dominant_answers[question_text] = int(dominant_answer)
+            dominant_answers.append({
+                'question': question_text,
+                'answer':  int(dominant_answer),
+                'qid': id_and_answers_dict['id']
+            })
         except ValueError:
             pass
+
+    sortedlist = sorted(dominant_answers, key=lambda k: k['qid'])
+    dominant_answers = sortedlist
 
     # get the answers of the last brand value questionnaire in this campaign asked by a manager
     manager_brand_value_qs = Answer.objects.filter(
