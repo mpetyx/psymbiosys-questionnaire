@@ -15,22 +15,51 @@ function drawChart(container, url, qsPart) {
             },
             success: function (data) {
                 $(container).removeClass('opac').empty();
-                var svg = dimple.newSvg(container, "90%", "100%");
-                var myChart = new dimple.chart(svg, data);
-                myChart.setBounds(50, 75, "90%", 550);
 
-                if ((qsPart == undefined) || (qsPart != 3)) {
-                    myChart.addCategoryAxis("x", ["Question", "Answer"]);
-                    myChart.addMeasureAxis("y", "Responses");
-                    myChart.addSeries("Answer", dimple.plot.bar);
-                    myChart.addLegend(20, 0, "100%", 50, "left");
+
+                if (qsPart != 4 && qsPart != 5) {
+                    var svg = dimple.newSvg(container, "90%", "100%");
+                    var myChart = new dimple.chart(svg, data);
+                    myChart.setBounds(50, 75, "90%", 550);
+
+                    if ((qsPart == undefined) || (qsPart != 3)) {
+                        myChart.addCategoryAxis("x", ["Question", "Answer"]);
+                        myChart.addMeasureAxis("y", "Responses");
+                        myChart.addSeries("Answer", dimple.plot.bar);
+                        myChart.addLegend(20, 0, "100%", 50, "left");
+                    }
+                    else {
+                        myChart.addMeasureAxis("p", "Responses");
+                        myChart.addSeries("Answer", dimple.plot.pie);
+                        myChart.addLegend("80%", 0, "20%", 300, "left");
+                    }
+                    myChart.draw();
+                } else {
+                    var chart = RadarChart.chart();
+                    var svg = d3
+                        .select(container)
+                        .append('svg')
+                        .attr('width', 550)
+                        .attr('height', 550);
+
+                    // change config
+                    chart.config({
+                        levels: 5,
+                        maxValue: 5,
+                        w: 545,
+                        h: 545
+
+                    });
+
+                    // draw one
+                    svg
+                        .append('g')
+                        .classed('focus', 1)
+                        .datum(data)
+                        .call(chart);
+
+                    // RadarChart.draw(container, data);
                 }
-                else {
-                    myChart.addMeasureAxis("p", "Responses");
-                    myChart.addSeries("Answer", dimple.plot.pie);
-                    myChart.addLegend("80%", 0, "20%", 300, "left");
-                }
-                myChart.draw();
             }
         })
     }

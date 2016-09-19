@@ -1220,10 +1220,16 @@ def workers_sentiment_charts(request, part=1):
     unique_answers = request.GET.get('unique', False)
 
     # The original query set for this questionnaire's specific part
-    workers_sentiment_qs = Answer.objects.filter(
-        question__questionset__questionnaire__type="WORKERS_SENTIMENT",
-        question__questionset__sortid=part
-    )
+    if part in ('4', '5'):
+        workers_sentiment_qs = Answer.objects.filter(
+            question__questionset__questionnaire__type="WORKERS_SENTIMENT",
+            question__questionset__sortid__in=['4', '5']
+        )
+    else:
+        workers_sentiment_qs = Answer.objects.filter(
+            question__questionset__questionnaire__type="WORKERS_SENTIMENT",
+            question__questionset__sortid=part
+        )
 
     if campaign:
         workers_sentiment_qs = workers_sentiment_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
@@ -1261,13 +1267,13 @@ def workers_sentiment_charts(request, part=1):
 
         different_answers_for_this_question = {}
 
+
         for a in answers_for_this_question_text:
-            answer_text = a.get_answer_text()
+            answer_text = a.get_likert_answer() if part in ('4', '5') else a.get_answer_text()
             if answer_text in different_answers_for_this_question:
                 different_answers_for_this_question[answer_text] += 1
             else:
                 different_answers_for_this_question[answer_text] = 1
-
 
 
         for key, val in different_answers_for_this_question.iteritems():
@@ -1280,6 +1286,25 @@ def workers_sentiment_charts(request, part=1):
                 
             })
 
+
+    if part in ('4', '5'):
+        radar_chart_data = [{
+            'axes': [] # {axis: "charisma", value: 5} ]
+        }]
+        questions = ['PLEASURE', 'ACTIVATION', 'CONTROL', 'MODIFICATION', 'AVOIDANCE']
+
+        for question in questions:
+            likert_sum = 0
+            count = 0
+            for obj in chart_data:
+                if obj['Question'] == question:
+                    count += obj['Responses']
+                    likert_sum += obj['Answer'] * obj['Responses']
+            radar_chart_data[0]['axes'].append({
+                'axis': question,
+                'value': float(likert_sum) / count
+            })
+        chart_data = radar_chart_data
 
     return JsonResponse(chart_data, safe=False)
 
@@ -1332,7 +1357,7 @@ def workers_sentiment_stats(request, part=1):
     likert_dict = {}
     for answer in workers_sentiment_qs:
         for available_answer in answer.question.choice_set.all():
-            # print available_answer.value
+
             answer_id = available_answer.sortid
             answer_text = available_answer.text
 
