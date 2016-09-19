@@ -1132,16 +1132,21 @@ def brand_value_charts(request):
     dominant_answers = sortedlist
 
     # get the answers of the last brand value questionnaire in this campaign asked by a manager
-    manager_brand_value_qs = Answer.objects.filter(
-        question__questionset__questionnaire__type="BRAND_VALUE",
+
+    managers_history = RunInfoHistory.objects.filter(
+        questionnaire__type="BRAND_VALUE",
         subject__type="MANAGER"
     )
 
     if campaign:
-        manager_brand_value_qs = manager_brand_value_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
+        managers_history = managers_history.filter(questionnaire__campaigns__pk__in=[campaign])
 
-    # save the latest & remove duplicates
-    manager_brand_value_qs = manager_brand_value_qs.reverse().distinct('question_id')
+    latest_managers_runid = managers_history.reverse().first().runid
+
+    manager_brand_value_qs = Answer.objects.filter(
+        runid=latest_managers_runid
+    )
+
 
     last_manager_answers = []
     for manager_answer in manager_brand_value_qs:
