@@ -1317,6 +1317,7 @@ def workers_sentiment_charts(request, part=1):
 def workers_sentiment_stats(request, part=1):
     campaign = request.GET.get('campaign', None)
     subject_type = request.GET.get('type', None)
+    unique_answers = request.GET.get('unique', False)
 
     # The original query set for this questionnaire's specific part
     workers_sentiment_qs = Answer.objects.filter(
@@ -1327,6 +1328,28 @@ def workers_sentiment_stats(request, part=1):
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="WORKERS_SENTIMENT")
     if campaign:
         questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
+        workers_sentiment_qs = workers_sentiment_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
+
+    if unique_answers:
+        run_ids = workers_sentiment_qs.values_list('runid', flat=True)
+
+        non_anonymous_distict = list(RunInfoHistory.objects \
+                                     .filter(runid__in=run_ids) \
+                                     .exclude(subject_id=1) \
+                                     .reverse() \
+                                     .distinct('subject_id') \
+                                     .values_list('runid', flat=True))
+
+        anonymous = list(RunInfoHistory.objects \
+                         .filter(runid__in=run_ids, subject_id=1) \
+                         .reverse() \
+                         .distinct('id') \
+                         .values_list('runid', flat=True))
+
+        unique_answer_runids = non_anonymous_distict + anonymous
+
+        workers_sentiment_qs = workers_sentiment_qs.filter(runid__in=unique_answer_runids)
+
 
     questionnaire_unique_history_non_anonymous_ids = questionnaire_history.exclude(subject_id=1).distinct('subject_id').values_list('id', flat=True)
     questionnaire_unique_history_anonymous_ids = questionnaire_history.filter(subject_id=1).values_list('id', flat=True)
