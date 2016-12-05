@@ -26,12 +26,20 @@ function drawChart(container, url, qsPart) {
                         myChart.addCategoryAxis("x", ["Question", "Answer"]);
                         myChart.addMeasureAxis("y", "Responses");
                         myChart.addSeries("Answer", dimple.plot.bar);
-                        myChart.addLegend(20, 0, "100%", 50, "left");
+                        myChart.addLegend(50, 0, "100%", 50, "left");
+
+                        myChart.assignColor("Not suitable for working", "rgba(182, 7, 7, 0.9)", "rgba(182, 7, 7, 0.9)");
+                        myChart.assignColor("Suitable for working", "rgba(9, 97, 16, 0.86)", "rgba(9, 97, 16, 0.86)");
+                        myChart.assignColor("Neither/nor", "rgb(215, 135, 37)", "rgb(215, 135, 37)");
                     }
                     else {
                         myChart.addMeasureAxis("p", "Responses");
                         myChart.addSeries("Answer", dimple.plot.pie);
                         myChart.addLegend("80%", 0, "20%", 300, "left");
+
+                        myChart.assignColor("Need some rest", "rgba(182, 7, 7, 0.9)", "rgba(182, 7, 7, 0.9)");
+                        myChart.assignColor("Can keep working", "rgba(9, 97, 16, 0.86)", "rgba(9, 97, 16, 0.86)");
+                        myChart.assignColor("Neither/nor", "rgb(215, 135, 37)", "rgb(215, 135, 37)");
                     }
                     myChart.draw();
                 } else {
