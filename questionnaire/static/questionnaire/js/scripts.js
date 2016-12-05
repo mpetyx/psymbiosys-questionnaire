@@ -16,6 +16,7 @@ function drawChart(container, url, qsPart) {
             success: function (data) {
                 $(container).removeClass('opac').empty();
 
+                var NumberOfResponses;
 
                 if (qsPart != 4 && qsPart != 5) {
                     var svg = dimple.newSvg(container, "90%", "100%");
@@ -25,21 +26,50 @@ function drawChart(container, url, qsPart) {
                     if ((qsPart == undefined) || (qsPart != 3)) {
                         myChart.addCategoryAxis("x", ["Question", "Answer"]);
                         myChart.addMeasureAxis("y", "Responses");
-                        myChart.addSeries("Answer", dimple.plot.bar);
+                        var myOtherSeries = myChart.addSeries("Answer", dimple.plot.bar);
                         myChart.addLegend(50, 0, "100%", 50, "left");
 
                         myChart.assignColor("Not suitable for working", "rgba(182, 7, 7, 0.9)", "rgba(182, 7, 7, 0.9)");
                         myChart.assignColor("Suitable for working", "rgba(9, 97, 16, 0.86)", "rgba(9, 97, 16, 0.86)");
                         myChart.assignColor("Neither/nor", "rgb(215, 135, 37)", "rgb(215, 135, 37)");
+
+                        myOtherSeries.getTooltipText = function(e) {
+                            NumberOfResponses = 0;
+                            data.forEach(function( entry ) {
+                                if (entry['Question'] == e.xField[0] ) {
+                                   NumberOfResponses += entry['Responses']
+                                }
+                            });
+
+                            return [
+                                'Answer: ' + e.xField[1],
+                                'Responses: ' + e.yValue,
+                                'Percentage: ' + (e.yValue * 100 / NumberOfResponses).toFixed(2) + '%'
+                            ]
+                        };
                     }
                     else {
                         myChart.addMeasureAxis("p", "Responses");
-                        myChart.addSeries("Answer", dimple.plot.pie);
+                        var mySeries = myChart.addSeries("Answer", dimple.plot.pie);
                         myChart.addLegend("80%", 0, "20%", 300, "left");
+
+                        NumberOfResponses = data.reduce( function(a, b){
+                            return a + b['Responses'];
+                        }, 0);
+
+                        mySeries.getTooltipText = function(e) {
+                            return [
+                                'Answer: ' + e.seriesValue,
+                                'Responses: ' + e.pValue,
+                                'Percentage: ' + (e.pValue * 100 / NumberOfResponses).toFixed(2) + '%'
+                            ]
+                        };
 
                         myChart.assignColor("Need some rest", "rgba(182, 7, 7, 0.9)", "rgba(182, 7, 7, 0.9)");
                         myChart.assignColor("Can keep working", "rgba(9, 97, 16, 0.86)", "rgba(9, 97, 16, 0.86)");
                         myChart.assignColor("Neither/nor", "rgb(215, 135, 37)", "rgb(215, 135, 37)");
+
+
                     }
                     myChart.draw();
                 } else {
