@@ -24,9 +24,10 @@ function drawChart(container, url, qsPart) {
                     myChart.setBounds(50, 75, "90%", 550);
 
                     if ((qsPart == undefined) || (qsPart != 3)) {
-                        myChart.addCategoryAxis("x", ["Question", "Answer"]);
+                        myChart.addCategoryAxis("x", "Question");
                         myChart.addMeasureAxis("y", "Responses");
                         var myOtherSeries = myChart.addSeries("Answer", dimple.plot.bar);
+                        myOtherSeries.barGap = 0.5;
                         myChart.addLegend(50, 0, "100%", 50, "left");
 
                         myChart.assignColor("Not suitable for working", "rgba(182, 7, 7, 0.9)", "rgba(182, 7, 7, 0.9)");
