@@ -565,3 +565,24 @@ input[type="checkbox"] {
 #chartContainer {
 	height: 900px;
 }
+
+#radar-chart-scale {
+	position: absolute;
+	left: 264px;
+	top: 21px;
+}
+
+#radar-chart-scale > div {
+	margin-bottom: 36px;
+	font-size: 13px;
+	color: #333;
+	font-weight: 600;
+}
+
+#radar-chart-scale > div:nth-last-child(2) {
+	margin-bottom: 30px;
+}
+
+.radar-chart text.legend {
+	cursor: default;
+}

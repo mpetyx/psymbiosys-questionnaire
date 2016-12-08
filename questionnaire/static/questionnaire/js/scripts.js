@@ -1,6 +1,16 @@
 /**
  * Created by DarkA_000 on 7/21/2016.
  */
+
+var _RADAR_CHART_MAPPINGS = {
+    PLEASURE: 'Psychological level of gusto while working in the room, being 1 the minimum pleasure and 5 the maximum pleasure.',
+    ACTIVATION: 'Psychological level of willingness to work due to working room and ambiance, being 1 the minimum level of activation and 5 the maximum level of activation.',
+    CONTROL: 'Psychological perception of dominance of the situation while working in the room, being 1 the miminum level of perceived control and 5 the maximum level of perceived control. ',
+    MODIFICATION: 'Psychological need for modifying the working ambiance and room elements, being 1 the miminum need for modification and 5 the maximum need for modification. ',
+    AVOIDANCE: 'Psychological need for leaving the working room due to displeasure with ambiance and room elements, being 1 the miminum need for avoidance and 5 the maximum need for avoidance.'
+};
+
+
 function drawChart(container, url, qsPart) {
 
         $(container).addClass('opac');
@@ -91,6 +101,9 @@ function drawChart(container, url, qsPart) {
                     chart.config({
                         levels: 5,
                         maxValue: 5,
+                        factorLegend: 1,
+                        axisLine: true,
+                        axisText: true,
                         w: 545,
                         h: 545
 
@@ -103,7 +116,25 @@ function drawChart(container, url, qsPart) {
                         .datum(data)
                         .call(chart);
 
-                    // RadarChart.draw(container, data);
+
+                    // add fake axis scale
+                    $(container).append('<div id="radar-chart-scale"><div>5</div><div>4</div><div>3</div><div>2</div><div>1</div><div>0</div></div>')
+
+                    var $radarLegends = $('.radar-chart .axis text.legend');
+
+                    $radarLegends.each(function(i, legend) {
+
+                        var $legend = $(legend);
+                        var text = _RADAR_CHART_MAPPINGS[$legend.text().trim().toUpperCase()];
+
+                        $legend
+                            .attr('data-toggle', "tooltip")
+                            .attr('title', text)
+                            .attr('data-container', 'body')
+                            .attr('data-placement', 'bottom');
+                    });
+
+                    $radarLegends.tooltip();
                 }
             }
         })
@@ -152,8 +183,8 @@ function drawStats(container, url) {
              // $container.append('<div class="col-xs-12 title">Likert Statistical Values</div>');
              // for (var i in data['likert_values']) {
              //     $container.append('<div class="col-xs-12">'
-             //         + '<span class="col-xs-6">' + i + ':</span>'
-             //         + '<span class="col-xs-6">' + data['likert_values'][i] + '</span></div>')
+             //         + '<div class="col-xs-6">' + i + ':</div>'
+             //         + '<div class="col-xs-6">' + data['likert_values'][i] + '</div></div>')
              // }
              // $statsContainer.append($container);
 
@@ -162,8 +193,8 @@ function drawStats(container, url) {
              $.each(data['percentages'], function(i, stat) {
 
                  $container.append('<div class="col-xs-12">'
-                     + '<span class="col-xs-6">' + ((stat['Answer'] != '') ? 'Answer #' + stat['Answer'] : '(No Answer)') + ':</span>'
-                     + '<span class="col-xs-6">' + stat['Percentage'] + '%</span></div>')
+                     + '<div class="col-xs-6">' + ((stat['Answer'] != '') ? 'Answer #' + stat['Answer'] : '(No Answer)') + ':</div>'
+                     + '<div class="col-xs-6">' + stat['Percentage'] + '%</div></div>')
 
              });
              $statsContainer.append($container)
@@ -299,7 +330,7 @@ $(document).ready(function() {
                     urlParamString += varname + '=' + val;
                 }
             });
-            console.log(urlParamString)
+
             var endpointURL = '/analytics/brand-value-charts/'+ urlParamString;
             updateBrandValueTable('#brand-value-table-container', endpointURL);
             drawStats()
@@ -308,7 +339,7 @@ $(document).ready(function() {
     $('select#table-campaign-filter').on('change', function() {
         var val = $(this).find('option:selected').data('val').toUpperCase(),
             $table = $('table:not(.hidden)');
-        console.log(val)
+
         $table
             .find('tr')
             .removeClass('hidden-campaign')
@@ -355,4 +386,5 @@ $(document).ready(function() {
         drawStats('#statsContainer', '/analytics/workers-sentiment-stats/1/');
     })
 });
+
 
