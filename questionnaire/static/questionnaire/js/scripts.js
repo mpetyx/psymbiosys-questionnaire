@@ -166,6 +166,9 @@ function drawStats(container, url) {
              $('#number-of-managers').html(data['#_of_managers']);
              $('#number-of-visitors').html(data['#_of_visitors']);
 
+             $('#kpi-title').html(data['kpi_title']);
+             $('#kpi-container').html(data['kpi'].toFixed(2) + '%');
+
 
 
              // update Likert dictionary

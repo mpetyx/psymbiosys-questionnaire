@@ -1299,7 +1299,6 @@ def workers_sentiment_charts(request, part=1):
                 
             })
 
-
     if part in ('4', '5'):
         radar_chart_data = [{
             'axes': [] # {axis: "charisma", value: 5} ]
@@ -1323,6 +1322,7 @@ def workers_sentiment_charts(request, part=1):
 
 
 def workers_sentiment_stats(request, part=1):
+
     campaign = request.GET.get('campaign', None)
     subject_type = request.GET.get('type', None)
     unique_answers = request.GET.get('unique', False)
@@ -1416,6 +1416,14 @@ def workers_sentiment_stats(request, part=1):
             'Percentage': "%.2f" % (100 * val / len(workers_sentiment_qs))
         })
 
+    kpi = 0
+    print different_answers_for_this_questionnaire_part
+    if part in ['1', '2', '3']:
+        number_of_responses = sum(different_answers_for_this_questionnaire_part.values())
+        number_of_positive_responses = different_answers_for_this_questionnaire_part[3]
+        kpi = float(number_of_positive_responses) / (len(different_answers_for_this_questionnaire_part) * number_of_responses) * 100
+        kpi_title = 'Worker well-being at workplace regarding ambient parameters and furniture'
+
     likert_list = []
     subject_type_qs = workers_sentiment_qs
     if subject_type:
@@ -1439,7 +1447,9 @@ def workers_sentiment_stats(request, part=1):
             '#_of_managers': number_of_unique_manager_responses,
             'percentages':payload,
             'likert_values': likert_values,
-            'likert_dict': str_likert_dict
+            'likert_dict': str_likert_dict,
+            'kpi': kpi,
+            'kpi_title': kpi_title
         }, safe=False
     )
 
