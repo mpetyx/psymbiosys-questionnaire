@@ -31,11 +31,12 @@
                     Detailed Results
                 </span>
                 <div class="pull-right">
-                    <span class="select-header">Select a Questionnaire part:</span>
-                    <select id="table-choice" class="pull-right">
-                        <option>Physical Perceptions: Part I.1</option>
-                        <option>Physical Perceptions: Part I.2</option>
-                        <option>Physical Perceptions: Part I.3</option>
+                    <span class="select-header">Select a Campaign:</span>
+                    <select id="table-campaign-filter" class="col-xs-4">
+                        <option></option>
+                        {% for campaign in campaigns %}
+                            <option data-val="{{ campaign.name }}">{{ campaign.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 </h4>
@@ -49,13 +50,13 @@
                         <option data-val="Visitor">Visitor</option>
                     </select>
 
-                    <span class="select-header">Select a Campaign:</span>
-                    <select id="table-campaign-filter" class="col-xs-4">
-                        <option></option>
-                        {% for campaign in campaigns %}
-                            <option data-val="{{ campaign.name }}">{{ campaign.name }}</option>
-                        {% endfor %}
+                    <span class="select-header">Select a Questionnaire part:</span>
+                    <select id="table-choice" class="pull-right">
+                        <option>Physical Perceptions: Part I.1</option>
+                        <option>Physical Perceptions: Part I.2</option>
+                        <option>Physical Perceptions: Part I.3</option>
                     </select>
+
                 </div>
                 <table id="detailed-results-part-1" class="analytics-table">
                     <thead>

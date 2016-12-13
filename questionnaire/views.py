@@ -1160,10 +1160,18 @@ def brand_value_charts(request):
     for i in sortedlist:
         last_manager_answers.append(i['answer'])
 
+
+    diff_sum = 0
+    for da, lma in zip(dominant_answers, last_manager_answers):
+        diff_sum += abs(da['answer'] - lma)
+    kpi_4 = 100 - (float(diff_sum)/len(dominant_answers))*100
+
     return render(request, 'questionnaire/analytics/brand-value-table.html', {
         'dominant_answers': dominant_answers,
         'last_manager_answers': last_manager_answers,
-        'logged_in': request.user.is_authenticated()
+        'logged_in': request.user.is_authenticated(),
+        'kpi_4': kpi_4,
+        'subject_type': subject_type or 'aggregated'
     })
 
 
