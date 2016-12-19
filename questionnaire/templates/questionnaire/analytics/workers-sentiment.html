@@ -16,9 +16,6 @@
                 <li role="presentation">
                     <a href="#statistical-data" aria-controls="statistical-data" role="tab" data-toggle="tab">Statistical Data</a>
                 </li>
-                <li role="presentation">
-                    <a href="#performance-indicators" aria-controls="performance-indicators" role="tab" data-toggle="tab">Performance Indicators</a>
-                </li>
              </ul>
         </div>
     </div>
@@ -187,13 +184,12 @@
                     Statistical Data
                 </span>
                 <div class="pull-right">
-                    <span class="select-header">Select a Questionnaire part:</span>
-                    <select id="chart-choice" class="pull-right">
-                        <option>Physical Perceptions: Part I.1</option>
-                        <option>Physical Perceptions: Part I.2</option>
-                        <option>Physical Perceptions: Part I.3</option>
-                        <option>Emotional & Behavioural: Part II.1</option>
-                        <option>Emotional & Behavioural: Part II.2</option>
+                    <span class="select-header">Select a Campaign:</span>
+                    <select id="chart-campaign-filter">
+                        <option></option>
+                        {% for campaign in campaigns %}
+                            <option value="{{ campaign.pk }}" data-varname="campaign">{{ campaign.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 </h4>
@@ -208,12 +204,12 @@
                             </select>
                         </div>
                         <div class="pull-left">
-                            <span class="select-header">Select a Campaign:</span>
-                            <select id="chart-campaign-filter">
-                                <option></option>
-                                {% for campaign in campaigns %}
-                                    <option value="{{ campaign.pk }}" data-varname="campaign">{{ campaign.name }}</option>
-                                {% endfor %}
+                            <span class="select-header">Select a Questionnaire part:</span>
+                            <select id="chart-choice" class="pull-right">
+                                <option>Physical Perceptions: Part I.1</option>
+                                <option>Physical Perceptions: Part I.2</option>
+                                <option>Physical Perceptions: Part I.3</option>
+                                <option>Emotional & Behavioural: Part II</option>
                             </select>
                         </div>
                         <div class="pull-left">

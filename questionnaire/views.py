@@ -1328,9 +1328,17 @@ def workers_sentiment_stats(request, part=1):
     unique_answers = request.GET.get('unique', False)
 
     # The original query set for this questionnaire's specific part
+
+    if part in ['1', '2']:
+        full_part = ['1', '2']
+    elif part in ['4', '5']:
+        full_part = ['4', '5']
+    else:
+        full_part = part
+
     workers_sentiment_qs = Answer.objects.filter(
         question__questionset__questionnaire__type="WORKERS_SENTIMENT",
-        question__questionset__sortid=part
+        question__questionset__sortid__in=full_part
     )
 
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="WORKERS_SENTIMENT")
@@ -1416,13 +1424,28 @@ def workers_sentiment_stats(request, part=1):
             'Percentage': "%.2f" % (100 * val / len(workers_sentiment_qs))
         })
 
-    kpi = 0
-    print different_answers_for_this_questionnaire_part
+
     if part in ['1', '2', '3']:
-        number_of_responses = sum(different_answers_for_this_questionnaire_part.values())
-        number_of_positive_responses = different_answers_for_this_questionnaire_part[3]
-        kpi = float(number_of_positive_responses) / (len(different_answers_for_this_questionnaire_part) * number_of_responses) * 100
+        isolate_part = {}
+
+        for a in workers_sentiment_qs.filter(question__questionset__sortid=part):
+            answer_number = a.get_likert_answer()
+
+            if answer_number in isolate_part:
+                isolate_part[answer_number] += 1
+            else:
+                isolate_part[answer_number] = 1
+
+        number_of_positive_responses = isolate_part[3]
         kpi_title = 'Worker well-being at workplace regarding ambient parameters and furniture'
+        num_of_variables = workers_sentiment_qs.values('question__text_en').distinct().count()
+    elif part in ['4', '5']:
+        number_of_positive_responses = different_answers_for_this_questionnaire_part[5]
+        kpi_title = 'Emotional perception of the workers about the office space'
+        num_of_variables = 5
+
+    number_of_responses = sum(different_answers_for_this_questionnaire_part.values())
+    kpi = float(number_of_positive_responses) / (num_of_variables * number_of_responses) * 100
 
     likert_list = []
     subject_type_qs = workers_sentiment_qs
