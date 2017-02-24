@@ -29,7 +29,7 @@ function drawChart(container, url, qsPart) {
                 var NumberOfResponses;
 
                 if (qsPart != 4 && qsPart != 5) {
-                    var svg = dimple.newSvg(container, "100%", "100%");
+                    var svg = dimple.newSvg(container, "100%", 675);
                     var myChart = new dimple.chart(svg, data);
                     myChart.setBounds(50, 75, "90%", 550);
 
@@ -165,7 +165,8 @@ function drawStats(container, url) {
              $('#number-of-workers').html(data['#_of_workers']);
              $('#number-of-managers').html(data['#_of_managers']);
              $('#number-of-visitors').html(data['#_of_visitors']);
-            
+             
+             $('#section-title').html(data['section_title']);
              
              if (data['kpi'] != null && data['kpi_title']) {
                  $('#performance-indicators').show();
@@ -176,6 +177,8 @@ function drawStats(container, url) {
                  $('#kpi-title').html('');
                  $('#kpi-container').html('');
              }
+             
+             
 
 
 

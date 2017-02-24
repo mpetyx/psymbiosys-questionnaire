@@ -1337,6 +1337,14 @@ def workers_sentiment_charts(request, part=1):
 
 def workers_sentiment_stats(request, part=1):
 
+    SECTION_TITLE_DICT = [
+        'Are the workspace conditions suitable for working?',
+        'Is current office furniture suitable for working?',
+        'Degree of fatigue after 2 hours working in the workspace',
+        'What reaction does the workspace provoke in users?',
+        'What reaction does the workspace provoke in users?',
+    ]
+
     campaign = request.GET.get('campaign', None)
     subject_type = request.GET.get('type', None)
     unique_answers = request.GET.get('unique', False)
@@ -1490,7 +1498,8 @@ def workers_sentiment_stats(request, part=1):
             'likert_values': likert_values,
             'likert_dict': str_likert_dict,
             'kpi': kpi,
-            'kpi_title': kpi_title
+            'kpi_title': kpi_title,
+            'section_title': SECTION_TITLE_DICT[int(part)]
         }, safe=False
     )
 

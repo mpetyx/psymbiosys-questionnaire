@@ -583,10 +583,6 @@ input[type="checkbox"] {
 	margin-top: 100px;
 }
 
-#chartContainer {
-	height: 900px;
-}
-
 #radar-chart-scale {
 	position: absolute;
 	left: 264px;
