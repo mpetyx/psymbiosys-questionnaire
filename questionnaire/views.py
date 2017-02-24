@@ -1425,7 +1425,7 @@ def workers_sentiment_stats(request, part=1):
         })
 
 
-    if part in ['1', '2', '3']:
+    if part in ['1', '2']:
         isolate_part = {}
 
         for a in workers_sentiment_qs.filter(question__questionset__sortid=part):
@@ -1443,6 +1443,10 @@ def workers_sentiment_stats(request, part=1):
         number_of_positive_responses = different_answers_for_this_questionnaire_part[5]
         kpi_title = 'Emotional perception of the workers about the office space'
         num_of_variables = 5
+    else:
+        number_of_positive_responses = 0
+        kpi_title = ''
+        num_of_variables = 1
 
     number_of_responses = sum(different_answers_for_this_questionnaire_part.values())
     kpi = float(number_of_positive_responses) / (num_of_variables * number_of_responses) * 100

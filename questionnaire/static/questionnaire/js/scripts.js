@@ -165,9 +165,17 @@ function drawStats(container, url) {
              $('#number-of-workers').html(data['#_of_workers']);
              $('#number-of-managers').html(data['#_of_managers']);
              $('#number-of-visitors').html(data['#_of_visitors']);
-
-             $('#kpi-title').html(data['kpi_title']);
-             $('#kpi-container').html(data['kpi'].toFixed(2) + '%');
+            
+             
+             if (data['kpi'] != null && data['kpi_title']) {
+                 $('#performance-indicators').show();
+                 $('#kpi-title').html(data['kpi_title']);
+                 $('#kpi-container').html(data['kpi'].toFixed(2) + '%');
+             } else {
+                 $('#performance-indicators').hide();
+                 $('#kpi-title').html('');
+                 $('#kpi-container').html('');
+             }
 
 
 
