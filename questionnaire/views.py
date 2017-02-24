@@ -1046,6 +1046,8 @@ def workers_sentiment(request):
     grouped_answers_part_1 = []
     grouped_answers_part_2 = []
     grouped_answers_part_3 = []
+    grouped_answers_part_4 = []
+    grouped_answers_part_5 = []
 
     for uid in unique_people_ids:
         answer_group = workers_sentiment_qs\
@@ -1063,11 +1065,23 @@ def workers_sentiment(request):
             .order_by('question__sort_id')
         grouped_answers_part_3.append(list(answer_group))
 
+        answer_group = workers_sentiment_qs \
+            .filter(runid=uid, question__questionset__sortid=4) \
+            .order_by('question__sort_id')
+        grouped_answers_part_4.append(list(answer_group))
+
+        answer_group = workers_sentiment_qs \
+            .filter(runid=uid, question__questionset__sortid=5) \
+            .order_by('question__sort_id')
+        grouped_answers_part_5.append(list(answer_group))
+
 
     return render(request, 'questionnaire/analytics/workers-sentiment.html', {
         'grouped_answers_part_1': grouped_answers_part_1,
         'grouped_answers_part_2': grouped_answers_part_2,
         'grouped_answers_part_3': grouped_answers_part_3,
+        'grouped_answers_part_4': grouped_answers_part_4,
+        'grouped_answers_part_5': grouped_answers_part_5,
         'campaigns': Campaign.objects.all(),
         'logged_in': request.user.is_authenticated()
     })

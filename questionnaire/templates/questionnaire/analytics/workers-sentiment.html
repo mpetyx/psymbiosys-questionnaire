@@ -11,10 +11,14 @@
         <div class="col-xs-12">
              <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active">
-                    <a href="#detailed-results" aria-controls="detailed-results" role="tab" data-toggle="tab">Detailed Results</a>
+                    <a href="#detailed-results" aria-controls="detailed-results" role="tab" data-toggle="tab">
+                        Detailed Results
+                    </a>
                 </li>
                 <li role="presentation">
-                    <a href="#statistical-data" aria-controls="statistical-data" role="tab" data-toggle="tab">Statistical Data</a>
+                    <a href="#statistical-data" aria-controls="statistical-data" role="tab" data-toggle="tab">
+                        Statistical Data
+                    </a>
                 </li>
              </ul>
         </div>
@@ -52,6 +56,8 @@
                         <option>Physical Perceptions: Part I.1</option>
                         <option>Physical Perceptions: Part I.2</option>
                         <option>Physical Perceptions: Part I.3</option>
+                        <option>Emotional & Behavioural: Part II.1</option>
+                        <option>Emotional & Behavioural: Part II.2</option>
                     </select>
 
                 </div>
@@ -174,6 +180,90 @@
                     {% endfor %}
                     </tbody>
                 </table>
+
+                <table id="detailed-results-part-4" class="analytics-table hidden">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Campaign</th>
+                            <th>Pleasure</th>
+                            <th>Activation</th>
+                            <th>Control</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for answer_group in grouped_answers_part_4 %}
+                        {% with campaign=answer_group.0.get_campaign %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="subject-type">{{ answer_group.0.subject.type }}</td>
+                                <td>{{ answer_group.0.answered_at|date:"d/m/Y" }}</td>
+                                <td class="campaign-name">{{ campaign }}</td>
+
+                                {% for answer in answer_group %}
+                                    {% with answer_text=answer.get_answer_text %}
+                                    <td {% if answer_text|lower|contains:"mess" or answer_text|lower|contains:"boring" or answer_text|lower|contains:"not pleased" %}class="negative weight-bold"
+                                        {% elif answer_text|lower|contains:"not much pleased" or answer_text|lower|contains:"kind of difficult" or answer_text|lower|contains:"not much inspired" %}class="semi-negative"
+                                        {% elif answer_text|lower|contains:"somewhat pleased" or answer_text|lower|contains:"appropriate for working" or answer_text|lower|contains:"somewhat motivated" %}class="semi-positive"
+                                        {% elif answer_text|lower|contains:"i love" or answer_text|lower|contains:"start working" or answer_text|lower|contains:"in control" %}class="positive weight-bold"
+                                        {% elif answer_text|lower|contains:"indifferent" %}class="neutral"
+                                        {% endif %}
+                                    >
+
+                                        {{ answer_text }}
+                                    </td>
+                                    {% endwith %}
+                                {% endfor %}
+
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <table id="detailed-results-part-5" class="analytics-table hidden">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Campaign</th>
+                            <th>Modification</th>
+                            <th>Avoidance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for answer_group in grouped_answers_part_5 %}
+                        {% with campaign=answer_group.0.get_campaign %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="subject-type">{{ answer_group.0.subject.type }}</td>
+                                <td>{{ answer_group.0.answered_at|date:"d/m/Y" }}</td>
+                                <td class="campaign-name">{{ campaign }}</td>
+
+                                {% for answer in answer_group %}
+                                    {% with answer_text=answer.get_answer_text %}
+                                    <td {% if answer_text|lower|contains:"would change" or answer_text|lower|contains:"need to escape" %}class="negative weight-bold"
+                                        {% elif answer_text|lower|contains:"change some important" or answer_text|lower|contains:"stay much longer" %}class="semi-negative"
+                                        {% elif answer_text|lower|contains:"may stay longer" or answer_text|lower|contains:"change just minor" %}class="semi-positive"
+                                        {% elif answer_text|lower|contains:"leave this place" or answer_text|lower|contains:"change anything" %}class="positive weight-bold"
+                                        {% elif answer_text|lower|contains:"indifferent" %}class="neutral"
+                                        {% endif %}
+                                    >
+
+                                        {{ answer_text }}
+                                    </td>
+                                    {% endwith %}
+                                {% endfor %}
+
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+
             </div>
         </div>
 

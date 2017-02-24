@@ -399,8 +399,22 @@ table.analytics-table#detailed-results-part-3 td:nth-child(n+5) {
 	width: 400px;
 }
 
+table.analytics-table#detailed-results-part-4 th:nth-child(n+5),
+table.analytics-table#detailed-results-part-4 td:nth-child(n+5) {
+	width: 160px;
+}
+
+table.analytics-table#detailed-results-part-5 th:nth-child(n+5),
+table.analytics-table#detailed-results-part-5 td:nth-child(n+5) {
+	width: 200px;
+}
+
 table td.positive {
-	color: rgb(22, 200, 91) !important;
+	color: rgb(6, 170, 45) !important;
+}
+
+table td.semi-positive {
+	color: rgba(78, 171, 71, 0.64) !important;
 }
 
 table td.neutral {
@@ -409,6 +423,14 @@ table td.neutral {
 
 table td.negative {
 	color: rgba(245, 82, 43, 0.92) !important;
+}
+
+table td.semi-negative {
+	color: rgba(245, 156, 112, 0.75) !important;
+}
+
+table td.weight-bold {
+	font-weight: 600 !important;
 }
 
 
