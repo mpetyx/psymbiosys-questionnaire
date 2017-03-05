@@ -6,8 +6,8 @@ var _RADAR_CHART_MAPPINGS = {
     PLEASURE: 'Psychological level of gusto while working in the room, being 1 the minimum pleasure and 5 the maximum pleasure.',
     ACTIVATION: 'Psychological level of willingness to work due to working room and ambiance, being 1 the minimum level of activation and 5 the maximum level of activation.',
     CONTROL: 'Psychological perception of dominance of the situation while working in the room, being 1 the miminum level of perceived control and 5 the maximum level of perceived control. ',
-    MODIFICATION: 'Psychological need for modifying the working ambiance and room elements, being 1 the miminum need for modification and 5 the maximum need for modification. ',
-    AVOIDANCE: 'Psychological need for leaving the working room due to displeasure with ambiance and room elements, being 1 the miminum need for avoidance and 5 the maximum need for avoidance.'
+    MODIFICATION: 'Psychological need for modifying the working ambiance and room elements, being 1 the maximum need for modification and 5 the minimum need for modification.',
+    AVOIDANCE: 'Psychological need for leaving the working room due to displeasure with ambiance and room elements, being 1 the maximum need for avoiding the room and 5 the minimum need for avoidance.'
 };
 
 
@@ -169,12 +169,17 @@ function drawStats(container, url) {
              $('#section-title').html(data['section_title']);
              
              if (data['kpi'] != null && data['kpi_title']) {
+                 $('.kpi-table').hide();
                  $('#performance-indicators').show();
-                 $('#kpi-title').html(data['kpi_title']);
-                 $('#kpi-container').html(data['kpi'].toFixed(2) + '%');
+                 $('.kpi-container').html(data['kpi'].toFixed(2) + '%');
+                 if (data['part'] == 1 || data['part'] == 2) {
+                     $('#kpi-table-1').show()
+                 } else if (data['part'] == 4 || data['part'] == 5) {
+                     $('#kpi-table-2').show()
+                 }
              } else {
+                 $('.kpi-table').hide();
                  $('#performance-indicators').hide();
-                 $('#kpi-title').html('');
                  $('#kpi-container').html('');
              }
              
@@ -207,7 +212,7 @@ function drawStats(container, url) {
              $.each(data['percentages'], function(i, stat) {
 
                  $container.append('<div class="col-xs-12">'
-                     + '<div class="col-xs-6">' + ((stat['Answer'] != '') ? 'Answer #' + stat['Answer'] : '(No Answer)') + ':</div>'
+                     + '<div class="col-xs-6">' + ((stat['Answer'] != '') ? stat['Answer'] : '(No Answer)') + ':</div>'
                      + '<div class="col-xs-6">' + stat['Percentage'] + '%</div></div>')
 
              });

@@ -1337,6 +1337,32 @@ def workers_sentiment_charts(request, part=1):
 
 def workers_sentiment_stats(request, part=1):
 
+    def calculate_answer_name(answer_key):
+
+        if part == '1' or part == '2':
+            answer_list = [
+                'Not suitable for working',
+                'Neither/Nor',
+                'Suitable for working'
+            ]
+        elif part == '3':
+            answer_list = [
+                'Need some rest',
+                'Neither/nor',
+                'Can keep working'
+            ]
+        elif part == '4' or part == '5':
+            answer_list = [
+                'Worst Answer',
+                'Negative Answer',
+                'Indifferent',
+                'Positive Answer',
+                'Best Answer'
+            ]
+        else:
+            answer_list = ['']
+        return answer_list[answer_key-1]
+
     SECTION_TITLE_DICT = [
         'Are the workspace conditions suitable for working?',
         'Is current office furniture suitable for working?',
@@ -1441,7 +1467,7 @@ def workers_sentiment_stats(request, part=1):
 
     for key, val in different_answers_for_this_questionnaire_part.iteritems():
         payload.append({
-            'Answer': key,
+            'Answer': calculate_answer_name(key),
             'Responses': val,
             'Percentage': "%.2f" % (100 * val / len(workers_sentiment_qs))
         })
@@ -1499,6 +1525,7 @@ def workers_sentiment_stats(request, part=1):
             'likert_dict': str_likert_dict,
             'kpi': kpi,
             'kpi_title': kpi_title,
+            'part': int(part),
             'section_title': SECTION_TITLE_DICT[int(part)]
         }, safe=False
     )

@@ -603,3 +603,34 @@ input[type="checkbox"] {
 .radar-chart text.legend {
 	cursor: default;
 }
+
+table.kpi-table {
+	border: 1px solid #eee;
+	table-layout: fixed;
+}
+
+table.kpi-table tr {
+	padding: 5px;
+	border-bottom: 1px solid #eee;
+}
+
+table.kpi-table tr td {
+	padding: 15px;
+}
+
+table.kpi-table tr td:first-of-type {
+	font-weight: 600;
+    font-size: 12px;
+    color: #444;
+	border-right: 1px solid #eee;
+}
+
+table.kpi-table .kpi-container {
+	font-size: 16px !important;
+	color: black !important;
+	text-decoration: underline;
+}
+
+table.kpi-table tr td:last-of-type {
+	line-height: 16px;
+}
