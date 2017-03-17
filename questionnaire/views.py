@@ -1496,8 +1496,8 @@ def workers_sentiment_stats(request, part=1):
         kpi_title = ''
         num_of_variables = 1
 
-    number_of_responses = sum(different_answers_for_this_questionnaire_part.values())
-    kpi = float(number_of_positive_responses) / (num_of_variables * number_of_responses) * 100
+    temp = sum(different_answers_for_this_questionnaire_part.values())
+    kpi = float(number_of_positive_responses) / (num_of_variables * temp) * 100
 
     likert_list = []
     subject_type_qs = workers_sentiment_qs
