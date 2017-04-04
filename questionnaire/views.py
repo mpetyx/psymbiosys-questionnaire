@@ -1364,6 +1364,7 @@ def workers_sentiment_stats(request, part=1):
         return answer_list[answer_key-1]
 
     SECTION_TITLE_DICT = [
+        '',
         'Are the workspace conditions suitable for working?',
         'Is current office furniture suitable for working?',
         'Degree of fatigue after 2 hours working in the workspace',
