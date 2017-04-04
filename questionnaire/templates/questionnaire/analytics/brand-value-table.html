@@ -76,6 +76,7 @@
                     expected.
                 </td>
             </tr>
+            {% if kpi_4 > 80 %}
             <tr>
                 <td>SUGGESTIONS FOR VALUES ABOVE 80%</td>
                 <td colspan="2">
@@ -88,6 +89,7 @@
                     renovation project.
                 </td>
             </tr>
+            {% elif kpi_4 >= 50%}
             <tr>
                 <td>SUGGESTIONS FOR VALUES BETWEEN 50% TO 80%</td>
                 <td colspan="2">
@@ -100,6 +102,7 @@
                     scale for the renovation of the workspace.
                 </td>
             </tr>
+            {% else %}
             <tr>
                 <td>SUGGESTIONS FOR VALUES BELOW 50%</td>
                 <td colspan="2">
@@ -112,6 +115,7 @@
                     main deviations before designing the renovation project.
                 </td>
             </tr>
+            {% endif %}
         </tbody>
     </table>
 

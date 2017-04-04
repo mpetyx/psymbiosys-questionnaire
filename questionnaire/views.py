@@ -1487,17 +1487,34 @@ def workers_sentiment_stats(request, part=1):
 
         number_of_positive_responses = isolate_part.get(3, 0)
         kpi_title = 'Worker well-being at workplace regarding ambient parameters and furniture'
-        num_of_variables = workers_sentiment_qs.values('question__text_en').distinct().count()
+        temp = Answer.objects.filter(
+            question__questionset__questionnaire__type="WORKERS_SENTIMENT",
+            question__questionset__sortid__in=[part]
+        )\
+        .distinct('runid')\
+        .count()
+        num_of_variables = workers_sentiment_qs\
+            .filter(question__questionset__sortid=part)\
+            .values('question__text_en')\
+            .distinct()\
+            .count()
     elif part in ['4', '5']:
         number_of_positive_responses = different_answers_for_this_questionnaire_part.get(5, 0)
         kpi_title = 'Emotional perception of the workers about the office space'
         num_of_variables = 5
+        temp = Answer.objects.filter(
+            question__questionset__questionnaire__type="WORKERS_SENTIMENT",
+            question__questionset__sortid__in=['4', '5']
+            ) \
+            .distinct('runid') \
+            .count()
     else:
         number_of_positive_responses = 0
         kpi_title = ''
         num_of_variables = 1
+        temp = 1
 
-    temp = sum(different_answers_for_this_questionnaire_part.values())
+
     kpi = float(number_of_positive_responses) / (num_of_variables * temp) * 100
 
     likert_list = []
