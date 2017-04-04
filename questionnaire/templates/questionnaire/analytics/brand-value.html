@@ -18,7 +18,7 @@
                     <select id="brand-table-campaign-filter" class="col-xs-4">
                         <option></option>
                         {% for campaign in campaigns %}
-                            <option value="{{ campaign.pk }}" data-varname="campaign">{{ campaign.name }}</option>
+                            <option {% if forloop.counter == 1 %}selected {% endif %}value="{{ campaign.pk }}" data-varname="campaign">{{ campaign.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -29,7 +29,7 @@
             <div class="col-xs-12">
                 <span class="select-header">Select a User type:</span>
                 <select id="brand-table-type-filter" class="col-xs-4">
-                    <option data-val="">All</option>
+                    <option selected data-val="">All</option>
                     <option data-val="Worker" data-varname="type">Worker</option>
                     <option data-val="Manager" data-varname="type">Manager</option>
                     <option data-val="Visitor" data-varname="type">Visitor</option>

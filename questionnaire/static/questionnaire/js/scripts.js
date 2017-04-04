@@ -172,20 +172,28 @@ function drawStats(container, url) {
                  $('.kpi-table').hide();
                  $('#performance-indicators').show();
                  $('.kpi-container').html(data['kpi'].toFixed(2) + '%');
+                 
+                 var $kpiTable;
                  if (data['part'] == 1 || data['part'] == 2) {
-                     $('#kpi-table-1').show()
+                     $kpiTable = $('#kpi-table-1')
                  } else if (data['part'] == 4 || data['part'] == 5) {
-                     $('#kpi-table-2').show()
+                     $kpiTable = $('#kpi-table-2')
+                 }
+                 
+                 $kpiTable.show();
+                 $kpiTable.find('.suggestions').hide();
+                 if (data['kpi'] < 50) {
+                     $kpiTable.find('.suggestions-below-50').show();
+                 } else if (data['kpi'] <= 80) {
+                     $kpiTable.find('.suggestions-between-50-80').show();
+                 } else {
+                     $kpiTable.find('.suggestions-above-80').show();
                  }
              } else {
                  $('.kpi-table').hide();
                  $('#performance-indicators').hide();
                  $('#kpi-container').html('');
              }
-             
-             
-
-
 
              // update Likert dictionary
              var $container;

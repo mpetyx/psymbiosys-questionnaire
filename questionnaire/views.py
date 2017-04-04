@@ -1082,14 +1082,14 @@ def workers_sentiment(request):
         'grouped_answers_part_3': grouped_answers_part_3,
         'grouped_answers_part_4': grouped_answers_part_4,
         'grouped_answers_part_5': grouped_answers_part_5,
-        'campaigns': Campaign.objects.all(),
+        'campaigns': Campaign.objects.filter(questionnaires__type='WORKERS_SENTIMENT'),
         'logged_in': request.user.is_authenticated()
     })
 
 
 def brand_value(request):
     return render(request, 'questionnaire/analytics/brand-value.html', {
-        'campaigns': Campaign.objects.all(),
+        'campaigns': Campaign.objects.filter(questionnaires__type='BRAND_VALUE'),
         'logged_in': request.user.is_authenticated()
     })
 
@@ -1484,11 +1484,11 @@ def workers_sentiment_stats(request, part=1):
             else:
                 isolate_part[answer_number] = 1
 
-        number_of_positive_responses = isolate_part[3]
+        number_of_positive_responses = isolate_part.get(3, 0)
         kpi_title = 'Worker well-being at workplace regarding ambient parameters and furniture'
         num_of_variables = workers_sentiment_qs.values('question__text_en').distinct().count()
     elif part in ['4', '5']:
-        number_of_positive_responses = different_answers_for_this_questionnaire_part[5]
+        number_of_positive_responses = different_answers_for_this_questionnaire_part.get(5, 0)
         kpi_title = 'Emotional perception of the workers about the office space'
         num_of_variables = 5
     else:
