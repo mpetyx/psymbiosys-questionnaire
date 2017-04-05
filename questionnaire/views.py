@@ -1131,6 +1131,7 @@ def brand_value_charts(request):
             formatted_answers[question_text]['answers'][answer_id] = 1
 
     dominant_answers = []
+    
     for question_text, id_and_answers_dict in formatted_answers.iteritems():
         dominant_answer = max(id_and_answers_dict['answers'].iteritems(), key=operator.itemgetter(1))[0]
         try:
