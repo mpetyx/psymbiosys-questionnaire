@@ -12,7 +12,7 @@ logger = get_task_logger(__name__)
 from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
-from datetime import timedelta
+from datetime import timedelta, datetime
 from email_campaigns.models import Campaign
 from questionnaire.views import *
 from django.contrib.sites.models import Site
@@ -152,14 +152,17 @@ def a_campaign_modified(instance):
     for questionnaire in questionnaires:
         emails = campaign.emails
         for email in emails:
-            print 'Attempted to send email to: %s' % email
-            if not RunInfo.objects.filter(
-                    subject__email=email,
-                    questionset__questionnaire=questionnaire,
-                    questionset__questionnaire__campaigns__in=[campaign]
-            ).count():
-                print 'Sending email to: %s' % email
+            print 'Started email sending on: %s' % email
+            run_info = RunInfo.objects.get(
+                subject__email=email,
+                questionset__questionnaire=questionnaire,
+                questionset__questionnaire__campaigns__in=[campaign]
+            )
+            if not bool(run_info.emailsent):
+                print 'Ok, sending an email to: %s' % email
                 send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email))
+                run_info.emailsent = datetime.now()
+                run_info.save()
 
 
 
