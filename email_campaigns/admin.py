@@ -8,7 +8,7 @@ from signals import *
 
 
 class CampaignAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', )
 
 admin.site.register(Campaign, CampaignAdmin)
 
