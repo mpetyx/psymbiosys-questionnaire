@@ -99,7 +99,7 @@ def send_email_alert(email, questionnaire):
 
 
 @shared_task(ignore_result=True)
-def send_email_campagin(email, qu):
+def send_email_campaign(email, qu):
     subject = "Give us your perspective for the brand values of the AIDIMME workplace !"
     to = [email]
     from_email = 'aidimme-questionnaires@psymbiosys.info'
@@ -129,13 +129,7 @@ def send_email_campagin(email, qu):
     return True
 
 
-@shared_task(ignore_result=True)
-def start_campaign(emails):
-    for email in emails:
-        send_email_campagin.delay(email)
-
-
-# # @celery.decorators.periodic_task(run_every=crontab(day_of_month=[1,15]),ignore_result=True,name="task_check_who_filled_the_questionaire",)
+# @celery.decorators.periodic_task(run_every=crontab(day_of_month=[1,15]),ignore_result=True,name="task_check_who_filled_the_questionaire",)
 # @celery.decorators.periodic_task(run_every=timedelta(minutes=10), ignore_result=True,
 #                                  name="task_check_who_filled_the_questionaire", )
 # def check_who_filled_the_questionaire():
@@ -146,8 +140,7 @@ def start_campaign(emails):
 #             for email in emails:
 #                 if not RunInfoHistory.objects.filter(subject__email=email, questionnaire=questionnaire):
 #                     send_email_alert.delay(email, retrieve_campaign_run(questionnaire.id, email))
-#
-#
+
 
 
 @shared_task(ignore_result=True)
@@ -158,9 +151,7 @@ def a_campaign_created_celery(instance):
     for questionnaire in questionnaires:
         emails = campaign.emails
         for email in emails:
-            if not RunInfoHistory.objects.filter(subject__email=email, questionnaire=questionnaire):
-                if not RunInfo.objects.filter(subject__email=email, questionset=questionnaire.questionsets()[0]):
-                    send_email_campagin.delay(email, retrieve_campaign_run(questionnaire.id, email))
+            send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email))
 
 
 
