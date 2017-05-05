@@ -151,7 +151,6 @@ def a_campaign_created_celery(instance):
     for questionnaire in questionnaires:
         emails = campaign.emails
         for email in emails:
-            print 'sending email to: %s' % email
             send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email))
 
 
