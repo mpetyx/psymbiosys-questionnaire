@@ -4,7 +4,6 @@ from tasks import *
 
 
 def a_campaign_created(sender, instance, created, **kwargs):
-    if created:
-        a_campaign_created_celery.delay(instance)
+    a_campaign_modified.delay(instance)
 
 post_save.connect(a_campaign_created, sender=Campaign)

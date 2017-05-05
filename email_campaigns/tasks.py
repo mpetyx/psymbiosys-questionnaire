@@ -144,14 +144,15 @@ def send_email_campaign(email, qu):
 
 
 @shared_task(ignore_result=True)
-def a_campaign_created_celery(instance):
+def a_campaign_modified(instance):
     campaign = Campaign.objects.get(id=instance.id)
 
     questionnaires = campaign.questionnaires.all()
     for questionnaire in questionnaires:
         emails = campaign.emails
         for email in emails:
-            send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email))
+            if not RunInfo.objects.filter(subject__email=email, questionset__questionnaire=questionnaire).count():
+                send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email))
 
 
 
