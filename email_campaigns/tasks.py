@@ -145,7 +145,7 @@ def send_email_campaign(email, qu):
 
 @shared_task(ignore_result=True)
 def a_campaign_modified(instance):
-    campaign = Campaign.objects.get(id=instance.id)
+    campaign = Campaign.objects.last()
 
     questionnaires = campaign.questionnaires.all()
     print questionnaires
