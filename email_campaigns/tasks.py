@@ -148,10 +148,13 @@ def a_campaign_modified(instance):
     campaign = Campaign.objects.get(id=instance.id)
 
     questionnaires = campaign.questionnaires.all()
+    print questionnaires
     for questionnaire in questionnaires:
         emails = campaign.emails
         for email in emails:
+            print 'Attempted to send email to: %s' % email
             if not RunInfo.objects.filter(subject__email=email, questionset__questionnaire=questionnaire).count():
+                print 'Sending email to: %s' % email
                 send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email))
 
 
