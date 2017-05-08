@@ -7,9 +7,10 @@ from utils import split_numal
 import json
 from parsers import parse_checks, ParseException
 from django.conf import settings
+from django.contrib.auth.models import User
+from email_campaigns.models import Campaign
 
 _numre = re.compile("(\d+)([a-z]+)", re.I)
-
 
 class Subject(models.Model):
     STATE_CHOICES = [
@@ -78,6 +79,7 @@ class Questionnaire(models.Model):
     name = models.CharField(max_length=128)
     redirect_url = models.CharField(max_length=128, help_text="URL to redirect to when Questionnaire is complete. Macros: $SUBJECTID, $RUNID, $LANG", default="/static/complete.html")
     type = models.CharField(max_length=256, choices=QUESTIONNAIRE_CHOICES, default="WORKERS_SENTIMENT")
+    campaigns = models.ManyToManyField(Campaign, blank=True, related_name='questionnaires')
 
     def __unicode__(self):
         return self.name
@@ -265,6 +267,7 @@ class RunInfoHistory(models.Model):
             help_text=u"A comma sepearted list of questions skipped by this run"
         )
     questionnaire = models.ForeignKey(Questionnaire)
+    campaign = models.ForeignKey(Campaign, null=True)
 
     def __unicode__(self):
         return "%s: %s on %s" % (self.runid, self.subject, self.completed)
@@ -411,6 +414,7 @@ class Answer(models.Model):
     runid = models.CharField(u'RunID', help_text = u"The RunID (ie. year)", max_length=32)
     answer = models.TextField()
     answered_at = models.DateTimeField(auto_now_add=True)
+    campaign = models.ForeignKey(Campaign, null=True)
 
     def __unicode__(self):
         return "Answer(%s: %s, %s)" % (self.question.number, self.subject.surname, self.subject.givenname)

@@ -67,7 +67,7 @@ def delete_answer(question, subject, runid):
     Answer.objects.filter(subject=subject, runid=runid, question=question).delete()
 
 
-def add_answer(runinfo, question, answer_dict):
+def add_answer(runinfo, question, answer_dict, campaign_id):
     """
     Add an Answer to a Question for RunInfo, given the relevant form input
 
@@ -75,10 +75,16 @@ def add_answer(runinfo, question, answer_dict):
     question_{number} prefix.  The question_{number} form value is accessible
     with the ANSWER key.
     """
+    try:
+        campaign = Campaign.objects.get(pk=campaign_id)
+    except:
+        campaign = None
+
     answer = Answer()
     answer.question = question
     answer.subject = runinfo.subject
     answer.runid = runinfo.runid
+    answer.campaign = campaign
 
     type = question.get_type()
 
@@ -399,6 +405,7 @@ def questionnaire(request, runcode=None, qs=None):
     # if the submitted page is different to what runinfo says, update runinfo
     # XXX - do we really want this?
     qs = request.POST.get('questionset_id', qs)
+    campaign_id = request.POST.get('campaign', None)
     try:
         qsobj = QuestionSet.objects.filter(pk=qs)[0]
         if qsobj.questionnaire == runinfo.questionset.questionnaire:
@@ -461,7 +468,7 @@ def questionnaire(request, runcode=None, qs=None):
                     if cd.get('store', False):
                         runinfo.set_cookie(question.number, None)
                     continue
-            add_answer(runinfo, question, ans)
+            add_answer(runinfo, question, ans, campaign_id)
             if cd.get('store', False):
                 runinfo.set_cookie(question.number, ans['ANSWER'])
         except AnswerException, e:
@@ -487,13 +494,18 @@ def questionnaire(request, runcode=None, qs=None):
         request.session['prev_runcode'] = runinfo.random
 
     if next is None:  # we are finished
-        return finish_questionnaire(request, runinfo, questionnaire)
+        return finish_questionnaire(request, runinfo, questionnaire, campaign_id)
 
     commit()
     return redirect_to_qs(runinfo, request)
 
 
-def finish_questionnaire(request, runinfo, questionnaire):
+def finish_questionnaire(request, runinfo, questionnaire, campaign_id):
+    try:
+        campaign = Campaign.objects.get(pk=campaign_id)
+    except:
+        campaign = None
+
     hist = RunInfoHistory()
     hist.subject = runinfo.subject
     hist.runid = runinfo.runid
@@ -501,6 +513,7 @@ def finish_questionnaire(request, runinfo, questionnaire):
     hist.questionnaire = questionnaire
     hist.tags = runinfo.tags
     hist.skipped = runinfo.skipped
+    hist.campaign = campaign
     hist.save()
 
     """

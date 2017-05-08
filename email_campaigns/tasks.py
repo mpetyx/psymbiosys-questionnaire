@@ -24,18 +24,16 @@ from django.db.models.signals import post_save
 current_site = Site.objects.all()[0].name
 
 
-def generate_campaign_run(questionnaire_id, subject_id=None):
+def generate_campaign_run(questionnaire_id, email=None):
     qu = get_object_or_404(Questionnaire, id=questionnaire_id)
     qs = qu.questionsets()[0]
 
-    if subject_id is not None:
+    if email is not None:
         # su = get_object_or_404(Subject, email=subject_id)
-        su = Subject.objects.get_or_create(email=subject_id)
-        su = su[0]
-        su.save()
+        su = Subject.objects.get_or_create(email=email)
     else:
-        su = Subject.objects.filter(givenname='Anonymous', surname='User')[0:1]
-        if su:
+        su = Subject.objects.filter(givenname='Anonymous', surname='User')
+        if su.exists():
             su = su[0]
         else:
             su = Subject(givenname='Anonymous', surname='User')
@@ -53,16 +51,20 @@ def generate_campaign_run(questionnaire_id, subject_id=None):
     return str(current_site) + "/q/%s/" % key
 
 
-def retrieve_campaign_run(questionnaire_id, subject):
+def retrieve_campaign_run(questionnaire_id, email, campaign_id):
+    """
+    This creates a link that will be added on the button of the template you received via email
+    """
     qu = get_object_or_404(Questionnaire, id=questionnaire_id)
     qs = qu.questionsets()[0]
 
-    if RunInfo.objects.filter(subject__email=subject, questionset=qs):
-        run_key = RunInfo.objects.get(subject__email=subject, questionset=qs).runid
+    if RunInfo.objects.filter(subject__email=email, questionset=qs):
+        run_key = RunInfo.objects.get(subject__email=email, questionset=qs).runid
 
-        return str(current_site) + "/q/%s/" % run_key
+        link = str(current_site) + "/q/%s/" % run_key
     else:
-        return generate_campaign_run(questionnaire_id, subject)
+        link = generate_campaign_run(questionnaire_id, email)
+    return "%s?campaign=%s" % (link, campaign_id)
 
 
 @shared_task(ignore_result=True)
@@ -142,7 +144,6 @@ def send_email_campaign(email, qu):
 #                     send_email_alert.delay(email, retrieve_campaign_run(questionnaire.id, email))
 
 
-
 @shared_task(ignore_result=True)
 def a_campaign_modified(instance):
     campaign = instance
@@ -159,9 +160,15 @@ def a_campaign_modified(instance):
                 questionset__questionnaire__campaigns__in=[campaign]
             )
 
-            if not run_info.exists() or not bool(run_info[0].emailsent):
+            run_info_history = RunInfoHistory.objects.filter(
+                subject__email=email,
+                questionnaire=questionnaire,
+                campaign=campaign
+            )
+
+            if (not run_info.exists() and not run_info_history.exists) or not bool(run_info[0].emailsent):
                 print 'Ok, sending an email to: %s' % email
-                send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email))
+                send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email, campaign.id))
                 if run_info.exists():
                     run_info_instance = run_info[0]
                     run_info_instance.emailsent = datetime.now()
