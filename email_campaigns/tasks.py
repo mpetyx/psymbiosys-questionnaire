@@ -13,7 +13,7 @@ from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from datetime import timedelta, datetime
-from email_campaigns.models import Campaign
+from questionnaire.models import Campaign
 from questionnaire.views import *
 from django.contrib.sites.models import Site
 from django.template import loader

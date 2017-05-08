@@ -8,9 +8,27 @@ import json
 from parsers import parse_checks, ParseException
 from django.conf import settings
 from django.contrib.auth.models import User
-from email_campaigns.models import Campaign
 
 _numre = re.compile("(\d+)([a-z]+)", re.I)
+
+
+from multi_email_field.fields import MultiEmailField
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models.signals import post_save
+
+
+class Campaign(models.Model):
+    name = models.CharField(max_length=200, default='Aidima Campaign')
+    manager = models.ForeignKey(User, blank=True)
+    emails = MultiEmailField()
+    questionnaires = models.ManyToManyField("Questionnaire", blank=True, related_name='campaigns')
+
+    get_latest_by = "campaign_id"
+
+    def __unicode__(self):
+        return self.name
+
 
 class Subject(models.Model):
     STATE_CHOICES = [
@@ -79,7 +97,6 @@ class Questionnaire(models.Model):
     name = models.CharField(max_length=128)
     redirect_url = models.CharField(max_length=128, help_text="URL to redirect to when Questionnaire is complete. Macros: $SUBJECTID, $RUNID, $LANG", default="/static/complete.html")
     type = models.CharField(max_length=256, choices=QUESTIONNAIRE_CHOICES, default="WORKERS_SENTIMENT")
-    campaigns = models.ManyToManyField(Campaign, blank=True, related_name='questionnaires')
 
     def __unicode__(self):
         return self.name
