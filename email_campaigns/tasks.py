@@ -30,7 +30,7 @@ def generate_campaign_run(questionnaire_id, email=None):
 
     if email is not None:
         # su = get_object_or_404(Subject, email=subject_id)
-        su = Subject.objects.get_or_create(email=email)
+        su, _ = Subject.objects.get_or_create(email=email)
     else:
         su = Subject.objects.filter(givenname='Anonymous', surname='User')
         if su.exists():
