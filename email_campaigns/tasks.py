@@ -154,11 +154,6 @@ def a_campaign_modified(instance):
         emails = campaign.emails
         for email in emails:
             print 'Started email sending on: %s' % email
-            run_info = RunInfo.objects.filter(
-                subject__email=email,
-                questionset__questionnaire=questionnaire,
-                questionset__questionnaire__campaigns__in=[campaign]
-            )
 
             run_info_history = RunInfoHistory.objects.filter(
                 subject__email=email,
@@ -166,13 +161,9 @@ def a_campaign_modified(instance):
                 campaign=campaign
             )
 
-            if (not run_info.exists() and not run_info_history.exists()) or not bool(run_info[0].emailsent):
+            if (not run_info_history.exists()):
                 print 'Ok, sending an email to: %s' % email
                 send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email, campaign.id))
-                if run_info.exists():
-                    run_info_instance = run_info[0]
-                    run_info_instance.emailsent = datetime.now()
-                    run_info_instance.save()
 
 
 
