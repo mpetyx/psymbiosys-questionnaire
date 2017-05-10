@@ -195,6 +195,8 @@ class RunInfo(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     emailsent = models.DateTimeField(null=True, blank=True)
 
+    campaign = models.ForeignKey(Campaign, null=True)
+
     lastemailerror = models.CharField(max_length=64, null=True, blank=True)
 
     state = models.CharField(max_length=16, null=True, blank=True)

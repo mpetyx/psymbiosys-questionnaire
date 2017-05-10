@@ -13,18 +13,16 @@ from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from datetime import timedelta, datetime
-from questionnaire.models import Campaign
 from questionnaire.views import *
 from django.contrib.sites.models import Site
 from django.template import loader
 from django.core.mail import send_mail
-from django.db.models.signals import post_save
 
 
 current_site = Site.objects.all()[0].name
 
 
-def generate_campaign_run(questionnaire_id, email=None):
+def generate_campaign_run(questionnaire_id, email=None, campaign_id=None):
     qu = get_object_or_404(Questionnaire, id=questionnaire_id)
     qs = qu.questionsets()[0]
 
@@ -43,7 +41,7 @@ def generate_campaign_run(questionnaire_id, email=None):
     str_to_hash += settings.SECRET_KEY
     key = md5(str_to_hash).hexdigest()
 
-    run = RunInfo(subject=su, random=key, runid=key, questionset=qs)
+    run = RunInfo(subject=su, random=key, runid=key, questionset=qs, campaign_id=campaign_id)
     run.save()
 
     questionnaire_start.send(sender=None, runinfo=run, questionnaire=qu)
@@ -58,13 +56,15 @@ def retrieve_campaign_run(questionnaire_id, email, campaign_id):
     qu = get_object_or_404(Questionnaire, id=questionnaire_id)
     qs = qu.questionsets()[0]
 
-    if RunInfo.objects.filter(subject__email=email, questionset=qs):
-        run_key = RunInfo.objects.get(subject__email=email, questionset=qs).runid
-
-        link = str(current_site) + "/q/%s/" % run_key
+    potential_run_info = RunInfo.objects.filter(
+        subject__email=email,
+        questionset=qs,
+        campaign_id=campaign_id
+    )
+    if potential_run_info.exists():
+        return str(current_site) + "/q/%s/" % potential_run_info[0].runid
     else:
-        link = generate_campaign_run(questionnaire_id, email)
-    return "%s?campaign=%s" % (link, campaign_id)
+        return generate_campaign_run(questionnaire_id, email, campaign_id)
 
 
 @shared_task(ignore_result=True)
@@ -149,21 +149,31 @@ def a_campaign_modified(instance):
     campaign = instance
 
     questionnaires = campaign.questionnaires.all()
-    print questionnaires
     for questionnaire in questionnaires:
         emails = campaign.emails
         for email in emails:
             print 'Started email sending on: %s' % email
 
+            run_info = RunInfo.objects.filter(
+                subject__email=email,
+                questionset__questionnaire=questionnaire,
+                campaign_id=campaign.id
+            )
             run_info_history = RunInfoHistory.objects.filter(
                 subject__email=email,
                 questionnaire=questionnaire,
-                campaign=campaign
+                campaign_id=campaign.id
             )
 
-            if (not run_info_history.exists()):
+            if (not run_info.exists() and not run_info_history.exists() or not bool(run_info[0].emailsent)):
+
                 print 'Ok, sending an email to: %s' % email
                 send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email, campaign.id))
+                if run_info.exists():
+                    run_info_instance = run_info[0]
+                    run_info_instance.emailsent = datetime.now()
+                    run_info_instance.save()
+
 
 
 
