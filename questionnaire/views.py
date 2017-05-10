@@ -264,7 +264,7 @@ def fetch_checks(questionsets):
     return checks
 
 
-def redirect_to_qs(runinfo, request=None):
+def redirect_to_qs(runinfo, request=None, campaign_id=None):
     "Redirect to the correct and current questionset URL for this RunInfo"
 
     # cache current questionset
@@ -288,7 +288,7 @@ def redirect_to_qs(runinfo, request=None):
     # empty ?
     if not hasquestionset:
         logging.warn('no questionset in questionnaire which passes the check')
-        return finish_questionnaire(request, runinfo, qs.questionnaire)
+        return finish_questionnaire(request, runinfo, qs.questionnaire, campaign_id)
 
     if not use_session:
         args = [runinfo.random, runinfo.questionset.sortid]
@@ -298,7 +298,7 @@ def redirect_to_qs(runinfo, request=None):
         request.session['qs'] = runinfo.questionset.sortid
         request.session['runcode'] = runinfo.random
         urlname = 'questionnaire'
-    url = reverse(urlname, args=args)
+    url = "%s?campaign=%s" % (reverse(urlname, args=args), campaign_id)
     return HttpResponseRedirect(url)
 
 
@@ -382,19 +382,20 @@ def questionnaire(request, runcode=None, qs=None):
     # --------------------------------
 
     if request.method != "POST":
+        campaign_id = request.GET.get('campaign', None)
         if qs is not None:
             qs = get_object_or_404(QuestionSet, sortid=qs, questionnaire=runinfo.questionset.questionnaire)
             if runinfo.random.startswith('test:'):
                 pass  # ok for testing
             elif qs.sortid > runinfo.questionset.sortid:
                 # you may jump back, but not forwards
-                return redirect_to_qs(runinfo, request)
+                return redirect_to_qs(runinfo, request, campaign_id)
             runinfo.questionset = qs
             runinfo.save()
             commit()
         # no questionset id in URL, so redirect to the correct URL
         if qs is None:
-            return redirect_to_qs(runinfo, request)
+            return redirect_to_qs(runinfo, request, campaign_id)
         questionset_start.send(sender=None, runinfo=runinfo, questionset=qs)
         return show_questionnaire(request, runinfo)
 
@@ -497,7 +498,7 @@ def questionnaire(request, runcode=None, qs=None):
         return finish_questionnaire(request, runinfo, questionnaire, campaign_id)
 
     commit()
-    return redirect_to_qs(runinfo, request)
+    return redirect_to_qs(runinfo, request, campaign_id)
 
 
 def finish_questionnaire(request, runinfo, questionnaire, campaign_id):
