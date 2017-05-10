@@ -397,7 +397,7 @@ def questionnaire(request, runcode=None, qs=None):
         if qs is None:
             return redirect_to_qs(runinfo, request, campaign_id)
         questionset_start.send(sender=None, runinfo=runinfo, questionset=qs)
-        return show_questionnaire(request, runinfo)
+        return show_questionnaire(request, runinfo, campaign_id=campaign_id)
 
     # -------------------------------------
     # --- Process POST with QuestionSet ---
@@ -480,7 +480,7 @@ def questionnaire(request, runcode=None, qs=None):
             raise
 
     if len(errors) > 0:
-        res = show_questionnaire(request, runinfo, errors=errors)
+        res = show_questionnaire(request, runinfo, errors=errors, campaign_id=campaign_id)
         rollback()
         return res
 
@@ -553,7 +553,7 @@ def finish_questionnaire(request, runinfo, questionnaire, campaign_id):
     return r2r("questionnaire/complete.$LANG.html", request)
 
 
-def show_questionnaire(request, runinfo, errors={}):
+def show_questionnaire(request, runinfo, errors={}, campaign_id=None):
     """
     Return the QuestionSet template
 
@@ -670,6 +670,7 @@ def show_questionnaire(request, runinfo, errors={}):
         current_answers = Answer.objects.filter(subject=runinfo.subject, runid=runinfo.runid).order_by('id')
 
     r = r2r("questionnaire/questionset.html", request,
+            campaign=Campaign.objects.get(pk=campaign_id),
             questionset=runinfo.questionset,
             runinfo=runinfo,
             errors=errors,
