@@ -58,24 +58,19 @@ class QuestionnaireAdmin(admin.ModelAdmin):
 
 
 class RunInfoAdmin(admin.ModelAdmin):
-    list_display = ['random', 'runid', 'get_campaign_name', 'subject', 'created', 'emailsent', 'lastemailerror']
-
-    def get_campaign_name(self, obj):
-        return obj.campaign.name if obj.campaign else None
+    list_display = ['random', 'runid', 'campaign', 'subject', 'created', 'emailsent', 'lastemailerror']
 
 
 class RunInfoHistoryAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['subject', 'runid', 'questionnaire', 'campaign', 'completed']
 
 
 class AnswerAdmin(admin.ModelAdmin):
     search_fields = ['subject__email', 'runid', 'question__number', 'answer']
-    list_display = ['runid', 'subject', 'campaign_name', 'question']
+    list_display = ['runid', 'subject', 'campaign', 'question']
     list_filter = ['subject', 'runid']
     ordering = [ 'subject', 'runid', 'question', ]
 
-    def campaign_name(self, obj):
-        return obj.campaign.name if obj.campaign else None
 
 adminsite.register(Questionnaire, QuestionnaireAdmin)
 adminsite.register(Question, QuestionAdmin)
