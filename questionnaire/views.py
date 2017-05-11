@@ -1202,12 +1202,10 @@ def brand_value_stats(request):
 
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="BRAND_VALUE")
     if campaign:
-        questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
+        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
+        questionnaire_history = questionnaire_history.filter(campaign_id=campaign)
 
-    questionnaire_unique_history_non_anonymous_ids = questionnaire_history.exclude(subject_id=1).distinct('subject_id').values_list('id', flat=True)
-    questionnaire_unique_history_anonymous_ids = questionnaire_history.filter(subject_id=1).values_list('id', flat=True)
-    combined = list(questionnaire_unique_history_non_anonymous_ids) + list(questionnaire_unique_history_anonymous_ids)
-    questionnaire_unique_history = questionnaire_history.filter(id__in=combined)
+    questionnaire_unique_history = questionnaire_history.distinct('subject_id')
 
     number_of_responses = questionnaire_history.count()
     number_of_unique_responses = questionnaire_unique_history.count()
@@ -1262,7 +1260,7 @@ def workers_sentiment_charts(request, part=1):
         )
 
     if campaign:
-        workers_sentiment_qs = workers_sentiment_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
+        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
     if subject_type:
         workers_sentiment_qs = workers_sentiment_qs.filter(subject__type=subject_type.upper())
 
@@ -1275,25 +1273,8 @@ def workers_sentiment_charts(request, part=1):
         # get all the possible answers, possibly discard duplicates
         answers_for_this_question_text = workers_sentiment_qs.filter(question__text_en=question_text)
         if unique_answers:
-            run_ids = answers_for_this_question_text.values_list('runid', flat=True)
-
-
-            non_anonymous_distict = list(RunInfoHistory.objects\
-                .filter(runid__in=run_ids)\
-                .exclude(subject_id=1) \
-                .reverse()\
-                .distinct('subject_id')\
-                .values_list('runid', flat=True))
-
-            anonymous = list(RunInfoHistory.objects\
-                .filter(runid__in=run_ids, subject_id=1)\
-                .reverse() \
-                .distinct('id') \
-                .values_list('runid', flat=True))
-
-            unique_answer_runids = non_anonymous_distict + anonymous
-
-            answers_for_this_question_text = answers_for_this_question_text.filter(runid__in=unique_answer_runids)
+            unique_subject_run_ids = answers_for_this_question_text.distinct('subject_id').values_list('runid', flat=True)
+            answers_for_this_question_text = answers_for_this_question_text.filter(runid__in=unique_subject_run_ids)
 
         different_answers_for_this_question = {}
 
@@ -1395,34 +1376,17 @@ def workers_sentiment_stats(request, part=1):
 
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="WORKERS_SENTIMENT")
     if campaign:
-        questionnaire_history = questionnaire_history.filter(questionnaire__campaigns__pk__in=[campaign])
-        workers_sentiment_qs = workers_sentiment_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
+        questionnaire_history = questionnaire_history.filter(campaign_id=campaign)
+        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
+
+    if subject_type:
+        workers_sentiment_qs = workers_sentiment_qs.filter(subject__type=subject_type.upper())
 
     if unique_answers:
-        run_ids = workers_sentiment_qs.values_list('runid', flat=True)
+        unique_subject_run_ids = workers_sentiment_qs.distinct('subject_id').values_list('runid', flat=True)
+        workers_sentiment_qs = workers_sentiment_qs.filter(runid__in=unique_subject_run_ids)
 
-        non_anonymous_distict = list(RunInfoHistory.objects \
-                                     .filter(runid__in=run_ids) \
-                                     .exclude(subject_id=1) \
-                                     .reverse() \
-                                     .distinct('subject_id') \
-                                     .values_list('runid', flat=True))
-
-        anonymous = list(RunInfoHistory.objects \
-                         .filter(runid__in=run_ids, subject_id=1) \
-                         .reverse() \
-                         .distinct('id') \
-                         .values_list('runid', flat=True))
-
-        unique_answer_runids = non_anonymous_distict + anonymous
-
-        workers_sentiment_qs = workers_sentiment_qs.filter(runid__in=unique_answer_runids)
-
-
-    questionnaire_unique_history_non_anonymous_ids = questionnaire_history.exclude(subject_id=1).distinct('subject_id').values_list('id', flat=True)
-    questionnaire_unique_history_anonymous_ids = questionnaire_history.filter(subject_id=1).values_list('id', flat=True)
-    combined = list(questionnaire_unique_history_non_anonymous_ids) + list(questionnaire_unique_history_anonymous_ids)
-    questionnaire_unique_history = questionnaire_history.filter(id__in=combined)
+    questionnaire_unique_history = questionnaire_history.distinct('subject_id')
 
     number_of_responses = questionnaire_history.count()
     number_of_unique_responses = questionnaire_unique_history.count()
@@ -1442,8 +1406,8 @@ def workers_sentiment_stats(request, part=1):
 
     different_answers_for_this_questionnaire_part, payload = {}, []
 
-    for a in workers_sentiment_qs:
-        answer_number = a.get_likert_answer()
+    for answer in workers_sentiment_qs:
+        answer_number = answer.get_likert_answer()
 
         if answer_number in different_answers_for_this_questionnaire_part:
             different_answers_for_this_questionnaire_part[answer_number] += 1
@@ -1468,7 +1432,6 @@ def workers_sentiment_stats(request, part=1):
     for id, lista in likert_dict.iteritems():
         str_likert_dict[id] = '   ---   '.join(lista)
 
-
     for key, val in different_answers_for_this_questionnaire_part.iteritems():
         payload.append({
             'Answer': calculate_answer_name(key),
@@ -1490,8 +1453,7 @@ def workers_sentiment_stats(request, part=1):
 
         number_of_positive_responses = isolate_part.get(3, 0)
         kpi_title = 'Worker well-being at workplace regarding ambient parameters and furniture'
-        temp = Answer.objects.filter(
-            question__questionset__questionnaire__type="WORKERS_SENTIMENT",
+        temp = workers_sentiment_qs.filter(
             question__questionset__sortid__in=[part]
         )\
         .distinct('runid')\
@@ -1505,27 +1467,17 @@ def workers_sentiment_stats(request, part=1):
         number_of_positive_responses = different_answers_for_this_questionnaire_part.get(5, 0)
         kpi_title = 'Emotional perception of the workers about the office space'
         num_of_variables = 5
-        temp = Answer.objects.filter(
-            question__questionset__questionnaire__type="WORKERS_SENTIMENT",
-            question__questionset__sortid__in=['4', '5']
-            ) \
-            .distinct('runid') \
-            .count()
+        temp = workers_sentiment_qs.distinct('runid').count()
     else:
         number_of_positive_responses = 0
         kpi_title = ''
         num_of_variables = 1
         temp = 1
 
-
     kpi = float(number_of_positive_responses) / (num_of_variables * temp) * 100
 
     likert_list = []
-    subject_type_qs = workers_sentiment_qs
-    if subject_type:
-        subject_type_qs = subject_type_qs.filter(subject__type=subject_type.upper())
-    for a in subject_type_qs:
-
+    for a in workers_sentiment_qs:
         likert_list.append(a.get_likert_answer())
 
     likert_values = {

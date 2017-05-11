@@ -439,7 +439,7 @@ class Answer(models.Model):
         return "Answer(%s: %s, %s)" % (self.question.number, self.subject.surname, self.subject.givenname)
 
     def get_campaign(self):
-        return self.question.questionset.questionnaire.campaigns.latest('id').name
+        return self.campaign.name
 
     def get_likert_answer(self):
         return int(eval(self.answer)[0])
