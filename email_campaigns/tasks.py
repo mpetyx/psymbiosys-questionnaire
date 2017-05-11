@@ -60,6 +60,7 @@ def retrieve_campaign_run(questionnaire_id, email, campaign_id):
         questionset=qs,
         campaign_id=campaign_id
     )
+
     if potential_run_info.exists():
         return str(current_site) + "/q/%s/" % potential_run_info[0].runid
     else:
@@ -167,11 +168,13 @@ def a_campaign_modified(instance):
             if (not run_info.exists() and not run_info_history.exists() or not bool(run_info[0].emailsent)):
 
                 print 'Ok, sending an email to: %s' % email
-                send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email, campaign.id))
+                campaign_run = retrieve_campaign_run(questionnaire.id, email, campaign.id)
                 if run_info.exists():
                     run_info_instance = run_info[0]
                     run_info_instance.emailsent = datetime.now()
                     run_info_instance.save()
+
+                send_email_campaign.delay(email, campaign_run)
 
 
 
