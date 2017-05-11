@@ -31,7 +31,11 @@ def generate_campaign_run(questionnaire_id, email=None, campaign_id=None):
     key = md5(str_to_hash).hexdigest()
 
     if email is not None:
-        su, _ = Subject.objects.get_or_create(email__iexact=email)
+        su = Subject.objects.filter(email__iexact=email)
+        if su.exists():
+            su = su[0]
+        else:
+            su = Subject.objects.create(email=email)
     else:
         su = Subject(givenname=key, surname='Anonymous User')
         su.save()
