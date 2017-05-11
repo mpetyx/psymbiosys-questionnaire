@@ -36,7 +36,7 @@ def generate_campaign_run(questionnaire_id, email=None, campaign_id=None):
         su = Subject(givenname=key, surname='Anonymous User')
         su.save()
 
-    run = RunInfo(subject=su, random=key, runid=key, questionset=qs, campaign_id=campaign_id)
+    run = RunInfo(subject=su, random=key, runid=key, questionset=qs, campaign_id=campaign_id, emailsent=datetime.now())
     run.save()
 
     questionnaire_start.send(sender=None, runinfo=run, questionnaire=qu)
@@ -164,10 +164,6 @@ def a_campaign_modified(instance):
 
                 print 'Ok, sending an email to: %s' % email
                 send_email_campaign.delay(email, retrieve_campaign_run(questionnaire.id, email, campaign.id))
-                if run_info.exists():
-                    run_info_instance = run_info[0]
-                    run_info_instance.emailsent = datetime.now()
-                    run_info_instance.save()
 
 
 
