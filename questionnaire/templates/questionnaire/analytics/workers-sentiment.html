@@ -34,9 +34,9 @@
                 <div class="pull-right">
                     <span class="select-header">Select a Campaign:</span>
                     <select id="table-campaign-filter" class="col-xs-4">
-                        <option></option>
+                        <option selected>All</option>
                         {% for campaign in campaigns %}
-                            <option {% if forloop.counter == 1 %}selected {% endif %}data-val="{{ campaign.name }}">{{ campaign.name }}</option>
+                            <option data-val="{{ campaign.name }}">{{ campaign.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -276,9 +276,9 @@
                 <div class="pull-right">
                     <span class="select-header">Select a Campaign:</span>
                     <select id="chart-campaign-filter">
-                        <option></option>
+                        <option selected>All</option>
                         {% for campaign in campaigns %}
-                            <option {% if forloop.counter == 1 %}selected {% endif %}value="{{ campaign.pk }}" data-varname="campaign">{{ campaign.name }}</option>
+                            <option value="{{ campaign.pk }}" data-varname="campaign">{{ campaign.name }}</option>
                         {% endfor %}
                     </select>
                 </div>

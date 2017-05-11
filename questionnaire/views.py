@@ -1312,7 +1312,7 @@ def workers_sentiment_charts(request, part=1):
                     likert_sum += obj['Answer'] * obj['Responses']
             radar_chart_data[0]['axes'].append({
                 'axis': question,
-                'value': float(likert_sum) / count
+                'value': 0 if not count else float(likert_sum) / count
             })
         chart_data = radar_chart_data
 
@@ -1474,7 +1474,7 @@ def workers_sentiment_stats(request, part=1):
         num_of_variables = 1
         temp = 1
 
-    kpi = float(number_of_positive_responses) / (num_of_variables * temp) * 100
+    kpi = 0 if not temp else float(number_of_positive_responses) / (num_of_variables * temp) * 100
 
     likert_list = []
     for a in workers_sentiment_qs:
