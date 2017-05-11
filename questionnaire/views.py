@@ -1247,8 +1247,6 @@ def workers_sentiment_charts(request, part=1):
     campaign = request.GET.get('campaign', None)
     unique_answers = request.GET.get('unique', False)
 
-    import pdb;pdb.set_trace();
-
     # The original query set for this questionnaire's specific part
     if part in ('4', '5'):
         workers_sentiment_qs = Answer.objects.filter(
