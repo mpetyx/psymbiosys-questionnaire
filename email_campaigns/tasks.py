@@ -26,20 +26,16 @@ def generate_campaign_run(questionnaire_id, email=None, campaign_id=None):
     qu = get_object_or_404(Questionnaire, id=questionnaire_id)
     qs = qu.questionsets()[0]
 
+    str_to_hash = "".join(map(lambda i: chr(random.randint(0, 255)), range(16)))
+    str_to_hash += settings.SECRET_KEY
+    key = md5(str_to_hash).hexdigest()
+
     if email is not None:
         # su = get_object_or_404(Subject, email=subject_id)
         su, _ = Subject.objects.get_or_create(email=email)
     else:
-        su = Subject.objects.filter(givenname='Anonymous', surname='User')
-        if su.exists():
-            su = su[0]
-        else:
-            su = Subject(givenname='Anonymous', surname='User')
-            su.save()
-
-    str_to_hash = "".join(map(lambda i: chr(random.randint(0, 255)), range(16)))
-    str_to_hash += settings.SECRET_KEY
-    key = md5(str_to_hash).hexdigest()
+        su = Subject(givenname=key, surname='Anonymous User')
+        su.save()
 
     run = RunInfo(subject=su, random=key, runid=key, questionset=qs, campaign_id=campaign_id)
     run.save()
