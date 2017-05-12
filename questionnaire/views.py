@@ -1179,7 +1179,11 @@ def brand_value_charts(request):
     diff_sum = 0
     for da, lma in zip(dominant_answers, last_manager_answers):
         diff_sum += abs(da['answer'] - lma)
-    kpi_4 = 100 - (float(diff_sum)/(len(dominant_answers)*4))*100
+
+    questionnaire_num_of_questions = Question.objects.filter(
+        questionset__questionnaire="BRAND_VALUE"
+    ).count()
+    kpi_4 = 100 - (float(diff_sum)/(len(questionnaire_num_of_questions)*4))*100
 
     return render(request, 'questionnaire/analytics/brand-value-table.html', {
         'dominant_answers': dominant_answers,
