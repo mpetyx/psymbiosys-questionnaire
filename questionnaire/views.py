@@ -1107,14 +1107,12 @@ def brand_value_charts(request):
     )
 
     if campaign:
-        brand_value_qs = brand_value_qs.filter(question__questionset__questionnaire__campaigns__pk__in=[campaign])
+        brand_value_qs = brand_value_qs.filter(campaign_id=campaign)
     if subject_type:
         brand_value_qs = brand_value_qs.filter(subject__type=subject_type.upper())
     if unique_answers:
-        anonymous_brand_value_qs_ids = brand_value_qs.filter(subject_id=1).values_list('id', flat=True)
-        brand_value_qs_ids = brand_value_qs.exclude(subject_id=1).reverse().distinct('question_id', 'subject_id').values_list('id', flat=True)
-        combined = list(anonymous_brand_value_qs_ids) + list(brand_value_qs_ids)
-        brand_value_qs = brand_value_qs.filter(id__in=combined)
+        unique_subject_run_ids = brand_value_qs.distinct('subject_id').values_list('runid', flat=True)
+        brand_value_qs = brand_value_qs.filter(runid__in=unique_subject_run_ids)
 
     formatted_answers = {}
     for answer in brand_value_qs:
@@ -1156,13 +1154,11 @@ def brand_value_charts(request):
     )
 
     if campaign:
-        managers_history = managers_history.filter(questionnaire__campaigns__pk__in=[campaign])
+        managers_history = managers_history.filter(campaign_id=campaign)
 
     latest_managers_runid = managers_history.reverse().first().runid
 
-    manager_brand_value_qs = Answer.objects.filter(
-        runid=latest_managers_runid
-    )
+    manager_brand_value_qs = Answer.objects.filter(runid=latest_managers_runid)
 
 
     last_manager_answers = []
