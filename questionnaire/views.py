@@ -1156,9 +1156,11 @@ def brand_value_charts(request):
     if campaign:
         managers_history = managers_history.filter(campaign_id=campaign)
 
-    latest_managers_runid = managers_history.reverse().first().runid
-
-    manager_brand_value_qs = Answer.objects.filter(runid=latest_managers_runid)
+    try:
+        latest_managers_runid = managers_history.reverse().first().runid
+        manager_brand_value_qs = Answer.objects.filter(runid=latest_managers_runid)
+    except AttributeError:
+        manager_brand_value_qs = Answer.objects.none()
 
 
     last_manager_answers = []
@@ -1191,14 +1193,8 @@ def brand_value_charts(request):
 def brand_value_stats(request):
     campaign = request.GET.get('campaign', None)
 
-    # The original query set for this questionnaire's specific part
-    workers_sentiment_qs = Answer.objects.filter(
-        question__questionset__questionnaire__type="BRAND_VALUE"
-    )
-
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="BRAND_VALUE")
     if campaign:
-        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
         questionnaire_history = questionnaire_history.filter(campaign_id=campaign)
 
     questionnaire_unique_history = questionnaire_history.distinct('subject_id')
