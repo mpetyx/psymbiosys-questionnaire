@@ -1183,7 +1183,7 @@ def brand_value_charts(request):
     questionnaire_num_of_questions = Question.objects.filter(
         questionset__questionnaire__type="BRAND_VALUE"
     ).count()
-    kpi_4 = 100 - (float(diff_sum)/(len(questionnaire_num_of_questions)*4))*100
+    kpi_4 = 100 - (float(diff_sum)/(questionnaire_num_of_questions*4))*100
 
     return render(request, 'questionnaire/analytics/brand-value-table.html', {
         'dominant_answers': dominant_answers,
