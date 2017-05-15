@@ -7,7 +7,8 @@ adminsite = admin.site
 
 class SubjectAdmin(admin.ModelAdmin):
     search_fields = ['surname', 'givenname', 'email']
-    list_display = ['surname', 'givenname', 'email']
+    list_display = ['surname', 'givenname', 'email', 'type']
+    list_filter = ['type']
 
 
 class ChoiceAdmin(admin.ModelAdmin):
