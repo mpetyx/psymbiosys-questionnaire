@@ -279,7 +279,7 @@ $(document).ready(function() {
 
     $('select#table-type-filter').on('change', function() {
         var val = $(this).find('option:selected').data('val').toUpperCase(),
-            $table = $('table:not(.hidden)');
+            $table = $('table.analytics-table');
         if ( val ) {
             $table
                 .find('tr')
