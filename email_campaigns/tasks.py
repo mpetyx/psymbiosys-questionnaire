@@ -102,7 +102,9 @@ def send_email_alert(email, questionnaire):
 
 @shared_task(ignore_result=True)
 def send_email_campaign(email, url, questionnaire):
-    subject = "Give us your perspective for the %ss in the AIDIMME workplace !" % questionnaire.type.lower()
+    subject = "Give us your perspective for the %ss in the AIDIMME workplace !" % (
+        questionnaire.type.replace('_', ' ').title()
+    )
     to = [email]
     from_email = 'aidimme-questionnaires@psymbiosys.info'
 
