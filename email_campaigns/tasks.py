@@ -154,13 +154,13 @@ def a_campaign_modified(instance):
             if (not run_info_history.exists() and not run_info.exists()) or (run_info.exists() and not bool(run_info[0].emailsent)):
 
                 print 'Ok, sending an email to: %s' % email
-                # campaign_run = retrieve_campaign_run(questionnaire.id, email, campaign.id)
+                campaign_run = retrieve_campaign_run(questionnaire.id, email, campaign.id)
                 if run_info.exists():
                     run_info_instance = run_info[0]
                     run_info_instance.emailsent = datetime.now()
                     run_info_instance.save()
 
-                # send_email_campaign.delay(email, str(campaign_run), questionnaire)
+                send_email_campaign.delay(email, str(campaign_run), questionnaire)
 
 
 
