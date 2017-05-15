@@ -151,7 +151,7 @@ def a_campaign_modified(instance):
                 campaign_id=campaign.id
             )
 
-            if (not run_info_history.exists()) or (run_info.exists() and not bool(run_info[0].emailsent)):
+            if (not run_info_history.exists() and not run_info.exists()) or (run_info.exists() and not bool(run_info[0].emailsent)):
 
                 print 'Ok, sending an email to: %s' % email
                 campaign_run = retrieve_campaign_run(questionnaire.id, email, campaign.id)
