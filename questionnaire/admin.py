@@ -67,7 +67,7 @@ class RunInfoHistoryAdmin(admin.ModelAdmin):
 
 class AnswerAdmin(admin.ModelAdmin):
     search_fields = ['subject__email', 'runid', 'question__number', 'answer', 'answered_at']
-    list_display = ['runid', 'subject', 'campaign', 'question', 'answer']
+    list_display = ['subject', 'campaign', 'question', 'answer', 'answered_at']
     list_filter = ['subject', 'runid']
     ordering = [ 'subject', 'runid', 'question', ]
 
