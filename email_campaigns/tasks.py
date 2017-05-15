@@ -101,47 +101,31 @@ def send_email_alert(email, questionnaire):
 
 
 @shared_task(ignore_result=True)
-def send_email_campaign(email, qu):
-    subject = "Give us your perspective for the brand values of the AIDIMME workplace !"
+def send_email_campaign(email, url, questionnaire):
+    subject = "Give us your perspective for the %ss in the AIDIMME workplace !" % questionnaire.type.lower()
     to = [email]
     from_email = 'aidimme-questionnaires@psymbiosys.info'
 
     ctx = {
-        # 'user': str(user.first_name+ " "+user.last_name),
-        # 'invoice_id': invoice_id,
-        # 'amount' : amount,
-        # 'overall_balance':balance,
-        'qu': str(qu)
+        'url': url,
+        'questionnaire': questionnaire
     }
 
-    message = get_template('mails/welcome_questionaire.html').render(Context(ctx))
+    html_template = 'mails/%s.html' % (questionnaire.type.lower())
+
+    message = get_template(html_template).render(Context(ctx))
     msg = EmailMessage(subject, message, to=to, from_email=from_email)
     # msg.content_subtype = 'html'
     # msg.send()
 
-    html_message = loader.render_to_string(
-        'mails/welcome_questionaire.html',
-        {
-            'questionnaire': str(qu)
-        }
-    )
+    html_message = loader.render_to_string(html_template, {
+        'questionnaire': questionnaire,
+        'url': url
+    })
 
     send_mail(subject, message, from_email, to, fail_silently=True, html_message=html_message)
 
     return True
-
-
-# @celery.decorators.periodic_task(run_every=crontab(day_of_month=[1,15]),ignore_result=True,name="task_check_who_filled_the_questionaire",)
-# @celery.decorators.periodic_task(run_every=timedelta(minutes=10), ignore_result=True,
-#                                  name="task_check_who_filled_the_questionaire", )
-# def check_who_filled_the_questionaire():
-#     for campaign in Campaign.objects.all():
-#         questionnaires = campaign.questionnaires.all()
-#         for questionnaire in questionnaires:
-#             emails = campaign.emails
-#             for email in emails:
-#                 if not RunInfoHistory.objects.filter(subject__email=email, questionnaire=questionnaire):
-#                     send_email_alert.delay(email, retrieve_campaign_run(questionnaire.id, email))
 
 
 @shared_task(ignore_result=True)
@@ -174,7 +158,7 @@ def a_campaign_modified(instance):
                     run_info_instance.emailsent = datetime.now()
                     run_info_instance.save()
 
-                send_email_campaign.delay(email, campaign_run)
+                send_email_campaign.delay(email, str(campaign_run), questionnaire)
 
 
 
