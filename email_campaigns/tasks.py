@@ -101,16 +101,18 @@ def send_email_alert(email, questionnaire):
 
 
 @shared_task(ignore_result=True)
-def send_email_campaign(email, url, questionnaire):
-    subject = "Give us your perspective for the %ss in the AIDIMME workplace !" % (
-        questionnaire.type.replace('_', ' ').title()
+def send_email_campaign(email, url, questionnaire, campaign):
+    subject = "Give us your perspective for the %s in the %s !" % (
+        questionnaire.type.replace('_', ' ').title(),
+        campaign.name
     )
     to = [email]
     from_email = 'aidimme-questionnaires@psymbiosys.info'
 
     ctx = {
         'url': url,
-        'questionnaire': questionnaire
+        'questionnaire': questionnaire,
+        'campaign': campaign
     }
 
     html_template = 'mails/%s.html' % (questionnaire.type.lower())
@@ -122,6 +124,7 @@ def send_email_campaign(email, url, questionnaire):
 
     html_message = loader.render_to_string(html_template, {
         'questionnaire': questionnaire,
+        'campaign': campaign,
         'url': url
     })
 
@@ -160,7 +163,7 @@ def a_campaign_modified(instance):
                     run_info_instance.emailsent = datetime.now()
                     run_info_instance.save()
 
-                send_email_campaign.delay(email, str(campaign_run), questionnaire)
+                send_email_campaign.delay(email, str(campaign_run), questionnaire, campaign)
 
 
 
