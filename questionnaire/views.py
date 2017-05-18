@@ -55,6 +55,10 @@ def get_runinfo(random):
     res = RunInfo.objects.filter(random=random.lower())
     return res and res[0] or None
 
+def get_runinfo_history(random):
+    "Return the RunInfoHistory entry with the provided random key"
+    res = RunInfoHistory.objects.filter(runid=random.lower())
+    return res and res[0] or None
 
 def get_question(number, questionset, questionnaire):
     "Return the specified Question (by number) from the specified Questionnaire"
@@ -355,7 +359,10 @@ def questionnaire(request, runcode=None, qs=None):
 
     if not runinfo:
         commit()
-        return HttpResponseRedirect('/')
+        run_info_history = get_runinfo_history(runcode)
+        if run_info_history:
+            return HttpResponseRedirect('/complete/')
+        return HttpResponseRedirect('/analytics/')
 
     # let the runinfo have a piggy back ride on the request
     # so we can easily use the runinfo in places like the question processor
