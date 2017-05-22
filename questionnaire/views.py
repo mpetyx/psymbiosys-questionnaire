@@ -1140,11 +1140,17 @@ def brand_value_charts(request):
     dominant_answers = []
     
     for question_text, id_and_answers_dict in formatted_answers.iteritems():
-        dominant_answer = max(id_and_answers_dict['answers'].iteritems(), key=operator.itemgetter(1))[0]
+        answer_sum = 0
+        responder_sum = 0
+        for answer_id, num_of_answers in id_and_answers_dict.iteritems():
+            answer_sum += int(answer_id) * num_of_answers
+            responder_sum += num_of_answers
+
+        dominant_answer = int(round(answer_sum / responder_sum))
         try:
             dominant_answers.append({
                 'question': question_text,
-                'answer':  int(dominant_answer),
+                'answer':  dominant_answer,
                 'qid': id_and_answers_dict['id']
             })
         except ValueError:
