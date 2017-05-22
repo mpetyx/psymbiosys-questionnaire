@@ -1142,7 +1142,7 @@ def brand_value_charts(request):
     for question_text, id_and_answers_dict in formatted_answers.iteritems():
         answer_sum = 0
         responder_sum = 0
-        for answer_id, num_of_answers in id_and_answers_dict.iteritems():
+        for answer_id, num_of_answers in id_and_answers_dict['answers'].iteritems():
             answer_sum += int(answer_id) * num_of_answers
             responder_sum += num_of_answers
 
