@@ -163,7 +163,7 @@ def a_campaign_modified(instance):
                     run_info_instance.emailsent = datetime.now()
                     run_info_instance.save()
 
-                send_email_campaign.delay(email, str(campaign_run), questionnaire, campaign)
+                send_email_campaign(email, str(campaign_run), questionnaire, campaign)
 
 
 
