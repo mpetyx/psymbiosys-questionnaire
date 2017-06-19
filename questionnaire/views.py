@@ -1203,7 +1203,7 @@ def brand_value_charts(request):
         'last_manager_answers': last_manager_answers,
         'logged_in': request.user.is_authenticated(),
         'kpi_4': kpi_4,
-        'subject_type': subject_type or 'aggregated'
+        'subject_type': subject_type or 'everyone'
     })
 
 
