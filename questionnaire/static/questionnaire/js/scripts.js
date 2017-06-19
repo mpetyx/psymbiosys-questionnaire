@@ -150,7 +150,6 @@ function drawStats(container, url) {
          type: "get",
          cache: false,
          url: url,
-         dataType: "json",
          error: function (xhr, status, error) {
              console.log('Something went bad');
          },
@@ -167,7 +166,7 @@ function drawStats(container, url) {
              $('#number-of-visitors').html(data['#_of_visitors']);
              
              $('#section-title').html(data['section_title']);
-             
+
              if (data['kpi'] != null && data['kpi_title']) {
                  $('.kpi-table').hide();
                  $('#performance-indicators').show();
@@ -215,16 +214,18 @@ function drawStats(container, url) {
              // }
              // $statsContainer.append($container);
 
-             $container = $('<div class="row likert-stats"></div>');
-             $container.append('<div class="col-xs-12 title">Aggregated Answers</div>');
-             $.each(data['percentages'], function(i, stat) {
+             if (data['percentages']) {
+                 $container = $('<div class="row likert-stats"></div>');
+                 $container.append('<div class="col-xs-12 title">Aggregated Answers</div>');
+                 $.each(data['percentages'], function (i, stat) {
 
-                 $container.append('<div class="col-xs-12">'
-                     + '<div class="col-xs-6">' + ((stat['Answer'] != '') ? stat['Answer'] : '(No Answer)') + ':</div>'
-                     + '<div class="col-xs-6">' + stat['Percentage'] + '%</div></div>')
+                     $container.append('<div class="col-xs-12">'
+                         + '<div class="col-xs-6">' + ((stat['Answer'] != '') ? stat['Answer'] : '(No Answer)') + ':</div>'
+                         + '<div class="col-xs-6">' + stat['Percentage'] + '%</div></div>')
 
-             });
-             $statsContainer.append($container)
+                 });
+                 $statsContainer.append($container)
+             }
          }
      })
 }
