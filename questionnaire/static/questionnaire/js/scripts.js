@@ -314,6 +314,11 @@ $(document).ready(function() {
                     var $option = $(sel).find('option:selected'),
                         varname = $option.data('varname'),
                         val = $option.val();
+
+                    var $mirror = $(sel).closest('.select-container').find('.selection-mirror');
+                    if ($mirror.length) {
+                        $mirror.text($option.text());
+                    }
                 }
                 else {
                     var varname = $(sel).data('varname'),
@@ -344,6 +349,11 @@ $(document).ready(function() {
                     var $option = $(sel).find('option:selected'),
                         varname = $option.data('varname'),
                         val = $option.val();
+
+                    var $mirror = $(sel).closest('.select-container').find('.selection-mirror');
+                    if ($mirror.length) {
+                        $mirror.text($option.text());
+                    }
                 }
                 else {
                     var varname = $(sel).data('varname'),
@@ -365,8 +375,15 @@ $(document).ready(function() {
     });
     
     $('select#table-campaign-filter').on('change', function() {
-        var val = $(this).find('option:selected').data('val').toUpperCase(),
+
+        var $option = $(this).find('option:selected'),
+            val = $option.data('val').toUpperCase(),
             $table = $('table.analytics-table');
+
+        var $mirror = $(this).closest('.select-container').find('.selection-mirror');
+        if ($mirror.length) {
+            $mirror.text($option.text());
+        }
 
         $table
             .find('tr')

@@ -645,3 +645,18 @@ table.kpi-table tr td:last-of-type {
     border-radius: 5px;
 	letter-spacing: 2px;
 }
+
+.select-container {
+	position: relative;
+}
+
+.select-container p {
+	position: absolute;
+	font-size: 11px;
+	text-transform: none;
+	letter-spacing: 0.5px;
+	top: -69px;
+	left: 130px;
+	font-weight: normal;
+	cursor: default;
+}
