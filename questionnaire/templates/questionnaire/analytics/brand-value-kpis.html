@@ -1,0 +1,69 @@
+<table class="kpi-table" id="kpi-table-4">
+    <tbody>
+        <tr>
+            <td>PERFORMANCE INDICATOR</td>
+            <td colspan="2">
+                AIDIMME _PI{% if not subject_type|lower == 'visitor' %}4{% else %}5{% endif %}. Brand value gap between management and
+                {% if subject_type %}{{ subject_type|lower }}s'{% else %}everyone else's{% endif %} perception.
+            </td>
+        </tr>
+        <tr>
+            <td>CURRENT VALUE</td>
+            <td colspan="2">
+                There is an agreement level of <span class="kpi-container">{{ kpi_45|floatformat:"2" }}%</span>
+                for brand value perception of the workspace amongst management and
+                {% if subject_type %}{{ subject_type|lower }}s{% else %}everyone else{% endif %}.
+            </td>
+        </tr>
+        <tr>
+            <td>DESIRED VALUE</td>
+            <td colspan="2">
+               80% of agreement on brand value perception of the
+
+                workspace amongst management and {% if subject_type %}{{ subject_type|lower }}s{% else %}everyone else{% endif %} is
+
+                expected.
+            </td>
+        </tr>
+        {% if kpi_45 > 80 %}
+        <tr>
+            <td>SUGGESTIONS</td>
+            <td colspan="2">
+                Management and {% if subject_type %}{{ subject_type|lower }}s{% else %}everyone else{% endif %} have a similar perception of the
+
+                workspace brand value. Just check slight differences in the
+
+                Brand Value scale so they can be solved in the next office
+
+                renovation project.
+            </td>
+        </tr>
+        {% elif kpi_45 >= 50%}
+        <tr>
+            <td>SUGGESTIONS</td>
+            <td colspan="2">
+               Management perception of the workspace brand value is
+
+                not realistic according to {{ subject_type|lower }}s’ perceptions. It is
+
+                necessary to work on critical differences in the Brand Value
+
+                scale for the renovation of the workspace.
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td>SUGGESTIONS</td>
+            <td colspan="2">
+                Management perception of the workspace brand value is
+
+                rather different to {% if subject_type %}{{ subject_type|lower }}s'{% else %}everyone else's{% endif %} perceptions. Values of the
+
+                Brand Value scale should be checked in order to identify
+
+                main deviations before designing the renovation project.
+            </td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>

@@ -660,3 +660,9 @@ table.kpi-table tr td:last-of-type {
 	font-weight: normal;
 	cursor: default;
 }
+
+span.kpi-subject-type {
+	font-weight: 300 !important;
+	font-size: 14px !important;
+	color: #333 !important;
+}

@@ -1102,9 +1102,7 @@ def brand_value(request):
         'logged_in': request.user.is_authenticated()
     })
 
-
 def brand_value_charts(request):
-
     subject_type = request.GET.get('type', '')
     campaign = request.GET.get('campaign', None)
     unique_answers = request.GET.get('unique', False)
@@ -1118,7 +1116,8 @@ def brand_value_charts(request):
     if subject_type:
         brand_value_qs = brand_value_qs.filter(subject__type=subject_type.upper())
     if unique_answers:
-        unique_subject_run_ids = brand_value_qs.distinct('subject_id').values_list('runid', flat=True)
+        unique_subject_run_ids = brand_value_qs.distinct('subject_id').values_list('runid',
+                                                                                   flat=True)
         brand_value_qs = brand_value_qs.filter(runid__in=unique_subject_run_ids)
 
     formatted_answers = {}
@@ -1138,7 +1137,7 @@ def brand_value_charts(request):
             formatted_answers[question_text]['answers'][answer_id] = 1
 
     dominant_answers = []
-    
+
     for question_text, id_and_answers_dict in formatted_answers.iteritems():
         answer_sum = 0
         responder_sum = 0
@@ -1150,7 +1149,7 @@ def brand_value_charts(request):
         try:
             dominant_answers.append({
                 'question': question_text,
-                'answer':  dominant_answer,
+                'answer': dominant_answer,
                 'qid': id_and_answers_dict['id']
             })
         except ValueError:
@@ -1175,7 +1174,6 @@ def brand_value_charts(request):
     except AttributeError:
         manager_brand_value_qs = Answer.objects.none()
 
-
     last_manager_answers = []
     for manager_answer in manager_brand_value_qs:
         last_manager_answers.append({
@@ -1188,7 +1186,6 @@ def brand_value_charts(request):
     for i in sortedlist:
         last_manager_answers.append(i['answer'])
 
-
     diff_sum = 0
     for da, lma in zip(dominant_answers, last_manager_answers):
         diff_sum += abs(da['answer'] - lma)
@@ -1196,14 +1193,14 @@ def brand_value_charts(request):
     questionnaire_num_of_questions = Question.objects.filter(
         questionset__questionnaire__type="BRAND_VALUE"
     ).count()
-    kpi_4 = 100 - (float(diff_sum)/(questionnaire_num_of_questions*4))*100
+    kpi_45 = 100 - (float(diff_sum) / (questionnaire_num_of_questions * 4)) * 100
 
     return render(request, 'questionnaire/analytics/brand-value-table.html', {
         'dominant_answers': dominant_answers,
         'last_manager_answers': last_manager_answers,
         'logged_in': request.user.is_authenticated(),
-        'kpi_4': kpi_4,
-        'subject_type': subject_type or 'everyone'
+        'kpi_45': kpi_45,
+        'subject_type': subject_type
     })
 
 
@@ -1461,7 +1458,7 @@ def workers_sentiment_stats(request, part=1):
                 isolate_part[answer_number] = 1
 
         number_of_positive_responses = isolate_part.get(3, 0)
-        kpi_title = 'Worker well-being at workplace regarding ambient parameters and furniture'
+        kpi_title = '%s well-being at workplace regarding ambient parameters and furniture' % (subject_type.capitalize() if subject_type else 'Total')
         temp = workers_sentiment_qs.filter(
             question__questionset__sortid__in=[part]
         )\
@@ -1474,7 +1471,7 @@ def workers_sentiment_stats(request, part=1):
             .count()
     elif part in ['4', '5']:
         number_of_positive_responses = different_answers_for_this_questionnaire_part.get(5, 0)
-        kpi_title = 'Emotional perception of the workers about the office space'
+        kpi_title = 'Emotional perception of the %ss about the office space' % (subject_type if subject_type else 'employee')
         num_of_variables = 5
         temp = workers_sentiment_qs.distinct('runid').count()
     else:
@@ -1503,6 +1500,7 @@ def workers_sentiment_stats(request, part=1):
             '#_of_visitors': number_of_unique_visitor_responses,
             '#_of_managers': number_of_unique_manager_responses,
             'percentages':payload,
+            'subject_type': subject_type or 'employee',
             'likert_values': likert_values,
             'likert_dict': str_likert_dict,
             'kpi': kpi,

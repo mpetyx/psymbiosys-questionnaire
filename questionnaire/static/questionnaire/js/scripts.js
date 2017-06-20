@@ -171,6 +171,7 @@ function drawStats(container, url) {
                  $('.kpi-table').hide();
                  $('#performance-indicators').show();
                  $('.kpi-container').html(data['kpi'].toFixed(2) + '%');
+                 $('.kpi-subject-type').text(data['subject_type'].toLowerCase() + 's');
                  
                  var $kpiTable;
                  if (data['part'] == 1 || data['part'] == 2) {
