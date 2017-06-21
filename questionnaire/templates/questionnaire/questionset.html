@@ -52,51 +52,55 @@
         <input type="hidden" name="questionset_id" value="{{ questionset.id }}">
 
         {% for question, qdict in qlist %}
-        {% with errors|dictget:question.number as error %}
+            {% with errors|dictget:question.number as error %}
 
-            <div class="question type_{{ qdict.qtype }} {% if error %} error prepend-top{% endif %}{{ qdict.qnum_class }}{{ qdict.qalpha_class }}" id="qc_{{ question.number }}" {{qdict.checkstring|safe}} style="{{qdict.css_style}}">
-                {% if request.user.is_staff %}
-                    <span class="pull-right">
-                        <a href="/admin/questionnaire/question/{{ question.id }}/">
-                            ({% trans "edit" %} {{ question.number }})
-                        </a>
-                    </span>
-                {% endif %}
-
-                {% if qdict.custom %}
-                    {% if error %}
-                        <div class="error">
-                            {{ error }}
-                        </div>
+                <div class="question type_{{ qdict.qtype }} {% if error %} error prepend-top{% endif %}{{ qdict.qnum_class }}{{ qdict.qalpha_class }}" id="qc_{{ question.number }}" {{qdict.checkstring|safe}} style="{{qdict.css_style}}">
+                    {% if request.user.is_staff %}
+                        <span class="pull-right">
+                            <a href="/admin/questionnaire/question/{{ question.id }}/">
+                                ({% trans "edit" %} {{ question.number }})
+                            </a>
+                        </span>
                     {% endif %}
-                    {% include qdict.template %}
-                {% else %}
-                    <div class="question-text {% if qdict.required %}required{% endif %}">
-                        <span class="qnumber">{{ question.display_number|safe }}.</span>
-                        {{ question.text }}
-                    </div>
-                    <div class="answer">
+
+                    {% if qdict.custom %}
                         {% if error %}
-                            <div class="alert-message block-message error input"><strong>{{ error }}</strong></div>
+                            <div class="error">
+                                {{ error }}
+                            </div>
                         {% endif %}
                         {% include qdict.template %}
+                    {% else %}
+                        <div class="question-text {% if qdict.required %}required{% endif %}">
+                            <span class="qnumber">{{ question.display_number|safe }}.</span>
+                            {{ question.text }}
+                        </div>
+                        <div class="answer">
+                            {% if error %}
+                                <div class="alert-message block-message error input"><strong>{{ error }}</strong></div>
+                            {% endif %}
+                            {% include qdict.template %}
+                        </div>
+                    {% endif %}
+                </div> <!-- /question container -->
+                {% if question.footer %}
+                    <div class="question-footer">
+                        {{ question.footer }}
+                        <div class="clearfix"></div>
                     </div>
                 {% endif %}
-            </div> <!-- /question container -->
-            {% if question.footer %}
-                <div class="question-footer">
-                    {{ question.footer }}
-                    <div class="clearfix"></div>
-                </div>
-            {% endif %}
-        {% endwith %}
+            {% endwith %}
         {% endfor %}
 
 
 
             <div style="text-align: center;" class="well questionset-submit">
                 <input class="btn large primary" name="submit" type="submit" value="{% trans "Continue" %}">
-
+                {% if errors %}
+                    <p style="margin-top: 15px;color: rgba(224, 63, 63, 0.95);font-weight:600;">
+                        You need to provide an answer to every question above
+                    </p>
+                {% endif %}
             </div>
 
             {% if questionset.prev %}

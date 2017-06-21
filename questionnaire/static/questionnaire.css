@@ -159,3 +159,8 @@ input.sending {
          -o-transition: 0.3s linear all !important;
             transition: 0.3s linear all !important;   
 }
+
+.alert-message.error {
+    color: #da3f3f;
+    background: rgba(218, 63, 63, 0.1);;
+}
