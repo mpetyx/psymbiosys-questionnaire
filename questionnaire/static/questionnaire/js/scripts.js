@@ -190,7 +190,7 @@ function drawStats(container, url) {
                      $kpiTable.find('.suggestions-above-80').show();
                  }
              } else {
-                 $('.kpi-table').hide();
+                 $('body.worker-sentiment .kpi-table').hide();
                  $('#performance-indicators').hide();
                  $('#kpi-container').html('');
              }
@@ -240,7 +240,12 @@ function updateBrandValueTable (container, url) {
              console.log('Something went bad');
          },
          success: function (data) {
-             $(container).html(data)
+             var $data = $(data);
+             $(container).html($data);
+
+             $('#indicators-container').html(
+                 $data.siblings('#kpi-table-4').detach()
+             )
          }
     });
 
