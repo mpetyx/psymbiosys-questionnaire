@@ -41,5 +41,9 @@ urlpatterns = patterns(
     ),
     url(r'^brand-values-export/', login_required(brand_values_detailed_results),
         name='brand-values-detailed-results'
+    ),
+
+    url(r'^send-campaign-emails/(?P<id>[0-9]+)/', login_required(send_campaign_emails),
+        name='send-campaign-emails'
     )
 )

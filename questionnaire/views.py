@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # vim: set fileencoding=utf-8
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -21,6 +22,7 @@ from questionnaire.emails import _send_email, send_emails
 from questionnaire.utils import numal_sort, split_numal
 from questionnaire.request_cache import request_cache
 from questionnaire.dependency_checker import dep_check
+from email_campaigns.tasks import a_campaign_modified
 from questionnaire import profiler
 from compat import commit_on_success, commit, rollback
 import logging
@@ -1523,5 +1525,8 @@ def workers_sentiment_stats(request, part=1):
     )
 
 
-
-
+def send_campaign_emails(request, id):
+    instance = Campaign.objects.get(pk=id)
+    a_campaign_modified(instance)
+    messages.add_message(request, messages.SUCCESS, 'Emails for this campaign have been sent successfully!')
+    return HttpResponseRedirect('/admin/questionnaire/campaign/')

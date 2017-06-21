@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
+import random
+
+from django.shortcuts import get_object_or_404
+from hashlib import md5
 
 __author__ = 'mpetyx'
 
@@ -13,10 +17,11 @@ from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from datetime import timedelta, datetime
-from questionnaire.views import *
+from questionnaire.models import *
 from django.contrib.sites.models import Site
 from django.template import loader
 from django.core.mail import send_mail
+from questionnaire import questionnaire_start
 
 
 current_site = Site.objects.all()[0].name
@@ -133,7 +138,6 @@ def send_email_campaign(email, url, questionnaire, campaign):
     return True
 
 
-@shared_task(ignore_result=True)
 def a_campaign_modified(instance):
     campaign = instance
 
