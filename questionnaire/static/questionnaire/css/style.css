@@ -666,3 +666,26 @@ span.kpi-subject-type {
 	font-size: 14px !important;
 	color: #333 !important;
 }
+
+.btn.btn-psy {
+	outline: none;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+
+	background: #ddd;
+	color: #777;
+
+	display: inline-block;
+	width: auto;
+	padding: 10px 15px;
+}
+
+.btn.btn-psy:hover {
+	background: #ccc;
+	color: #666;
+}
+
+.btn.btn-psy:active {
+	background: #bbb;
+}
