@@ -337,7 +337,8 @@ td .bullet {
 	display: block;
 }
 .bullet {
-	background: green;
+	background: rgba(43, 146, 225, 1);
+
 	height: 10px;
 	width: 10px;
 	text-align: center;
@@ -353,7 +354,7 @@ td .bullet {
 }
 
 .bullet.simultaneous-bullet {
-	background: rgba(43, 146, 225, 1)
+	background: rgba(0, 128, 0, 0.95);
 }
 
 .bullet.simultaneous-bullet::after {
@@ -361,7 +362,7 @@ td .bullet {
     height: 20px;
     width: 20px;
     position: absolute;
-    background: rgba(43, 146, 225, 0.44);
+    background: rgba(0, 128, 0, 0.36);
     border-radius: 50%;
     z-index: -1;
     left: -5px;
