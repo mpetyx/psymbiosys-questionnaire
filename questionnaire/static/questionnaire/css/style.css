@@ -314,8 +314,8 @@ table#brand-value-table th {
 }
 
 table#brand-value-table tbody tr {
-	margin-bottom: 15px;
-	padding-bottom: 25px;
+	margin-bottom: 5px;
+    padding-bottom: 20px;
 	border-bottom: 1px solid #eee;
 }
 
