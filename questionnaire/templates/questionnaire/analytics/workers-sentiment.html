@@ -27,8 +27,11 @@
     <div class="tab-content">
         <div role="tabpanel" class="row tab-pane active" id="detailed-results">
             <div class="col-xs-12">
-                <button class="btn btn-psy" style="margin-bottom: 25px;" onclick="window.print();">
+                <button class="btn btn-psy" style="margin: 0 25px 25px 0;" onclick="window.print();">
                     Print
+                </button>
+                <button class="btn btn-psy btn-psy--green" id="workers-sentiment-detailed-results--excel" style="margin: 0 25px 25px 0;">
+                    Download report
                 </button>
                 <h4>
                     <span>
@@ -40,7 +43,7 @@
                     <select id="table-campaign-filter" class="col-xs-4">
                         <option selected>All</option>
                         {% for campaign in campaigns %}
-                            <option data-val="{{ campaign.name }}">{{ campaign.name }}</option>
+                            <option data-val="{{ campaign.name }}" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
                         {% endfor %}
                     </select>
                 </div>

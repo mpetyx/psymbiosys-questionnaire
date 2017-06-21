@@ -1,5 +1,6 @@
 from django.conf.urls import *
 from views import *
+from questionnaire.excel import *
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import user_passes_test, login_required
 
@@ -34,5 +35,8 @@ urlpatterns = patterns(
     ),
     url(r'^workers-sentiment-stats/(?P<part>[0-9]+)/', login_required(workers_sentiment_stats),
         name='workers-sentiment-stats'
-    )
+    ),
+    url(r'^workers-sentiment-export/', login_required(workers_sentiment_detailed_results),
+        name='workers-sentiment-detailed-results'
+        )
 )

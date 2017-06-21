@@ -434,3 +434,8 @@ $(document).ready(function() {
 });
 
 
+
+$('body').on('click', '#workers-sentiment-detailed-results--excel', function(e) {
+    var val = $('#table-campaign-filter').find('option:selected').data('pk');
+    window.location.href = '/analytics/workers-sentiment-export?campaign=' + (val ? val : '');
+});

@@ -689,3 +689,16 @@ span.kpi-subject-type {
 .btn.btn-psy:active {
 	background: #bbb;
 }
+
+.btn.btn-psy.btn-psy--green {
+	background: #aece9e;
+	color: #fafafa;
+}
+
+.btn.btn-psy.btn-psy--green:hover {
+	background: #9eb98e;
+}
+
+.btn.btn-psy.btn-psy--green:active {
+	background: #92ac86;
+}

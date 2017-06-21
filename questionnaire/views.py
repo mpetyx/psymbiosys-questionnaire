@@ -32,6 +32,14 @@ from statistics import *
 from django.db.models import Q
 import re
 
+big_question_dict = {
+    'In what extent are you pleased with this workplace?': 'PLEASURE',
+    'In what extent this workplace encourages you for doing a better work?': 'ACTIVATION',
+    'In what extent this workplace helps you to take control of your work?': 'CONTROL',
+    'In what extent would you like to modify this workplace?': 'MODIFICATION',
+    'In what extent would you like to go out of this workplace?': 'AVOIDANCE',
+}
+
 
 try:
     use_session = settings.QUESTIONNAIRE_USE_SESSION
@@ -1061,27 +1069,27 @@ def workers_sentiment(request):
     for uid in unique_people_ids:
         answer_group = workers_sentiment_qs\
             .filter(runid=uid, question__questionset__sortid=1)\
-            .order_by('question__sort_id')
+            .order_by('question__number')
         grouped_answers_part_1.append(list(answer_group))
 
         answer_group = workers_sentiment_qs \
             .filter(runid=uid, question__questionset__sortid=2) \
-            .order_by('question__sort_id')
+            .order_by('question__number')
         grouped_answers_part_2.append(list(answer_group))
 
         answer_group = workers_sentiment_qs \
             .filter(runid=uid, question__questionset__sortid=3) \
-            .order_by('question__sort_id')
+            .order_by('question__number')
         grouped_answers_part_3.append(list(answer_group))
 
         answer_group = workers_sentiment_qs \
             .filter(runid=uid, question__questionset__sortid=4) \
-            .order_by('question__sort_id')
+            .order_by('question__number')
         grouped_answers_part_4.append(list(answer_group))
 
         answer_group = workers_sentiment_qs \
             .filter(runid=uid, question__questionset__sortid=5) \
-            .order_by('question__sort_id')
+            .order_by('question__number')
         grouped_answers_part_5.append(list(answer_group))
 
 
@@ -1240,14 +1248,6 @@ def brand_value_stats(request):
 
 
 def workers_sentiment_charts(request, part=1):
-
-    big_question_dict = {
-        'In what extent are you pleased with this workplace?': 'PLEASURE',
-        'In what extent this workplace encourages you for doing a better work?': 'ACTIVATION',
-        'In what extent this workplace helps you to take control of your work?': 'CONTROL',
-        'In what extent would you like to modify this workplace?': 'MODIFICATION',
-        'In what extent would you like to go out of this workplace?': 'AVOIDANCE',
-    }
 
     subject_type = request.GET.get('type', '')
     campaign = request.GET.get('campaign', None)
