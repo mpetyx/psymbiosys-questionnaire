@@ -37,16 +37,16 @@
                     <span>
                         Detailed Results
                     </span>
-                <div class="pull-right select-container">
-                    <p>Currently selected: <br/><span class="selection-mirror">All</span></p>
-                    <span class="select-header">Select a Campaign:</span>
-                    <select id="table-campaign-filter" class="col-xs-4">
-                        <option selected>All</option>
-                        {% for campaign in campaigns %}
-                            <option data-val="{{ campaign.name }}" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div class="pull-right select-container">
+                        <p>Currently selected: <br/><span class="selection-mirror">All</span></p>
+                        <span class="select-header">Select a Campaign:</span>
+                        <select id="table-campaign-filter" class="col-xs-4">
+                            <option selected data-val="">All</option>
+                            {% for campaign in campaigns %}
+                                <option data-val="{{ campaign.name }}" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </h4>
 
                 <div class="col-xs-12">

@@ -267,7 +267,6 @@ function updateBrandValueTable (container, url) {
 $(document).ready(function() {
     // select & checkbox initialization
     $('select').chosen();
-    // $('input[type="checkbox"]').iCheck({checkboxClass: 'icheckbox_flat-aero'})
 
     // table show
     $('select#table-choice').on('change', function () {
@@ -386,32 +385,39 @@ $(document).ready(function() {
             $mirror.text($option.text());
         }
 
-        $table
-            .find('tr')
-            .removeClass('hidden-campaign')
-            .find('td.campaign-name')
-            .filter(function(){
-                return $(this).text().toUpperCase() != val
-            })
-            .closest('tr')
-            .addClass('hidden-campaign');
+        if (val) {
 
-        if (!$table
-            .find('tbody tr:not(.hidden-campaign)')
-            .length
-        ) {
+            $table
+                .find('tr')
+                .removeClass('hidden-campaign')
+                .find('td.campaign-name')
+                .filter(function () {
+                    return $(this).text().toUpperCase() != val
+                })
+                .closest('tr')
+                .addClass('hidden-campaign');
 
-            if (!$table.find('.table-placeholder').length) {
+            if (!$table
+                    .find('tbody tr:not(.hidden-campaign)')
+                    .length
+            ) {
+
+                if (!$table.find('.table-placeholder').length) {
+                    $table
+                        .find('tbody')
+                        .append('<tr class="table-placeholder"></tr>')
+                        .find('.table-placeholder')
+                        .append('<h5 class="text-center">No results were found</h5>')
+                }
+            } else {
                 $table
-                    .find('tbody')
-                    .append('<tr class="table-placeholder"></tr>')
                     .find('.table-placeholder')
-                    .append('<h5 class="text-center">No results were found</h5>')
+                    .remove()
             }
         } else {
             $table
-                .find('.table-placeholder')
-                .remove()
+                .find('tr')
+                .removeClass('hidden-campaign')
         }
     });
 
@@ -438,4 +444,9 @@ $(document).ready(function() {
 $('body').on('click', '#workers-sentiment-detailed-results--excel', function(e) {
     var val = $('#table-campaign-filter').find('option:selected').data('pk');
     window.location.href = '/analytics/workers-sentiment-export?campaign=' + (val ? val : '');
+});
+
+$('body').on('click', '#brand-values-detailed-results--excel', function(e) {
+    var val = $('#brand-table-campaign-filter').find('option:selected').data('pk');
+    window.location.href = '/analytics/brand-values-export?campaign=' + (val ? val : '');
 });

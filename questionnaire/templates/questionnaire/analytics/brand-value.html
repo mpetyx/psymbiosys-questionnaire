@@ -9,66 +9,166 @@
     <div class="row"><h3 class="text-center base-title">Brand Value Analytics</h3></div>
     <div class="row">
         <div class="col-xs-12">
-            <button class="btn btn-psy" style="margin-bottom: 25px;" onclick="window.print();">
-                Print
-            </button>
-            <h4>
-                <span>
-                    Aggregated Statistical Analysis
-                </span>
-                <div class="pull-right select-container">
-                    <p>Currently selected: <br/><span class="selection-mirror">All</span></p>
-                    <span class="select-header">Select a Campaign:</span>
-                    <select id="brand-table-campaign-filter" class="col-xs-4">
-                        <option selected>All</option>
-                        {% for campaign in campaigns %}
-                            <option value="{{ campaign.pk }}" data-varname="campaign">{{ campaign.name }}</option>
-                        {% endfor %}
+             <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#detailed-results" aria-controls="detailed-results" role="tab" data-toggle="tab">
+                        Detailed Results
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#aggregated-analysis" aria-controls="aggregated-analysis" role="tab" data-toggle="tab">
+                        Aggregated Analysis
+                    </a>
+                </li>
+             </ul>
+        </div>
+    </div>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="row tab-pane active" id="detailed-results">
+            <div class="col-xs-12">
+                <button class="btn btn-psy" style="margin: 0 25px 25px 0;" onclick="window.print();">
+                        Print
+                </button>
+                <button class="btn btn-psy btn-psy--green" id="brand-values-detailed-results--excel" style="margin: 0 25px 25px 0;">
+                    Download report
+                </button>
+
+                <h4>
+                    <span>
+                        Detailed Results
+                    </span>
+                    <div class="pull-right select-container">
+                        <p>Currently selected: <br/><span class="selection-mirror">All</span></p>
+                        <span class="select-header">Select a Campaign:</span>
+                        <select id="table-campaign-filter" class="col-xs-4">
+                            <option selected data-val="">All</option>
+                            {% for campaign in campaigns %}
+                                <option data-val="{{ campaign.name }}" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </h4>
+
+                <div class="col-xs-12">
+                    <span class="select-header">Select a User type:</span>
+                    <select id="table-type-filter" class="col-xs-4">
+                        <option selected data-val="">All</option>
+                        <option data-val="Worker">Worker</option>
+                        <option data-val="Manager">Manager</option>
+                        <option data-val="Visitor">Visitor</option>
                     </select>
                 </div>
-            </h4>
 
+                <table id="detailed-results-part-1" class="analytics-table brand-value-analytics" style="width: 255%;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Campaign</th>
+                            <th>Cheerful<br/> Lifeless</th>
+                            <th>Impersonal<br/> Warm</th>
+                            <th>Relaxing<br/> Stressful</th>
+                            <th>Traditional<br/> Contemporary</th>
+                            <th>Inspiring<br/> Inhibiting</th>
+                            <th>Functional<br/> Chaotic</th>
+                            <th>Aggressive<br/> Friendly</th>
+                            <th>Emotional<br/> Utilitarian</th>
+                            <th>Feminine<br/> Masculine</th>
+                            <th>Fun<br/> Humdrum</th>
+                            <th>Innovative<br/> Conservative</th>
+                            <th>Timeless<br/> Hip</th>
+                            <th>Stylish<br/> Casual</th>
+                            <th>Accessible<br/> Exclusive</th>
+                            <th>Passionate<br/> Calculating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for answer_group in grouped_answers %}
+                        {% with campaign=answer_group.0.get_campaign %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="subject-type">{{ answer_group.0.subject.type }}</td>
+                                <td>{{ answer_group.0.answered_at|date:"d/m/Y" }}</td>
+                                <td class="campaign-name">{{ campaign }}</td>
 
-
-            <div class="col-xs-12">
-                <span class="select-header">Select a User type:</span>
-                <select id="brand-table-type-filter" class="col-xs-4">
-                    <option selected data-val="">All</option>
-                    <option data-val="Worker" data-varname="type">Worker</option>
-                    <option data-val="Manager" data-varname="type">Manager</option>
-                    <option data-val="Visitor" data-varname="type">Visitor</option>
-                </select>
+                                {% for answer in answer_group %}
+                                    {% with answer_text=answer.get_answer_text %}
+                                    <td>{{ answer_text }}</td>
+                                    {% endwith %}
+                                {% endfor %}
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                    </tbody>
+                </table>
 
             </div>
-
+        </div>
+        <div role="tabpanel" class="row tab-pane" id="aggregated-analysis">
             <div class="col-xs-12">
-                <div class="row">
-                    <div class="main-stat col-xs-12">
-                        <div class="col-xs-9">Number of Responses: </div>
-                        <div class="col-xs-3" id="number-of-responses"></div>
+                <button class="btn btn-psy" style="margin: 0 25px 25px 0;" onclick="window.print();">
+                        Print
+                </button>
+
+                <h4>
+                    <span>
+                        Aggregated Analysis
+                    </span>
+                    <div class="pull-right select-container">
+                        <p>Currently selected: <br/><span class="selection-mirror">All</span></p>
+                        <span class="select-header">Select a Campaign:</span>
+                        <select id="brand-table-campaign-filter" class="col-xs-4">
+                            <option selected>All</option>
+                            {% for campaign in campaigns %}
+                                <option value="{{ campaign.pk }}" data-varname="campaign" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="main-stat col-xs-12">
-                        <div class="col-xs-9">Number of Unique Responders: </div>
-                        <div class="col-xs-3" id="number-of-unique-responses"></div>
-                    </div>
-                    <div class="main-stat col-xs-12 delimit">
-                        <div class="col-xs-12">
-                            <div class="col-xs-4"><span id="number-of-workers"></span>% Workers </div>
-                            <div class="col-xs-4"><span id="number-of-managers"></span>% Managers</div>
-                            <div class="col-xs-4"><span id="number-of-visitors"></span>% Visitors</div>
+                </h4>
+
+
+
+                <div class="col-xs-12">
+                    <span class="select-header">Select a User type:</span>
+                    <select id="brand-table-type-filter" class="col-xs-4">
+                        <option selected data-val="">All</option>
+                        <option data-val="Worker" data-varname="type">Worker</option>
+                        <option data-val="Manager" data-varname="type">Manager</option>
+                        <option data-val="Visitor" data-varname="type">Visitor</option>
+                    </select>
+
+                </div>
+
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="main-stat col-xs-12">
+                            <div class="col-xs-9">Number of Responses: </div>
+                            <div class="col-xs-3" id="number-of-responses"></div>
+                        </div>
+                        <div class="main-stat col-xs-12">
+                            <div class="col-xs-9">Number of Unique Responders: </div>
+                            <div class="col-xs-3" id="number-of-unique-responses"></div>
+                        </div>
+                        <div class="main-stat col-xs-12 delimit">
+                            <div class="col-xs-12">
+                                <div class="col-xs-4"><span id="number-of-workers"></span>% Workers </div>
+                                <div class="col-xs-4"><span id="number-of-managers"></span>% Managers</div>
+                                <div class="col-xs-4"><span id="number-of-visitors"></span>% Visitors</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <p class="col-xs-12 text-center" id="section-title" style="margin: 50px auto;text-transform: uppercase">
+                    Are management perceptions realistic to users’ perceptions of the workspace?
+                </p>
+
+                <div class="col-xs-12" id="brand-value-table-container">
+
+                </div>
             </div>
-
-            <p class="col-xs-12 text-center" id="section-title" style="margin: 50px auto;text-transform: uppercase">
-                Are management perceptions realistic to users’ perceptions of the workspace?
-            </p>
-
-            <div class="col-xs-12" id="brand-value-table-container">
-
-            </div>
-
         </div>
     </div>
 {% endblock %}

@@ -1105,9 +1105,21 @@ def workers_sentiment(request):
 
 
 def brand_value(request):
+    brand_value_qs = Answer.objects.filter(
+        question__questionset__questionnaire__type="BRAND_VALUE"
+    )
+
+    runids = brand_value_qs.values_list('runid', flat=True).distinct()
+
+    grouped_answers = []
+    for runid in runids:
+        answer_group = brand_value_qs.filter(runid=runid).order_by('question__number')
+        grouped_answers.append(list(answer_group))
+
     return render(request, 'questionnaire/analytics/brand-value.html', {
         'campaigns': Campaign.objects.filter(questionnaires__type='BRAND_VALUE'),
-        'logged_in': request.user.is_authenticated()
+        'logged_in': request.user.is_authenticated(),
+        'grouped_answers': grouped_answers
     })
 
 def brand_value_charts(request):
