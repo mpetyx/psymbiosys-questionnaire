@@ -390,7 +390,7 @@ table.analytics-table#detailed-results-part-1 td:nth-child(n+5) {
 }
 
 table.analytics-table.brand-value-analytics th:nth-child(n+5),
-table.analytics-table.brand-value-analyticstd:nth-child(n+5) {
+table.analytics-table.brand-value-analytics td:nth-child(n+5) {
 	width: 165px !important;
 }
 

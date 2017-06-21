@@ -60,7 +60,7 @@
                     </select>
                 </div>
 
-                <table id="detailed-results-part-1" class="analytics-table brand-value-analytics" style="width: 255%;">
+                <table class="analytics-table brand-value-analytics" style="width: 255%;">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -94,7 +94,7 @@
                                 <td class="campaign-name">{{ campaign }}</td>
 
                                 {% for answer in answer_group %}
-                                    {% with answer_text=answer.get_answer_text %}
+                                    {% with answer_text=answer|get_answer_text:True %}
                                     <td>{{ answer_text }}</td>
                                     {% endwith %}
                                 {% endfor %}

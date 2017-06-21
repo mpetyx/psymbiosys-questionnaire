@@ -29,3 +29,8 @@ def getitem(lista, value):
         return lista[value]
     except:
         return 0
+
+
+@register.filter
+def get_answer_text(answer, extended=False):
+    return answer.get_answer_text(extended=extended)

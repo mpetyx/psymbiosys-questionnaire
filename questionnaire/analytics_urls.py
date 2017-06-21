@@ -38,5 +38,8 @@ urlpatterns = patterns(
     ),
     url(r'^workers-sentiment-export/', login_required(workers_sentiment_detailed_results),
         name='workers-sentiment-detailed-results'
-        )
+    ),
+    url(r'^brand-values-export/', login_required(brand_values_detailed_results),
+        name='brand-values-detailed-results'
+    )
 )

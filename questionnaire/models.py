@@ -444,10 +444,20 @@ class Answer(models.Model):
     def get_likert_answer(self):
         return int(eval(self.answer)[0])
 
-    def get_answer_text(self):
+    def get_answer_text(self, extended=False):
         try:
             number = self.get_likert_answer()
-            return self.question.choices()[number - 1].text
+            payload =  self.question.choices()[number - 1].text
+
+            if not extended:
+                return payload
+
+            if number < 3:
+                return payload + ' negative'
+            elif number > 3:
+                return payload + ' positive'
+            return payload
+
         except:
             return ''
 
