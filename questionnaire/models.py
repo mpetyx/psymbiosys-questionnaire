@@ -21,7 +21,7 @@ from django.db.models.signals import post_save
 class Campaign(models.Model):
     name = models.CharField(max_length=200, default='Aidima Campaign')
     manager = models.ForeignKey(User, blank=True)
-    emails = MultiEmailField(verbose_name='Add participants emails')
+    users = models.ManyToManyField("Subject", blank=True, related_name='campaigns', verbose_name='Add participants emails')
     questionnaires = models.ManyToManyField("Questionnaire", blank=True, related_name='campaigns')
 
     get_latest_by = "campaign_id"
@@ -67,7 +67,7 @@ class Subject(models.Model):
     ), null=True)
 
     def __unicode__(self):
-        return u'%s, %s (%s)' % (self.surname, self.givenname, self.email)
+        return u'%s' % self.email
 
     def next_runid(self):
         "Return the string form of the runid for the upcoming run"

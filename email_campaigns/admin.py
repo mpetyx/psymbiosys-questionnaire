@@ -1,3 +1,5 @@
+from django.forms import SelectMultiple
+
 __author__ = 'mpetyx'
 
 from django.contrib import admin
@@ -9,6 +11,11 @@ from signals import *
 
 class CampaignAdmin(admin.ModelAdmin):
     list_display = ('name', )
+    formfield_overrides = {
+        models.ManyToManyField: {
+            'widget': SelectMultiple(attrs={'style': 'height:250px'})},
+
+    }
 
 admin.site.register(Campaign, CampaignAdmin)
 
