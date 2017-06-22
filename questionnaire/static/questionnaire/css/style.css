@@ -708,3 +708,8 @@ span.kpi-subject-type {
 .btn.btn-psy.btn-psy--green:active {
 	background: #92ac86;
 }
+
+.alert-message.error {
+    color: #da3f3f;
+    background: rgba(218, 63, 63, 0.1);;
+}

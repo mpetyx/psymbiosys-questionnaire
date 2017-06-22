@@ -1,6 +1,14 @@
 {% load app_filters %}
 
 {% if dominant_answers %}
+
+    {% if not directors_answers|length %}
+        <div class="alert-message block-message error input text-center" style="padding: 20px; margin: 0 -15px;">
+            <strong>
+                Waiting for director's Brand Value answers to be submitted
+            </strong>
+        </div>
+    {% endif %}
     
     <div class="col-xs-12 text-center" style="padding: 15px; border: 1px solid #ccc; margin: 50px 0;">
         <div class="col-xs-4">
@@ -29,7 +37,7 @@
             {% for dom_answer in dominant_answers %}
                 <tr>
                     <td>{{ dom_answer.question|split_brand_value:"0" }}</td>
-                    {% with manager_answer=last_manager_answers|getitem:forloop.counter0 %}
+                    {% with manager_answer=directors_answers|getitem:forloop.counter0 %}
                         {% for x in '12345' %}
                                 <td>
                                     {% if dom_answer.answer == forloop.counter and manager_answer != forloop.counter %}

@@ -1124,6 +1124,7 @@ def brand_value(request):
         'grouped_answers': grouped_answers
     })
 
+
 def brand_value_charts(request):
     subject_type = request.GET.get('type', '')
     campaign = request.GET.get('campaign', None)
@@ -1134,7 +1135,8 @@ def brand_value_charts(request):
     )
 
     if campaign:
-        brand_value_qs = brand_value_qs.filter(campaign_id=campaign)
+        director_id = Campaign.objects.get(pk=campaign).director_id
+        brand_value_qs = brand_value_qs.filter(campaign_id=campaign).exclude(subject_id=director_id)
     if subject_type:
         brand_value_qs = brand_value_qs.filter(subject__type=subject_type.upper())
     if unique_answers:
@@ -1180,36 +1182,47 @@ def brand_value_charts(request):
     sortedlist = sorted(dominant_answers, key=lambda k: k['qid'])
     dominant_answers = sortedlist
 
-    # get the answers of the last brand value questionnaire in this campaign asked by a manager
-
-    managers_history = RunInfoHistory.objects.filter(
-        questionnaire__type="BRAND_VALUE",
-        subject__type="MANAGER"
-    )
-
-    if campaign:
-        managers_history = managers_history.filter(campaign_id=campaign)
-
+    # get the answers of the director
+    directors_answers = []
     try:
-        latest_managers_runid = managers_history.reverse().first().runid
-        manager_brand_value_qs = Answer.objects.filter(runid=latest_managers_runid)
+        directors_brand_value_qs = Answer.objects.filter(question__questionset__questionnaire__type="BRAND_VALUE")
+        if campaign:
+            directors_brand_value_qs = directors_brand_value_qs.filter(
+                campaign_id=campaign,
+                subject_id=Campaign.objects.get(pk=campaign).director_id
+            )
+
+            for manager_answer in directors_brand_value_qs:
+                directors_answers.append({
+                    'qid': manager_answer.question_id,
+                    'answer': int(eval(manager_answer.answer)[0])
+                })
+        else:
+            directors_brand_value_qs = directors_brand_value_qs.filter(subject__type="MANAGER")
+            question_ids = directors_brand_value_qs.values_list('question_id', flat=True).distinct()
+
+            for question_id in question_ids:
+                val = 0
+                aggregated_answers = directors_brand_value_qs.filter(question_id=question_id)
+                for a in aggregated_answers:
+                    val += int(eval(a.answer)[0])
+
+                directors_answers.append({
+                    'qid': question_id,
+                    'answer': round(val / aggregated_answers.count())
+                })
+
     except AttributeError:
-        manager_brand_value_qs = Answer.objects.none()
+        directors_answers = []
 
-    last_manager_answers = []
-    for manager_answer in manager_brand_value_qs:
-        last_manager_answers.append({
-            'qid': manager_answer.question_id,
-            'answer': int(eval(manager_answer.answer)[0])
-        })
 
-    sortedlist = sorted(last_manager_answers, key=lambda k: k['qid'])
-    last_manager_answers = []
+    sortedlist = sorted(directors_answers, key=lambda k: k['qid'])
+    directors_answers = []
     for i in sortedlist:
-        last_manager_answers.append(i['answer'])
+        directors_answers.append(i['answer'])
 
     diff_sum = 0
-    for da, lma in zip(dominant_answers, last_manager_answers):
+    for da, lma in zip(dominant_answers, directors_answers):
         diff_sum += abs(da['answer'] - lma)
 
     questionnaire_num_of_questions = Question.objects.filter(
@@ -1219,7 +1232,7 @@ def brand_value_charts(request):
 
     return render(request, 'questionnaire/analytics/brand-value-table.html', {
         'dominant_answers': dominant_answers,
-        'last_manager_answers': last_manager_answers,
+        'directors_answers': directors_answers,
         'logged_in': request.user.is_authenticated(),
         'kpi_45': kpi_45,
         'subject_type': subject_type

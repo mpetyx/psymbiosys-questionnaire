@@ -6,16 +6,30 @@ from django.contrib import admin
 from django.db import models
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
-from signals import *
+from questionnaire.models import *
+from django import forms
+
+
+class CampaignAdminForm(forms.ModelForm):
+    class Meta:
+        model = Campaign
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super(CampaignAdminForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields['director'].queryset = Subject.objects.filter(type="MANAGER")
 
 
 class CampaignAdmin(admin.ModelAdmin):
+    form = CampaignAdminForm
     list_display = ('name', )
     formfield_overrides = {
         models.ManyToManyField: {
             'widget': SelectMultiple(attrs={'style': 'height:250px'})},
 
     }
+
 
 admin.site.register(Campaign, CampaignAdmin)
 
