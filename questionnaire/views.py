@@ -1135,8 +1135,7 @@ def brand_value_charts(request):
     )
 
     if campaign:
-        director_id = Campaign.objects.get(pk=campaign).director_id
-        brand_value_qs = brand_value_qs.filter(campaign_id=campaign).exclude(subject_id=director_id)
+        brand_value_qs = brand_value_qs.filter(campaign_id=campaign).exclude(subject_id=Campaign.objects.get(pk=campaign).director_id)
     if subject_type:
         brand_value_qs = brand_value_qs.filter(subject__type=subject_type.upper())
     if unique_answers:
@@ -1244,7 +1243,7 @@ def brand_value_stats(request):
 
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="BRAND_VALUE")
     if campaign:
-        questionnaire_history = questionnaire_history.filter(campaign_id=campaign)
+        questionnaire_history = questionnaire_history.filter(campaign_id=campaign).exclude(subject_id=Campaign.objects.get(pk=campaign).director_id)
 
     questionnaire_unique_history = questionnaire_history.distinct('subject_id')
 
@@ -1293,7 +1292,7 @@ def workers_sentiment_charts(request, part=1):
         )
 
     if campaign:
-        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
+        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign).exclude(subject_id=Campaign.objects.get(pk=campaign).director_id)
     if subject_type:
         workers_sentiment_qs = workers_sentiment_qs.filter(subject__type=subject_type.upper())
 
@@ -1409,8 +1408,8 @@ def workers_sentiment_stats(request, part=1):
 
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="WORKERS_SENTIMENT")
     if campaign:
-        questionnaire_history = questionnaire_history.filter(campaign_id=campaign)
-        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
+        questionnaire_history = questionnaire_history.filter(campaign_id=campaign).exclude(subject_id=Campaign.objects.get(pk=campaign).director_id)
+        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign).exclude(subject_id=Campaign.objects.get(pk=campaign).director_id)
 
     if subject_type:
         workers_sentiment_qs = workers_sentiment_qs.filter(subject__type=subject_type.upper())
