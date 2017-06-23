@@ -344,11 +344,24 @@ $(document).ready(function() {
             drawStats('#statsContainer', '/analytics/workers-sentiment-stats/' + endpointURL)
     });
 
-    $('select#brand-table-campaign-filter, select#brand-table-type-filter, input#brand-table-unique-answers-filter').on('change',
+    $('select.brand-table-campaign-filter, select.brand-table-type-filter, input#brand-table-unique-answers-filter').on('change',
         function() {
             var urlParamString = '?';
 
-            $.each($('select#brand-table-campaign-filter, select#brand-table-type-filter, input#brand-table-unique-answers-filter'), function(i, sel) {
+            var that = this;
+            if ($(this).is('.brand-table-type-filter')) {
+                $('select.brand-table-type-filter').each(function(i, sel) {
+                    sel.value = that.value;
+                    $(sel).trigger("chosen:updated");
+                });
+            } else if ($(this).is('.brand-table-campaign-filter')) {
+                $('select.brand-table-campaign-filter').each(function(i, sel) {
+                    sel.value = that.value;
+                    $(sel).trigger("chosen:updated");
+                });
+            }
+
+            $.each($('select.brand-table-campaign-filter, select.brand-table-type-filter, input#brand-table-unique-answers-filter'), function(i, sel) {
                 if ($(sel).is('select')) {
 
                     var $option = $(sel).find('option:selected'),
