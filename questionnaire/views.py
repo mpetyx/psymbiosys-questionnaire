@@ -1221,7 +1221,6 @@ def brand_value_charts(request):
     for da, lma in zip(dominant_answers, directors_answers):
         diff_sum += abs(da['answer'] - lma)
 
-    import pdb;pdb.set_trace();
     kpi_45 = 100 - (float(diff_sum) / (15 * 4)) * 100
 
     return render(request, 'questionnaire/analytics/brand-value-table.html', {
