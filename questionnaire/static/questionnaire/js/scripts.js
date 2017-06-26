@@ -465,6 +465,6 @@ $('body').on('click', '#workers-sentiment-detailed-results--excel', function(e) 
 });
 
 $('body').on('click', '#brand-values-detailed-results--excel', function(e) {
-    var val = $('#brand-table-campaign-filter').find('option:selected').data('pk');
+    var val = $('#table-campaign-filter').find('option:selected').data('pk');
     window.location.href = '/analytics/brand-values-export?campaign=' + (val ? val : '');
 });

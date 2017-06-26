@@ -16,7 +16,7 @@ def workers_sentiment_detailed_results(request):
 
     campaign = request.GET.get('campaign', None)
     if campaign:
-        workers_sentiment_qs.filter(campaign_id=campaign)
+        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
 
     filename = 'workers_sentiment_detailed_results.xlsx'
     excel = NamedTemporaryFile(suffix='.xlsx')
@@ -72,7 +72,7 @@ def brand_values_detailed_results(request):
 
     campaign = request.GET.get('campaign', None)
     if campaign:
-        brand_value_qs.filter(campaign_id=campaign)
+        brand_value_qs = brand_value_qs.filter(campaign_id=campaign)
 
     filename = 'brand_value_detailed_results.xlsx'
     excel = NamedTemporaryFile(suffix='.xlsx')
