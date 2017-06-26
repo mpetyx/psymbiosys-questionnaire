@@ -529,11 +529,8 @@ def finish_questionnaire(request, runinfo, questionnaire):
     """
 
     if runinfo.subject.email:
-        hist.subject.type = 'WORKER'
-
-        for u in User.objects.all():
-            if u.email == runinfo.subject.email:
-                hist.subject.type = 'MANAGER'
+        if hist.subject.type == 'VISITOR':
+            hist.subject.type = 'WORKER'
 
         hist.subject.save()
 
