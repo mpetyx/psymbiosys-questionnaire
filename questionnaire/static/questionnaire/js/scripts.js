@@ -184,7 +184,7 @@ function drawStats(container, url) {
                  $kpiTable.find('.suggestions').hide();
                  if (data['kpi'] < 50) {
                      $kpiTable.find('.suggestions-below-50').show();
-                 } else if (data['kpi'] <= 80) {
+                 } else if (data['kpi'] < 80) {
                      $kpiTable.find('.suggestions-between-50-80').show();
                  } else {
                      $kpiTable.find('.suggestions-above-80').show();
