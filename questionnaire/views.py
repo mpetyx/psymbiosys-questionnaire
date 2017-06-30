@@ -537,7 +537,7 @@ def finish_questionnaire(request, runinfo, questionnaire):
     questionnaire_done.send(sender=None, runinfo=runinfo,
                             questionnaire=questionnaire)
 
-    redirect_url = questionnaire.redirect_url
+    redirect_url = runinfo.campaign.redirect_url
     for x, y in (('$LANG', translation.get_language()),
                  ('$SUBJECTID', runinfo.subject.id),
                  ('$RUNID', runinfo.runid),):

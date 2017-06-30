@@ -19,6 +19,7 @@ div.input {
 
 div.table-input table {
     width: 100%;
+    table-layout: fixed;
 }
 
 div.table-input thead > tr {
@@ -55,6 +56,9 @@ div.table-input tbody > tr > td > input[type="radio"] {
     display: block;
     box-shadow: none;
     width: 100%;
+    cursor: pointer;
+    padding-top: 4px;
+    margin-top: 0;
 }
 
 .answer {

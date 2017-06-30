@@ -11,14 +11,12 @@
   model: questionnaire.subject
   pk: 1
 - fields: {
-    name: Test,
-    redirect_url: /
+    name: Test
   }
   model: questionnaire.questionnaire
   pk: 1
 - fields: {
-    name: TagTest,
-    redirect_url: /
+    name: TagTest
   }
   model: questionnaire.questionnaire
   pk: 2

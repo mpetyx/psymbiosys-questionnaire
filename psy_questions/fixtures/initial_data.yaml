@@ -9,7 +9,7 @@
     nextrun: null, state: inactive, surname: User}
   model: questionnaire.subject
   pk: 2
-- fields: {name: psy_questions, redirect_url: /}
+- fields: {name: psy_questions}
   model: questionnaire.questionnaire
   pk: 1
 - fields: {checks: '', heading: Page 1, questionnaire: 1, sortid: 1, text_de: h1. Biervorlieben,

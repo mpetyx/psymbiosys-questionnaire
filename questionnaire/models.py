@@ -21,6 +21,11 @@ class Campaign(models.Model):
     director = models.ForeignKey("Subject")
     users = models.ManyToManyField("Subject", blank=True, related_name='campaigns', verbose_name='Add participants emails')
     questionnaires = models.ManyToManyField("Questionnaire", blank=True, related_name='campaigns')
+    redirect_url = models.CharField(
+        max_length=128,
+        help_text="URL to redirect to when Questionnaire is complete. Macros: $SUBJECTID, $RUNID, $LANG",
+        default="/static/complete.html"
+    )
 
     get_latest_by = "campaign_id"
 
@@ -93,7 +98,6 @@ class Questionnaire(models.Model):
     )
 
     name = models.CharField(max_length=128)
-    redirect_url = models.CharField(max_length=128, help_text="URL to redirect to when Questionnaire is complete. Macros: $SUBJECTID, $RUNID, $LANG", default="/static/complete.html")
     type = models.CharField(max_length=256, choices=QUESTIONNAIRE_CHOICES, default="WORKERS_SENTIMENT")
 
     def __unicode__(self):

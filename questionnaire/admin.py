@@ -48,7 +48,7 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 class QuestionnaireAdmin(admin.ModelAdmin):
-    list_display = ('name', 'redirect_url', 'export', 'type')
+    list_display = ('name', 'export', 'type')
     readonly_fields = ('export',)
 
     def export(self, obj):

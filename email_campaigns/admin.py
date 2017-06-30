@@ -23,7 +23,7 @@ class CampaignAdminForm(forms.ModelForm):
 
 class CampaignAdmin(admin.ModelAdmin):
     form = CampaignAdminForm
-    list_display = ('name', )
+    list_display = ('name', 'redirect_url', 'director' )
     formfield_overrides = {
         models.ManyToManyField: {
             'widget': SelectMultiple(attrs={'style': 'height:250px'})},
