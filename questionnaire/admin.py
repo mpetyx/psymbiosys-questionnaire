@@ -6,6 +6,7 @@ adminsite = admin.site
 
 
 class SubjectAdmin(admin.ModelAdmin):
+    exclude = ('next_run', 'formtype', 'language', 'state', 'gender')
     search_fields = ['surname', 'givenname', 'email']
     list_display = ['surname', 'givenname', 'email', 'type']
     list_filter = ['type']
