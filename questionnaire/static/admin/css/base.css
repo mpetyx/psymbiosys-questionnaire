@@ -14,7 +14,7 @@ body {
 /* LINKS */
 
 a:link, a:visited {
-    color: #5b80b2;
+    color: #2d6f5d;
     text-decoration: none;
 }
 
@@ -299,7 +299,7 @@ tr.alt {
 }
 
 .row1 {
-    background: #EDF3FE;
+    background: #edfefc;
 }
 
 .row2 {
@@ -454,22 +454,15 @@ a.button {
 }
 
 .button.default, input[type=submit].default, .submit-row input.default {
-    border: 2px solid #5b80b2;
-    background: #7CA0C7 url(../img/default-bg.gif) bottom repeat-x;
+    border: 2px solid rgba(51, 139, 98, 0.91);
+    background: rgba(55, 137, 99, 0.74);
     font-weight: bold;
     color: #fff;
     float: right;
 }
 
 .button.default:active, input[type=submit].default:active {
-    background-image: url(../img/default-bg-reverse.gif);
-    background-position: top;
-}
-
-.button[disabled].default, input[type=submit][disabled].default, input[type=button][disabled].default {
-    background-image: url(../img/default-bg.gif);
-    background-position: bottom;
-    opacity: 0.4;
+    background: rgba(42, 104, 75, 0.74)
 }
 
 
@@ -504,7 +497,7 @@ a.button {
     font-size: 11px;
     text-align: left;
     font-weight: bold;
-    background: #7CA0C7 url(../img/default-bg.gif) top left repeat-x;
+    background: rgba(51, 139, 98, 0.91);
     color: #fff;
 }
 
@@ -695,7 +688,7 @@ a.deletelink:hover {
 }
 
 .object-tools a:hover, .object-tools li:hover a {
-    background-color: #5b80b2;
+    background-color: #27875b;
 }
 
 .object-tools a.viewsitelink, .object-tools a.golink {
@@ -786,7 +779,7 @@ table#change-history tbody th {
 
 #header {
     width: 100%;
-    background: #417690;
+    background: rgba(43, 150, 101, 0.96);
     color: #ffc;
     overflow: hidden;
 }
@@ -810,7 +803,7 @@ table#change-history tbody th {
 }
 
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
-    color: #f4f379;
+    color: white;
 }
 
 #branding h2 {
