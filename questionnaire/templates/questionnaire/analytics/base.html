@@ -27,6 +27,14 @@
     <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/login.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'questionnaire/css/radar-chart.min.css' %}">
 
+    <style media="print">
+        nav ul li,
+        ul.nav.nav-tabs,
+        button.btn-psy {
+            display: none !important;
+        }
+    </style>
+
     <!-- any extra CSS that must be included in the current page -->
     {% block css %}{% endblock %}
     <!-- end of CSS block -->

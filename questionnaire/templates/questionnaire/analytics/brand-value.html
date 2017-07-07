@@ -1,6 +1,21 @@
 {% extends 'questionnaire/analytics/base.html' %}
 {% load app_filters %}
 
+{% block css %}
+    <style media="print">
+        .bullet {
+            background: rgba(43, 146, 225, 1) !important;
+        }
+
+        .bullet.simultaneous-bullet {
+            background: rgba(0, 128, 0, 0.95) !important;
+        }
+
+        .bullet.manager-bullet {
+            background: #e12b2f !important;
+        }
+    </style>
+{% endblock %}
 
 {% block title %}Brand value analytics{% endblock %}
 {% block body_class %}brand-value analytics-page{% endblock %}

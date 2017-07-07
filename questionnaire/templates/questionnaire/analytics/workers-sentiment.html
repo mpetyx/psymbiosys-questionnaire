@@ -2,6 +2,30 @@
 {% load app_filters %}
 
 
+{% block css %}
+    <style media="print">
+        .col-sm-6 {
+            width: 100% !important;
+        }
+
+        svg {
+            margin-left: 25% !important;
+        }
+
+        #radar-chart-scale {
+            display: none;
+        }
+
+        #chartContainer {
+            margin-top: 450px;
+        }
+
+        .main-stat {
+            margin-top: 275px;
+        }
+    </style>
+{% endblock %}
+
 {% block title %}Worker sentiment analytics{% endblock %}
 {% block body_class %}worker-sentiment analytics-page{% endblock %}
 
