@@ -6,6 +6,7 @@ from views import clone_questionnaire
 from email_campaigns.admin import clone_CloneQuestionnaire
 admin.autodiscover()
 
+admin.site.site_header = 'PSYMBIOSYS Campaigns and Questionnaires Administration'
 urlpatterns = patterns('',
     
     url(r'q/', include('questionnaire.urls')),
