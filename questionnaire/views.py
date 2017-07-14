@@ -1115,10 +1115,14 @@ def brand_value(request):
         answer_group = brand_value_qs.filter(runid=runid).order_by('question__number')
         grouped_answers.append(list(answer_group))
 
+    num_of_questions = brand_value_qs.order_by('question__text_en').distinct('question__text_en').count()
+    question_edges_list = brand_value_qs.values_list('question__text_en', flat=True).order_by('question_id').distinct()[:num_of_questions]
+
     return render(request, 'questionnaire/analytics/brand-value.html', {
         'campaigns': Campaign.objects.filter(questionnaires__type='BRAND_VALUE'),
         'logged_in': request.user.is_authenticated(),
-        'grouped_answers': grouped_answers
+        'grouped_answers': grouped_answers,
+        'question_edges_list': question_edges_list
     })
 
 

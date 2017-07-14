@@ -87,35 +87,28 @@
                             <th>Type</th>
                             <th>Date</th>
                             <th>Campaign</th>
-                            <th>Cheerful<br/> Lifeless</th>
-                            <th>Impersonal<br/> Warm</th>
-                            <th>Relaxing<br/> Stressful</th>
-                            <th>Traditional<br/> Contemporary</th>
-                            <th>Inspiring<br/> Inhibiting</th>
-                            <th>Functional<br/> Chaotic</th>
-                            <th>Aggressive<br/> Friendly</th>
-                            <th>Emotional<br/> Utilitarian</th>
-                            <th>Feminine<br/> Masculine</th>
-                            <th>Fun<br/> Humdrum</th>
-                            <th>Innovative<br/> Conservative</th>
-                            <th>Timeless<br/> Hip</th>
-                            <th>Stylish<br/> Casual</th>
-                            <th>Accessible<br/> Exclusive</th>
-                            <th>Passionate<br/> Calculating</th>
+                            {% for question_edges in question_edges_list %}
+                                <th>
+                                    {{ question_edges|qtext_parse:0 }}
+                                    <br/>
+                                    {{ question_edges|qtext_parse:1 }}
+                                </th>
+                            {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
                     {% for answer_group in grouped_answers %}
-                        {% with campaign=answer_group.0.get_campaign %}
+                        {% with campaign=answer_group.0.get_campaign campaign_instance=answer_group.0.campaign %}
+
                             <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td class="subject-type">{{ answer_group.0.subject.type }}</td>
+                                <td class="subject-type">{{ answer_group.0.subject|get_brand_value_subject_type:campaign_instance }}</td>
                                 <td>{{ answer_group.0.answered_at|date:"d/m/Y" }}</td>
                                 <td class="campaign-name">{{ campaign }}</td>
 
                                 {% for answer in answer_group %}
-                                    {% with answer_text=answer|get_answer_text:True %}
-                                    <td>{{ answer_text }}</td>
+                                    {% with answer_text=answer|get_likert_answer %}
+                                    <td style="padding-left: 50px;">{{ answer_text }}</td>
                                     {% endwith %}
                                 {% endfor %}
                             </tr>
