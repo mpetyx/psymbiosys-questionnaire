@@ -143,7 +143,8 @@ def a_campaign_modified(instance):
 
     questionnaires = campaign.questionnaires.all()
     for questionnaire in questionnaires:
-        emails = campaign.users.values_list('email', flat=True)
+        emails = list(campaign.users.values_list('email', flat=True))
+        emails.append(campaign.director.email)
         for email in emails:
             print 'Started email sending on: %s' % email
 
