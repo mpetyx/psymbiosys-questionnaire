@@ -27,8 +27,8 @@ def workers_sentiment_detailed_results(request):
     for i in range(1,6):
         worksheet = wordbook.add_worksheet(name='Questionnaire part %s' % str(i))
         worksheet.set_default_row(20)
-        answers_for_part = workers_sentiment_qs.filter(question__questionset__sortid=i).order_by('question__number')
-        question_texts = answers_for_part.values_list('question__text_en', flat=True).order_by('question__number').distinct('question__number')
+        answers_for_part = workers_sentiment_qs.filter(question__questionset__sortid=i).order_by('question_id')
+        question_texts = answers_for_part.values_list('question__text_en', flat=True).order_by('question_id').distinct()
 
         worksheet.write(0, 0, '#', bold)
         worksheet.write(0, 1, 'TYPE', bold)
@@ -39,7 +39,7 @@ def workers_sentiment_detailed_results(request):
             worksheet.write(0, (idx + 4), question_text.upper() if clean_question_text not in big_question_dict else big_question_dict[clean_question_text], bold)
 
         for idx2, runid in enumerate(runids):
-            answers_for_part_for_user = answers_for_part.filter(runid=runid).order_by('question__number')
+            answers_for_part_for_user = answers_for_part.filter(runid=runid).order_by('question_id')
             sample_answer = answers_for_part_for_user[0]
 
             worksheet.write((idx2 + 1), 0, (idx2 + 1))
@@ -82,8 +82,8 @@ def brand_values_detailed_results(request):
 
     worksheet = wordbook.add_worksheet(name='Questionnaire detailed answers')
     worksheet.set_default_row(20)
-    answers = brand_value_qs.order_by('question__number')
-    question_texts = answers.values_list('question__text_en', flat=True).order_by('question__number').distinct('question__number')
+    answers = brand_value_qs.order_by('question_id')
+    question_texts = answers.values_list('question__text_en', flat=True).order_by('question_id').distinct()
 
     worksheet.write(0, 0, '#', bold)
     worksheet.write(0, 1, 'TYPE', bold)
@@ -93,7 +93,7 @@ def brand_values_detailed_results(request):
         worksheet.write(0, (idx + 4), question_text.upper(), bold)
 
     for idx2, runid in enumerate(runids):
-        answers_for_part_for_user = answers.filter(runid=runid).order_by('question__number')
+        answers_for_part_for_user = answers.filter(runid=runid).order_by('question_id')
         sample_answer = answers_for_part_for_user[0]
 
         worksheet.write((idx2 + 1), 0, (idx2 + 1))
