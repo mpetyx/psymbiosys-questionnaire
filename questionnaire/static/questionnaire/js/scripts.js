@@ -31,7 +31,7 @@ function drawChart(container, url, qsPart) {
                 if (qsPart != 4 && qsPart != 5) {
                     var svg = dimple.newSvg(container, "100%", 675);
                     var myChart = new dimple.chart(svg, data);
-                    myChart.setBounds(50, 75, "90%", 550);
+                    myChart.setBounds(50, 75, 485, 550);
 
                     if ((qsPart == undefined) || (qsPart != 3)) {
                         myChart.addCategoryAxis("x", "Question");
@@ -269,51 +269,113 @@ function updateBrandValueTable (container, url) {
     })
 }
 
+function refreshTable() {
+    var val = $('#table-type-filter').find('option:selected').data('val').toUpperCase(),
+        $table = $('table.analytics-table');
+
+    if ( val ) {
+        $table
+            .find('tr')
+            .removeClass('hidden-type')
+            .find('td.subject-type')
+            .filter(function () {
+                return $(this).text() != val
+            })
+            .closest('tr')
+            .addClass('hidden-type');
+    } else {
+        $table
+            .find('tr')
+            .removeClass('hidden-type')
+    }
+
+    // Campaign related changes
+    var $option = $('#table-campaign-filter').find('option:selected');
+    val = $option.data('val').toUpperCase();
+
+    var $mirror = $option.closest('.select-container').find('.selection-mirror');
+    if ($mirror.length) {
+        $mirror.text($option.text());
+    }
+
+    if (val) {
+
+        $table
+            .find('tr')
+            .removeClass('hidden-campaign')
+            .find('td.campaign-name')
+            .filter(function () {
+                return $(this).text().toUpperCase() != val
+            })
+            .closest('tr')
+            .addClass('hidden-campaign');
+
+        if (!$table
+                .find('tbody tr:not(.hidden-campaign)')
+                .length
+        ) {
+
+            if (!$table.find('.table-placeholder').length) {
+                $table
+                    .find('tbody')
+                    .append('<tr class="table-placeholder"></tr>')
+                    .find('.table-placeholder')
+                    .append('<h5 class="text-center">No results were found</h5>')
+            }
+        } else {
+            $table
+                .find('.table-placeholder')
+                .remove()
+        }
+    } else {
+        $table
+            .find('tr')
+            .removeClass('hidden-campaign')
+    }
+
+    // choose which table to show
+    var $tableChoiceSelector = $('select#table-choice');
+
+    if (!$tableChoiceSelector.length) {
+        return;
+    }
+
+    var $selectedIdx = $tableChoiceSelector.find('option:selected').index();
+
+    $table.addClass('hidden');
+    $table.eq($selectedIdx).removeClass('hidden');
+}
+
 $(document).ready(function() {
     // select & checkbox initialization
     $('select').chosen();
 
-    // table show
-    $('select#table-choice').on('change', function () {
-        var $tables = $('table'),
-            $selectedIdx = $(this).find('option:selected').index();
+    if(window.location.href.indexOf('workers-sentiment') > -1) {
+        drawChart('#chartContainer', '/analytics/workers-sentiment-charts/1/');
+        drawStats('#statsContainer', '/analytics/workers-sentiment-stats/1/');
+    }
 
-        $tables.addClass('hidden');
-        $tables.eq($selectedIdx).removeClass('hidden');
-    });
-
-
-    $('select#table-type-filter').on('change', function() {
-        var val = $(this).find('option:selected').data('val').toUpperCase(),
-            $table = $('table.analytics-table');
-        if ( val ) {
-            $table
-                .find('tr')
-                .removeClass('hidden-type')
-                .find('td.subject-type')
-                .filter(function () {
-                    return $(this).text() != val
-                })
-                .closest('tr')
-                .addClass('hidden-type');
-        } else {
-            $table
-                .find('tr')
-                .removeClass('hidden-type')
-        }
-    });
+    if(window.location.href.indexOf('brand-value') > -1) {
+        updateBrandValueTable('#brand-value-table-container', '/analytics/brand-value-charts/');
+    }
     
-    $('select#chart-choice, select#chart-subject-type-filter, select#chart-campaign-filter, input#chart-unique-answers-filter').on('change',
+    $('select.ws-filter, input#chart-unique-answers-filter').on('change',
         function() {
-            var urlParamString = '?',
-                $option = $('select#chart-choice').find('option:selected'),
-                chartChoice = $option.index() + 1;
+            var that = this,
+                selectedVariable = $(this).find('option:selected').data('varname'),
+                urlParamString = '?';
 
-            if ($option.text() == '') {
-                return;
-            }
 
-            $.each($('select#chart-subject-type-filter, select#chart-campaign-filter, input#chart-unique-answers-filter'), function(i, sel) {
+            $('select > option[data-varname=' + selectedVariable + '][value=' + this.value + ']')
+                .closest('select')
+                .not(this)
+                .each(function(i, sel) {
+                    sel.value = that.value;
+                    $(sel).trigger("chosen:updated");
+
+            });
+
+            $.each($('select.ws-filter, input#chart-unique-answers-filter'), function(i, sel) {
                 if ($(sel).is('select')) {
 
                     var $option = $(sel).find('option:selected'),
@@ -330,7 +392,7 @@ $(document).ready(function() {
                         val = $(sel).prop('checked');
                 }
 
-                if ((val) && (varname != undefined)) {
+                if ((val) && (varname != undefined) && urlParamString.indexOf(varname) < 0) {
                     if (urlParamString.length != 1) {
                         urlParamString += '&';
                     }
@@ -339,29 +401,31 @@ $(document).ready(function() {
                 }
             });
 
+            var $option = $('select#chart-choice').find('option:selected'),
+                chartChoice = $option.index() + 1;
+
             var endpointURL = chartChoice + '/' + urlParamString;
             drawChart('#chartContainer', '/analytics/workers-sentiment-charts/' + endpointURL, chartChoice);
-            drawStats('#statsContainer', '/analytics/workers-sentiment-stats/' + endpointURL)
+            drawStats('#statsContainer', '/analytics/workers-sentiment-stats/' + endpointURL);
+            refreshTable();
     });
 
-    $('select.brand-table-campaign-filter, select.brand-table-type-filter, input#brand-table-unique-answers-filter').on('change',
+    $('select.bv-filter, input#brand-table-unique-answers-filter').on('change',
         function() {
             var urlParamString = '?';
+            var selectedVariable = $(this).find('option:selected').data('varname');
 
             var that = this;
-            if ($(this).is('.brand-table-type-filter')) {
-                $('select.brand-table-type-filter').each(function(i, sel) {
+            $('select > option[data-varname=' + selectedVariable + '][value=' + this.value + ']')
+                .closest('select')
+                .not(this)
+                .each(function(i, sel) {
                     sel.value = that.value;
                     $(sel).trigger("chosen:updated");
-                });
-            } else if ($(this).is('.brand-table-campaign-filter')) {
-                $('select.brand-table-campaign-filter').each(function(i, sel) {
-                    sel.value = that.value;
-                    $(sel).trigger("chosen:updated");
-                });
-            }
 
-            $.each($('select.brand-table-campaign-filter, select.brand-table-type-filter, input#brand-table-unique-answers-filter'), function(i, sel) {
+            });
+
+            $.each($('select.bv-filter, input#brand-table-unique-answers-filter'), function(i, sel) {
                 if ($(sel).is('select')) {
 
                     var $option = $(sel).find('option:selected'),
@@ -378,7 +442,7 @@ $(document).ready(function() {
                         val = $(sel).prop('checked');
                 }
 
-                if ((val) && (varname != undefined)) {
+                if ((val) && (varname != undefined) && urlParamString.indexOf(varname) < 0) {
                     if (urlParamString.length != 1) {
                         urlParamString += '&';
                     }
@@ -389,54 +453,8 @@ $(document).ready(function() {
 
             var endpointURL = '/analytics/brand-value-charts/'+ urlParamString;
             updateBrandValueTable('#brand-value-table-container', endpointURL);
-            drawStats()
-    });
-    
-    $('select#table-campaign-filter').on('change', function() {
-
-        var $option = $(this).find('option:selected'),
-            val = $option.data('val').toUpperCase(),
-            $table = $('table.analytics-table');
-
-        var $mirror = $(this).closest('.select-container').find('.selection-mirror');
-        if ($mirror.length) {
-            $mirror.text($option.text());
-        }
-
-        if (val) {
-
-            $table
-                .find('tr')
-                .removeClass('hidden-campaign')
-                .find('td.campaign-name')
-                .filter(function () {
-                    return $(this).text().toUpperCase() != val
-                })
-                .closest('tr')
-                .addClass('hidden-campaign');
-
-            if (!$table
-                    .find('tbody tr:not(.hidden-campaign)')
-                    .length
-            ) {
-
-                if (!$table.find('.table-placeholder').length) {
-                    $table
-                        .find('tbody')
-                        .append('<tr class="table-placeholder"></tr>')
-                        .find('.table-placeholder')
-                        .append('<h5 class="text-center">No results were found</h5>')
-                }
-            } else {
-                $table
-                    .find('.table-placeholder')
-                    .remove()
-            }
-        } else {
-            $table
-                .find('tr')
-                .removeClass('hidden-campaign')
-        }
+            drawStats();
+            refreshTable();
     });
 
     $('body.analytics-page h4 .toggle-section').on('click', function() {
@@ -446,15 +464,6 @@ $(document).ready(function() {
             .find('i')
             .toggleClass('fa-chevron-up fa-chevron-down')
     });
-
-    if ($('body').hasClass('brand-value')) {
-        updateBrandValueTable('#brand-value-table-container', '/analytics/brand-value-charts/');
-    }
-
-    $('[aria-controls="statistical-data"]').one('click', function() {
-        drawChart('#chartContainer', '/analytics/workers-sentiment-charts/1/');
-        drawStats('#statsContainer', '/analytics/workers-sentiment-stats/1/');
-    })
 });
 
 

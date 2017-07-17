@@ -13,7 +13,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if os.environ.get('LOGNAME') in ['3nvi']:
+if os.environ.get('LOGNAME') in ['3nvi', 'psy-dev']:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.

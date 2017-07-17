@@ -1494,7 +1494,7 @@ def workers_sentiment_stats(request, part=1):
             .distinct()\
             .count()
     elif part in ['4', '5']:
-        number_of_positive_responses = different_answers_for_this_questionnaire_part.get(5, 0)
+        number_of_positive_responses = different_answers_for_this_questionnaire_part.get(4, 0) + different_answers_for_this_questionnaire_part.get(5, 0)
         kpi_title = 'Emotional perception of the %ss about the office space' % (subject_type if subject_type else 'employee')
         num_of_variables = 5
         temp = workers_sentiment_qs.distinct('runid').count()

@@ -61,10 +61,10 @@
                     <div class="pull-right select-container">
                         <p>Currently selected: <br/><span class="selection-mirror">All</span></p>
                         <span class="select-header">Select a Campaign:</span>
-                        <select id="table-campaign-filter" class="col-xs-4">
-                            <option selected data-val="">All</option>
+                        <select id="table-campaign-filter" class="col-xs-4 bv-filter">
+                            <option data-varname="campaign" selected data-val="" value="">All</option>
                             {% for campaign in campaigns %}
-                                <option data-val="{{ campaign.name }}" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
+                                <option data-varname="campaign" value="{{ campaign.pk }}" data-val="{{ campaign.name }}" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -72,11 +72,11 @@
 
                 <div class="col-xs-12">
                     <span class="select-header">Select a User type:</span>
-                    <select id="table-type-filter" class="col-xs-4">
-                        <option selected data-val="">All</option>
-                        <option data-val="Worker">Worker</option>
-                        <option data-val="Manager">Manager</option>
-                        <option data-val="Visitor">Visitor</option>
+                    <select id="table-type-filter" class="col-xs-4 bv-filter">
+                        <option data-varname="type" selected data-val="" value="">All</option>
+                        <option data-varname="type" data-val="Worker" value="worker">Worker</option>
+                        <option data-varname="type" data-val="Manager" value="manager">Manager</option>
+                        <option data-varname="type" data-val="Visitor" value="visitor">Visitor</option>
                     </select>
                 </div>
 
@@ -125,34 +125,21 @@
                         Print
                 </button>
 
-                <h4>
+                <h4 style="margin-bottom: 30px;">
                     <span>
                         Aggregated Analysis
                     </span>
                     <div class="pull-right select-container">
                         <p>Currently selected: <br/><span class="selection-mirror">All</span></p>
                         <span class="select-header">Select a Campaign:</span>
-                        <select class="brand-table-campaign-filter col-xs-4">
-                            <option selected>All</option>
+                        <select class="bv-filter col-xs-4">
+                            <option selected value="" data-varname="campaign">All</option>
                             {% for campaign in campaigns %}
-                                <option value="{{ campaign.pk }}" data-varname="campaign" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
+                                <option data-varname="campaign" value="{{ campaign.pk }}" data-varname="campaign" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </h4>
-
-
-
-                <div class="col-xs-12">
-                    <span class="select-header">Select a User type:</span>
-                    <select class="brand-table-type-filter col-xs-4">
-                        <option selected data-val="">All</option>
-                        <option data-val="Worker" data-varname="type">Worker</option>
-                        <option data-val="Manager" data-varname="type">Manager</option>
-                        <option data-val="Visitor" data-varname="type">Visitor</option>
-                    </select>
-
-                </div>
 
                 <div class="col-xs-12">
                     <div class="row">
@@ -174,9 +161,31 @@
                     </div>
                 </div>
 
-                <p class="col-xs-12 text-center" id="section-title" style="margin: 50px auto;text-transform: uppercase">
+                <p class="col-xs-12 text-center" id="section-title" style="text-transform: uppercase">
                     Are management perceptions realistic to users’ perceptions of the workspace?
                 </p>
+
+                <div class="col-xs-12 text-center" style="margin-bottom: 100px;">
+                    <div class="col-xs-4">
+                        <span class="bullet" style="margin-right: 15px;"></span> User's Average Answer
+                    </div>
+                    <div class="col-xs-4">
+                        <span class="bullet manager-bullet" style="margin-right: 15px;"></span> Director's Perspective
+                    </div>
+                    <div class="col-xs-4">
+                        <span class="bullet simultaneous-bullet" style="margin-right: 15px;"></span> Answer is the same
+                    </div>
+                </div>
+
+                <div class="col-xs-12" style="padding-left: 30px; margin-bottom: 15px;">
+                    <span class="select-header">Select a User type:</span>
+                    <select class="bv-filter col-xs-4">
+                        <option data-varname="type" selected data-val="" value="">All</option>
+                        <option data-val="Worker" data-varname="type" value="worker">Worker</option>
+                        <option data-val="Manager" data-varname="type" value="manager">Manager</option>
+                        <option data-val="Visitor" data-varname="type" value="visitor">Visitor</option>
+                    </select>
+                </div>
 
                 <div class="col-xs-12" id="brand-value-table-container">
 
@@ -196,10 +205,10 @@
                     <div class="pull-right select-container">
                         <p>Currently selected: <br/><span class="selection-mirror">All</span></p>
                         <span class="select-header">Select a Campaign:</span>
-                        <select class="brand-table-campaign-filter col-xs-4">
-                            <option selected>All</option>
+                        <select class="bv-filter col-xs-4">
+                            <option selected data-varname="campaign" value="">All</option>
                             {% for campaign in campaigns %}
-                                <option value="{{ campaign.pk }}" data-varname="campaign" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
+                                <option data-varname="campaign" value="{{ campaign.pk }}" data-varname="campaign" data-pk="{{ campaign.pk }}">{{ campaign.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -207,11 +216,11 @@
 
                 <div class="col-xs-12">
                     <span class="select-header">Select a User type:</span>
-                    <select class="brand-table-type-filter col-xs-4">
-                        <option selected data-val="">All</option>
-                        <option data-val="Worker" data-varname="type">Worker</option>
-                        <option data-val="Manager" data-varname="type">Manager</option>
-                        <option data-val="Visitor" data-varname="type">Visitor</option>
+                    <select class="bv-filter col-xs-4">
+                        <option data-varname="type" selected data-val="" value="">All</option>
+                        <option data-val="Worker" data-varname="type" value="worker">Worker</option>
+                        <option data-val="Manager" data-varname="type" value="manager">Manager</option>
+                        <option data-val="Visitor" data-varname="type" value="visitor">Visitor</option>
                     </select>
 
                 </div>
