@@ -158,13 +158,16 @@ function drawStats(container, url) {
              $statsContainer.removeClass('opac').empty();
              $dictContainer.removeClass('opac').empty();
 
-             $('#number-of-responses').html(data['#_of_responses']);
-             $('#number-of-unique-responses').html(data['#_of_unique_responses']);
-             
-             $('#number-of-workers').html(data['#_of_workers'] + ' ( ' + data['%_of_workers'] + '% )');
-             $('#number-of-managers').html(data['#_of_managers'] + ' ( ' + data['%_of_managers'] + '% )');
-             $('#number-of-visitors').html(data['#_of_visitors'] + ' ( ' + data['%_of_visitors'] + '% )');
-             
+             if ('#_of_responses' in data) {
+
+                 $('#number-of-responses').html(data['#_of_responses']);
+                 $('#number-of-unique-responses').html(data['#_of_unique_responses']);
+
+                 $('#number-of-workers').html(data['#_of_workers'] + ' ( ' + data['%_of_workers'] + '% )');
+                 $('#number-of-managers').html(data['#_of_managers'] + ' ( ' + data['%_of_managers'] + '% )');
+                 $('#number-of-visitors').html(data['#_of_visitors'] + ' ( ' + data['%_of_visitors'] + '% )');
+             }
+
              $('#section-title').html(data['section_title']);
 
              if (data['kpi'] != null && data['kpi_title']) {
@@ -453,7 +456,6 @@ $(document).ready(function() {
 
             var endpointURL = '/analytics/brand-value-charts/'+ urlParamString;
             updateBrandValueTable('#brand-value-table-container', endpointURL);
-            drawStats();
             refreshTable();
     });
 
