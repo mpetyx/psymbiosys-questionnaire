@@ -1416,8 +1416,8 @@ def workers_sentiment_stats(request, part=1):
 
     questionnaire_history = RunInfoHistory.objects.filter(questionnaire__type="WORKERS_SENTIMENT")
     if campaign:
-        questionnaire_history = questionnaire_history.filter(campaign_id=campaign).exclude(subject_id=Campaign.objects.get(pk=campaign).director_id)
-        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign).exclude(subject_id=Campaign.objects.get(pk=campaign).director_id)
+        questionnaire_history = questionnaire_history.filter(campaign_id=campaign)
+        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
 
     if subject_type:
         workers_sentiment_qs = workers_sentiment_qs.filter(subject__type=subject_type.upper())
@@ -1488,25 +1488,16 @@ def workers_sentiment_stats(request, part=1):
 
 
     if part in ['1', '2']:
-        isolate_part = {}
 
-        for a in workers_sentiment_qs.filter(question__questionset__sortid=part):
-            answer_number = a.get_likert_answer()
-
-            if answer_number in isolate_part:
-                isolate_part[answer_number] += 1
-            else:
-                isolate_part[answer_number] = 1
-
-        number_of_positive_responses = isolate_part.get(3, 0)
+        number_of_positive_responses = workers_sentiment_qs.filter(answer='["3"]').count()
         kpi_title = '%s well-being at workplace regarding ambient parameters and furniture' % (subject_type.capitalize() if subject_type else 'Total')
         temp = workers_sentiment_qs.filter(
-            question__questionset__sortid__in=[part]
+            question__questionset__sortid__in=full_part
         )\
         .distinct('runid')\
         .count()
         num_of_variables = workers_sentiment_qs\
-            .filter(question__questionset__sortid=part)\
+            .filter(question__questionset__sortid__in=full_part)\
             .values('question__text_en')\
             .distinct()\
             .count()
