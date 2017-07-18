@@ -1255,7 +1255,7 @@ def brand_value_stats(request):
         number_of_unique_worker_responses = questionnaire_unique_history.filter(
             subject__type='WORKER').count()
         number_of_unique_manager_responses = questionnaire_unique_history.filter(
-            subject__type='VISITOR').count()
+            subject__type='MANAGER').count()
         number_of_unique_visitor_responses = questionnaire_unique_history.filter(
             subject__type='VISITOR').count()
         percent_of_unique_worker_responses = "%.2f" % (
@@ -1438,7 +1438,7 @@ def workers_sentiment_stats(request, part=1):
         number_of_unique_worker_responses = questionnaire_unique_history.filter(
             subject__type='WORKER').count()
         number_of_unique_manager_responses = questionnaire_unique_history.filter(
-            subject__type='VISITOR').count()
+            subject__type='MANAGER').count()
         number_of_unique_visitor_responses = questionnaire_unique_history.filter(
             subject__type='VISITOR').count()
         percent_of_unique_worker_responses = "%.2f" % (
