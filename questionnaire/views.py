@@ -1300,7 +1300,7 @@ def workers_sentiment_charts(request, part=1):
         )
 
     if campaign:
-        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign).exclude(subject_id=Campaign.objects.get(pk=campaign).director_id)
+        workers_sentiment_qs = workers_sentiment_qs.filter(campaign_id=campaign)
     if subject_type:
         workers_sentiment_qs = workers_sentiment_qs.filter(subject__type=subject_type.upper())
 
