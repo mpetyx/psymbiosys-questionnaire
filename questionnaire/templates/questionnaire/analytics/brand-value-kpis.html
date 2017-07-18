@@ -4,7 +4,7 @@
             <td>PERFORMANCE INDICATOR</td>
             <td colspan="2">
                 AIDIMME _PI{% if not subject_type|lower == 'visitor' %}4{% else %}5{% endif %}. Brand value gap between management and
-                {% if subject_type %}{{ subject_type|lower }}s'{% else %}everyone else's{% endif %} perception.
+                {% if subject_type %}{{ subject_type|lower }}s'{% else %}employees'{% endif %} perception.
             </td>
         </tr>
         <tr>
@@ -12,15 +12,15 @@
             <td colspan="2">
                 There is an agreement level of <span class="kpi-container">{{ kpi_45|floatformat:"2" }}%</span>
                 for brand value perception of the workspace amongst management and
-                {% if subject_type %}{{ subject_type|lower }}s{% else %}everyone else{% endif %}.
+                {% if subject_type %}{{ subject_type|lower }}s{% else %}employees{% endif %}.
             </td>
         </tr>
         <tr>
             <td>DESIRED VALUE</td>
             <td colspan="2">
-               80% of agreement on brand value perception of the
+               More than 80% of agreement on brand value perception of the
 
-                workspace amongst management and {% if subject_type %}{{ subject_type|lower }}s{% else %}everyone else{% endif %} is
+                workspace amongst management and {% if subject_type %}{{ subject_type|lower }}s{% else %}employees{% endif %} is
 
                 expected.
             </td>
@@ -29,7 +29,7 @@
         <tr>
             <td>SUGGESTIONS</td>
             <td colspan="2">
-                Management and {% if subject_type %}{{ subject_type|lower }}s{% else %}everyone else{% endif %} have a similar perception of the
+                Management and {% if subject_type %}{{ subject_type|lower }}s{% else %}employees{% endif %} have a similar perception of the
 
                 workspace brand value. Just check slight differences in the
 
@@ -57,7 +57,7 @@
             <td colspan="2">
                 Management perception of the workspace brand value is
 
-                rather different to {% if subject_type %}{{ subject_type|lower }}s'{% else %}everyone else's{% endif %} perceptions. Values of the
+                rather different to {% if subject_type %}{{ subject_type|lower }}s'{% else %}employees{% endif %} perceptions. Values of the
 
                 Brand Value scale should be checked in order to identify
 

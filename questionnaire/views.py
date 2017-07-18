@@ -1250,15 +1250,22 @@ def brand_value_stats(request):
 
     if not number_of_unique_responses:
         number_of_unique_worker_responses = number_of_unique_visitor_responses = number_of_unique_manager_responses = 0
+        percent_of_unique_worker_responses = percent_of_unique_visitor_responses = percent_of_unique_manager_responses = 0
     else:
-        number_of_unique_worker_responses = "%.2f" % (
-            questionnaire_unique_history.filter(subject__type='WORKER').count() * 100 / float(number_of_unique_responses)
+        number_of_unique_worker_responses = questionnaire_unique_history.filter(
+            subject__type='WORKER').count()
+        number_of_unique_manager_responses = questionnaire_unique_history.filter(
+            subject__type='VISITOR').count()
+        number_of_unique_visitor_responses = questionnaire_unique_history.filter(
+            subject__type='VISITOR').count()
+        percent_of_unique_worker_responses = "%.2f" % (
+            number_of_unique_worker_responses * 100 / float(number_of_unique_responses)
         )
-        number_of_unique_visitor_responses = "%.2f" % (
-            questionnaire_unique_history.filter(subject__type='VISITOR').count() * 100 / float(number_of_unique_responses)
+        percent_of_unique_visitor_responses = "%.2f" % (
+            number_of_unique_visitor_responses * 100 / float(number_of_unique_responses)
         )
-        number_of_unique_manager_responses = "%.2f" % (
-            questionnaire_unique_history.filter(subject__type='MANAGER').count() * 100 / float(number_of_unique_responses)
+        percent_of_unique_manager_responses = "%.2f" % (
+            number_of_unique_manager_responses * 100 / float(number_of_unique_responses)
         )
 
     return JsonResponse({
@@ -1267,6 +1274,9 @@ def brand_value_stats(request):
             '#_of_workers': number_of_unique_worker_responses,
             '#_of_visitors': number_of_unique_visitor_responses,
             '#_of_managers': number_of_unique_manager_responses,
+            '%_of_workers': percent_of_unique_worker_responses,
+            '%_of_visitors': percent_of_unique_visitor_responses,
+            '%_of_managers': percent_of_unique_manager_responses,
         }, safe=False
     )
 
@@ -1423,15 +1433,22 @@ def workers_sentiment_stats(request, part=1):
 
     if not number_of_unique_responses:
         number_of_unique_worker_responses = number_of_unique_visitor_responses = number_of_unique_manager_responses = 0
+        percent_of_unique_worker_responses = percent_of_unique_visitor_responses = percent_of_unique_manager_responses = 0
     else:
-        number_of_unique_worker_responses = "%.2f" % (
-            questionnaire_unique_history.filter(subject__type='WORKER').count() * 100 / float(number_of_unique_responses)
+        number_of_unique_worker_responses = questionnaire_unique_history.filter(
+            subject__type='WORKER').count()
+        number_of_unique_manager_responses = questionnaire_unique_history.filter(
+            subject__type='VISITOR').count()
+        number_of_unique_visitor_responses = questionnaire_unique_history.filter(
+            subject__type='VISITOR').count()
+        percent_of_unique_worker_responses = "%.2f" % (
+            number_of_unique_worker_responses * 100 / float(number_of_unique_responses)
         )
-        number_of_unique_visitor_responses = "%.2f" % (
-            questionnaire_unique_history.filter(subject__type='VISITOR').count() * 100 / float(number_of_unique_responses)
+        percent_of_unique_visitor_responses = "%.2f" % (
+            number_of_unique_visitor_responses * 100 / float(number_of_unique_responses)
         )
-        number_of_unique_manager_responses = "%.2f" % (
-            questionnaire_unique_history.filter(subject__type='MANAGER').count() * 100 / float(number_of_unique_responses)
+        percent_of_unique_manager_responses = "%.2f" % (
+            number_of_unique_manager_responses * 100 / float(number_of_unique_responses)
         )
 
     different_answers_for_this_questionnaire_part, payload = {}, []
@@ -1523,6 +1540,9 @@ def workers_sentiment_stats(request, part=1):
             '#_of_workers': number_of_unique_worker_responses,
             '#_of_visitors': number_of_unique_visitor_responses,
             '#_of_managers': number_of_unique_manager_responses,
+            '%_of_workers': percent_of_unique_worker_responses,
+            '%_of_visitors': percent_of_unique_visitor_responses,
+            '%_of_managers': percent_of_unique_manager_responses,
             'percentages':payload,
             'subject_type': subject_type or 'employee',
             'likert_values': likert_values,

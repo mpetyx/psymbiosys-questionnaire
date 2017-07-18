@@ -161,9 +161,9 @@ function drawStats(container, url) {
              $('#number-of-responses').html(data['#_of_responses']);
              $('#number-of-unique-responses').html(data['#_of_unique_responses']);
              
-             $('#number-of-workers').html(data['#_of_workers']);
-             $('#number-of-managers').html(data['#_of_managers']);
-             $('#number-of-visitors').html(data['#_of_visitors']);
+             $('#number-of-workers').html(data['#_of_workers'] + ' ( ' + data['%_of_workers'] + '% )');
+             $('#number-of-managers').html(data['#_of_managers'] + ' ( ' + data['%_of_managers'] + '% )');
+             $('#number-of-visitors').html(data['#_of_visitors'] + ' ( ' + data['%_of_visitors'] + '% )');
              
              $('#section-title').html(data['section_title']);
 
@@ -262,9 +262,9 @@ function updateBrandValueTable (container, url) {
             $('#number-of-responses').html(data['#_of_responses']);
             $('#number-of-unique-responses').html(data['#_of_unique_responses']);
 
-            $('#number-of-workers').html(data['#_of_workers']);
-            $('#number-of-managers').html(data['#_of_managers']);
-            $('#number-of-visitors').html(data['#_of_visitors']);
+            $('#number-of-workers').html(data['#_of_workers'] + ' ( ' + data['%_of_workers'] + '% )');
+             $('#number-of-managers').html(data['#_of_managers'] + ' ( ' + data['%_of_managers'] + '% )');
+             $('#number-of-visitors').html(data['#_of_visitors'] + ' ( ' + data['%_of_visitors'] + '% )');
         }
     })
 }
