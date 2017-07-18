@@ -1112,7 +1112,7 @@ def brand_value(request):
 
     grouped_answers = []
     for runid in runids:
-        answer_group = brand_value_qs.filter(runid=runid).order_by('question__number')
+        answer_group = brand_value_qs.filter(runid=runid).order_by('question_id')
         grouped_answers.append(list(answer_group))
 
     num_of_questions = brand_value_qs.order_by('question__text_en').distinct('question__text_en').count()
