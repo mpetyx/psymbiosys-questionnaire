@@ -6,7 +6,16 @@ from django.core.files.temp import NamedTemporaryFile
 from questionnaire.models import Answer
 from questionnaire.views import big_question_dict
 from django.http import HttpResponse
+from questionnaire.models import Campaign
 import os
+
+
+def eval_user_type(subject, campaign):
+    if campaign:
+        campaign_instance = Campaign.objects.get(pk=campaign)
+        if campaign_instance.director_id == subject.id:
+            return 'Director'
+    return subject.type
 
 
 def workers_sentiment_detailed_results(request):
@@ -99,7 +108,7 @@ def brand_values_detailed_results(request):
         sample_answer = answers_for_part_for_user[0]
 
         worksheet.write((idx2 + 1), 0, (idx2 + 1))
-        worksheet.write((idx2 + 1), 1, sample_answer.subject.type.capitalize())
+        worksheet.write((idx2 + 1), 1, eval_user_type(sample_answer.subject, campaign).upper())
         worksheet.write((idx2 + 1), 2, sample_answer.answered_at.strftime('%d/%m/%Y'))
         worksheet.write((idx2 + 1), 3, sample_answer.campaign.name.capitalize())
 

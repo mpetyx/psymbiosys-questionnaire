@@ -1510,9 +1510,9 @@ def workers_sentiment_stats(request, part=1):
         number_of_positive_responses = 0
         kpi_title = ''
         num_of_variables = 1
-        temp = 1
+        temp = 0
 
-    kpi = 0 if not temp else float(number_of_positive_responses) / (num_of_variables * temp) * 100
+    kpi = None if not temp else float(number_of_positive_responses) / (num_of_variables * temp) * 100
 
     likert_list = []
     for a in workers_sentiment_qs:
