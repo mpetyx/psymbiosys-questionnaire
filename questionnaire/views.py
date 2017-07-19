@@ -1522,7 +1522,7 @@ def workers_sentiment_stats(request, part=1):
         'Minimum': min(likert_list) if likert_list else None,
         'Maximum': max(likert_list) if likert_list else None,
         'Average': ("%.2f" % mean(likert_list)) if likert_list else None,
-        'Standard Deviation':  ("%.2f" % pstdev(likert_list)) if likert_list else None
+        'Standard Deviation':  ("%.2f" % pstdev(likert_list)) if len(likert_list) else None
     }
 
     return JsonResponse({

@@ -10,6 +10,29 @@ var _RADAR_CHART_MAPPINGS = {
     AVOIDANCE: 'Psychological need for leaving the working room due to displeasure with ambiance and room elements, being 1 the maximum need for avoiding the room and 5 the minimum need for avoidance.'
 };
 
+function evaluateKpiSubtitle(Questionnaire, userType) {
+    var q = Questionnaire.toUpperCase();
+    var ut = userType ? userType.toUpperCase() : 'ALL';
+
+
+    if (q === 'WORKERS_SENTIMENT') {
+        return {
+            'ALL': 'a_ALL',
+            'WORKER': 'b_WORKERS',
+            'MANAGER': 'c_MANAGERS',
+            'VISITOR': 'd_VISITORS'
+        }[ut];
+
+    } else {
+        return {
+            'ALL': 'a_ALL EMPLOYEES',
+            'WORKER': 'b_WORKERS',
+            'MANAGER': 'c_MANAGERS',
+            'VISITOR': 'a_VISITORS'
+        }[ut];
+    }
+}
+
 
 function drawChart(container, url, qsPart) {
 
@@ -192,6 +215,14 @@ function drawStats(container, url) {
                  } else {
                      $kpiTable.find('.suggestions-above-80').show();
                  }
+
+                 $('.kpi-subtitle').html(
+                     evaluateKpiSubtitle(
+                         'WORKERS_SENTIMENT',
+                         $('select#chart-subject-type-filter option:selected').val()
+                     )
+                 );
+
              } else {
                  $('body.worker-sentiment .kpi-table').hide();
                  $('#performance-indicators').hide();
@@ -248,7 +279,14 @@ function updateBrandValueTable (container, url) {
 
              $('#indicators-container').html(
                  $data.siblings('#kpi-table-4').detach()
-             )
+             );
+
+             $('.kpi-subtitle').html(
+                 evaluateKpiSubtitle(
+                     'BRAND_VALUE',
+                     $('select#table-type-filter option:selected').val()
+                 )
+             );
          }
     });
 
